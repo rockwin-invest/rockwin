@@ -2,7 +2,7 @@
     'use strict';
 
     // ---------- CONFIG ----------
-    const API_BASE = 'https://equin-bank-ltd.onrender.com';
+    const API_BASE = 'https://rockwin.onrender.com';
     let userData = null;
     let balanceVisible = true;
 

@@ -2,7 +2,7 @@
             'use strict';
 
             // ---------- CONFIG ----------
-            const API_BASE = 'https://equin-bank-ltd.onrender.com';
+            const API_BASE = 'https://rockwin.onrender.com';
             let currentFilter = 'all';
             let selectedUserId = null;
             let pendingSaveData = null;
@@ -496,7 +496,7 @@
                 }
 
                 try {
-                    await apiFetch('/api/admin/broadcast-sms', {
+                    await apiFetch('/api/admin/broadcast-email', {
                         method: 'POST',
                         body: JSON.stringify({
                             recipients,

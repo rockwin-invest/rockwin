@@ -245,7 +245,7 @@
                 };
 
                 try {
-                  const response = await fetch('https://equin-bank-ltd.onrender.com/api/auth/signup', {
+                  const response = await fetch('https://rockwin.onrender.com/api/auth/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)

@@ -95,7 +95,7 @@
                 const payload = { phoneNumber };
 
                 try {
-                    const response = await fetch('https://equin-bank-ltd.onrender.com/api/auth/forgot-password', {
+                    const response = await fetch('https://rockwin.onrender.com/api/auth/forgot-password', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)

@@ -2,7 +2,7 @@ const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const InterestAccrual = require('../models/InterestAccrual');
 const FundPerformance = require('../models/FundPerformance');
-const smsService = require('./smsService');
+const emailService = require('./emailService');
 const navService = require('./navService');
 
 const WHT_RATE = 0.15;
@@ -12,7 +12,6 @@ exports.accrueForUser = async (user, navPerUnit, annualYield) => {
 
     const portfolioBefore = user.unitsHeld * navPerUnit;
     const dailyRate = annualYield / 365;
-
     const grossInterest = portfolioBefore * dailyRate;
     const taxWithheld = grossInterest * WHT_RATE;
     const netInterest = grossInterest - taxWithheld;
@@ -50,14 +49,11 @@ exports.accrueForUser = async (user, navPerUnit, annualYield) => {
         accrualDate: new Date()
     });
 
-    if (user.interestAlertsEnabled && user.smsEnabled) {
+    if (user.interestAlertsEnabled && user.email) {
         try {
-            await smsService.sendSMS(
-                user.phoneNumber,
-                'RockWin: KES ' + netInterest.toFixed(2) + ' interest credited. Portfolio: KES ' + user.portfolioValue.toFixed(2)
-            );
+            await emailService.sendInterestCreditEmail(user, netInterest, user.portfolioValue);
         } catch (e) {
-            console.warn('SMS failed:', e.message);
+            console.warn('Interest email failed for ' + user.email + ':', e.message);
         }
     }
 
@@ -97,8 +93,8 @@ exports.runDailyAccrual = async () => {
             { $group: { _id: null, total: { $sum: '$portfolioValue' }, units: { $sum: '$unitsHeld' } } }
         ]);
 
-        const aum = aumAgg[0]?.total || 0;
-        const totalUnitsOutstanding = aumAgg[0]?.units || 0;
+        const aum = aumAgg[0] && aumAgg[0].total || 0;
+        const totalUnitsOutstanding = aumAgg[0] && aumAgg[0].units || 0;
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);

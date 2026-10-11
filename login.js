@@ -2,7 +2,7 @@
     'use strict';
 
     // ---------- CONFIG ----------
-    const API_BASE = 'https://equin-bank-ltd.onrender.com';
+    const API_BASE = 'https://rockwin.onrender.com';
 
     // ---------- DOM REFS ----------
     const form = document.getElementById('loginForm');

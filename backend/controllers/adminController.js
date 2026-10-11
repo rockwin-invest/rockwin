@@ -3,7 +3,7 @@ const Transaction = require('../models/Transaction');
 const AuditLog = require('../models/AuditLog');
 const FundPerformance = require('../models/FundPerformance');
 const InterestAccrual = require('../models/InterestAccrual');
-const smsService = require('../services/smsService');
+const emailService = require('../services/emailService');
 const navService = require('../services/navService');
 const interestService = require('../services/interestService');
 
@@ -27,7 +27,10 @@ exports.getUsers = async (req, res) => {
         const users = await User.find(query).select('-password').sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit));
         const total = await User.countDocuments(query);
 
-        res.json({ users, pagination: { total, page: parseInt(page), limit: parseInt(limit), pages: Math.ceil(total / parseInt(limit)) } });
+        res.json({
+            users,
+            pagination: { total, page: parseInt(page), limit: parseInt(limit), pages: Math.ceil(total / parseInt(limit)) }
+        });
     } catch (error) {
         console.error('Get users error:', error);
         res.status(500).json({ error: 'Server error.' });
@@ -38,10 +41,8 @@ exports.getUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id).select('-password');
         if (!user) return res.status(404).json({ error: 'Investor not found.' });
-
         const transactions = await Transaction.find({ userId: user._id }).sort({ createdAt: -1 }).limit(10);
         const accruals = await InterestAccrual.find({ userId: user._id }).sort({ accrualDate: -1 }).limit(10);
-
         res.json({ user, transactions, accruals });
     } catch (error) {
         console.error('Get user error:', error);
@@ -52,8 +53,7 @@ exports.getUser = async (req, res) => {
 exports.updatePortfolio = async (req, res) => {
     try {
         const { id } = req.params;
-        const { adjustmentType, adjustmentAmount, reason, sendSms } = req.body;
-
+        const { adjustmentType, adjustmentAmount, reason, sendEmail } = req.body;
         const user = await User.findById(id);
         if (!user) return res.status(404).json({ error: 'Investor not found.' });
 
@@ -87,34 +87,46 @@ exports.updatePortfolio = async (req, res) => {
         await user.save();
 
         await Transaction.create({
-            userId: user._id,
-            accountNumber: user.accountNumber,
-            type: txType,
+            userId: user._id, accountNumber: user.accountNumber, type: txType,
             amount: adjustmentAmount || Math.abs(unitsDelta * currentNav),
-            unitsAffected: unitsDelta,
-            navAtTransaction: currentNav,
-            portfolioAfter: user.portfolioValue,
-            description: reason || 'Admin ' + adjustmentType,
+            unitsAffected: unitsDelta, navAtTransaction: currentNav,
+            portfolioAfter: user.portfolioValue, description: reason || 'Admin ' + adjustmentType,
             reference: 'ADMIN-' + Date.now()
         });
 
         await AuditLog.create({
-            adminId: req.user.id,
-            adminName: req.user.fullName || 'Admin',
-            adminRole: req.user.role || 'operations',
-            action: 'Portfolio Update',
+            adminId: req.user.id, adminName: req.user.fullName || 'Admin',
+            adminRole: req.user.role || 'operations', action: 'Portfolio Update',
             details: user.fullName + ': ' + adjustmentType + ' KES ' + adjustmentAmount + ' → New: KES ' + user.portfolioValue.toFixed(2),
-            targetUserId: user._id,
-            ipAddress: req.ip
+            targetUserId: user._id, ipAddress: req.ip
         });
 
-        if (sendSms !== false) {
+        if (sendEmail !== false && user.email) {
             try {
-                await smsService.sendSMS(user.phoneNumber, 'RockWin: Your portfolio is now KES ' + user.portfolioValue.toFixed(2) + '. Acc: ' + user.accountNumber);
-            } catch (e) { console.warn('SMS failed:', e.message); }
+                await emailService.sendEmail(
+                    user.email,
+                    'RockWin Investment — Portfolio Updated',
+                    '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
+                    '<h1 style="color: #006d32; font-size: 24px;">Portfolio Update</h1>' +
+                    '<p style="color: #4a5a72; font-size: 15px;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+                    '<p style="color: #4a5a72; font-size: 15px;">Your RockWin Investment portfolio has been updated.</p>' +
+                    '<div style="background: #e8f5ee; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">' +
+                    '<div style="color: #4a5a72; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">New Portfolio Value</div>' +
+                    '<div style="color: #006d32; font-size: 32px; font-weight: 700;">KES ' + user.portfolioValue.toFixed(2) + '</div>' +
+                    '<div style="color: #4a5a72; font-size: 13px;">Account: <strong>' + user.accountNumber + '</strong></div>' +
+                    '</div>' +
+                    '<a href="https://rockwin-invest.github.io/rockwin/dashboard.html" style="display: inline-block; background: #006d32; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">View Portfolio</a>' +
+                    '<hr style="border: none; border-top: 1px solid #e8ecf0; margin: 32px 0;">' +
+                    '<p style="color: #8a9bb0; font-size: 12px;">RockWin Investment · CMA Licensed · I&M Trustee · Deloitte Audited</p>' +
+                    '</div>'
+                );
+            } catch (e) { console.warn('Portfolio email failed:', e.message); }
         }
 
-        res.json({ message: 'Portfolio updated.', user: { id: user._id, fullName: user.fullName, accountNumber: user.accountNumber, portfolioValue: user.portfolioValue, unitsHeld: user.unitsHeld } });
+        res.json({
+            message: 'Portfolio updated.',
+            user: { id: user._id, fullName: user.fullName, accountNumber: user.accountNumber, portfolioValue: user.portfolioValue, unitsHeld: user.unitsHeld }
+        });
     } catch (error) {
         console.error('Update portfolio error:', error);
         res.status(500).json({ error: 'Server error.' });
@@ -128,26 +140,19 @@ exports.setYieldRate = async (req, res) => {
         if (isNaN(yieldDecimal) || yieldDecimal < 0 || yieldDecimal > 0.30) {
             return res.status(400).json({ error: 'Yield must be between 0% and 30%.' });
         }
-
         const currentNav = await navService.getCurrentNav();
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-
         await FundPerformance.findOneAndUpdate(
             { date: today },
             { date: today, navPerUnit: currentNav, dailyYieldRate: yieldDecimal / 365, annualYieldRate: yieldDecimal },
             { upsert: true, new: true }
         );
-
         await AuditLog.create({
-            adminId: req.user.id,
-            adminName: req.user.fullName || 'Admin',
-            adminRole: req.user.role || 'operations',
-            action: 'Set Yield Rate',
-            details: 'Yield → ' + newYield + '% p.a. Reason: ' + (reason || 'Not provided'),
-            ipAddress: req.ip
+            adminId: req.user.id, adminName: req.user.fullName || 'Admin',
+            adminRole: req.user.role || 'operations', action: 'Set Yield Rate',
+            details: 'Yield → ' + newYield + '% p.a. Reason: ' + (reason || 'Not provided'), ipAddress: req.ip
         });
-
         res.json({ message: 'Yield rate updated.', yield: newYield + '% p.a.' });
     } catch (error) {
         console.error('Set yield error:', error);
@@ -159,12 +164,9 @@ exports.runAccrual = async (req, res) => {
     try {
         const result = await interestService.runDailyAccrual();
         await AuditLog.create({
-            adminId: req.user.id,
-            adminName: req.user.fullName || 'Admin',
-            adminRole: req.user.role || 'operations',
-            action: 'Run Interest Accrual',
-            details: result.successCount + ' investors, KES ' + result.totalInterest.toFixed(2) + ' credited',
-            ipAddress: req.ip
+            adminId: req.user.id, adminName: req.user.fullName || 'Admin',
+            adminRole: req.user.role || 'operations', action: 'Run Interest Accrual',
+            details: result.successCount + ' investors, KES ' + result.totalInterest.toFixed(2), ipAddress: req.ip
         });
         res.json({ message: 'Accrual complete.', ...result });
     } catch (error) {
@@ -179,31 +181,26 @@ exports.getFundStats = async (req, res) => {
         const activeInvestors = await User.countDocuments({ status: 'active' });
         const suspendedAccounts = await User.countDocuments({ status: 'suspended' });
         const pendingKyc = await User.countDocuments({ status: 'pending' });
-
         const aumAgg = await User.aggregate([
             { $match: { status: 'active' } },
             { $group: { _id: null, aum: { $sum: '$portfolioValue' }, units: { $sum: '$unitsHeld' } } }
         ]);
-        const aum = aumAgg[0]?.aum || 0;
-        const totalUnits = aumAgg[0]?.units || 0;
-
+        const aum = aumAgg[0] && aumAgg[0].aum || 0;
+        const totalUnits = aumAgg[0] && aumAgg[0].units || 0;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-
         const todayInterest = await InterestAccrual.aggregate([
             { $match: { accrualDate: { $gte: today } } },
             { $group: { _id: null, total: { $sum: '$netInterest' }, tax: { $sum: '$taxWithheld' } } }
         ]);
-
         const currentYield = await navService.getCurrentYield();
         const currentNav = await navService.getCurrentNav();
-
         res.json({
             totalInvestors, activeInvestors, suspendedAccounts, pendingKyc,
             totalAUM: aum, totalUnitsOutstanding: totalUnits,
             currentYield: currentYield * 100, currentNav,
-            todayInterestCredited: todayInterest[0]?.total || 0,
-            todayTaxWithheld: todayInterest[0]?.tax || 0
+            todayInterestCredited: todayInterest[0] && todayInterest[0].total || 0,
+            todayTaxWithheld: todayInterest[0] && todayInterest[0].tax || 0
         });
     } catch (error) {
         console.error('Get fund stats error:', error);
@@ -225,19 +222,16 @@ exports.updateStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
-        if (!['active', 'suspended', 'pending'].includes(status)) {
+        if (['active', 'suspended', 'pending'].indexOf(status) === -1) {
             return res.status(400).json({ error: 'Invalid status.' });
         }
-
         const user = await User.findByIdAndUpdate(id, { status }, { new: true }).select('-password');
         if (!user) return res.status(404).json({ error: 'Investor not found.' });
-
         await AuditLog.create({
             adminId: req.user.id, adminName: req.user.fullName || 'Admin',
             adminRole: req.user.role || 'operations', action: 'Status Change',
             details: user.fullName + ': Status → ' + status, targetUserId: user._id, ipAddress: req.ip
         });
-
         res.json({ message: 'Status updated.', user });
     } catch (error) {
         console.error('Update status error:', error);
@@ -250,17 +244,25 @@ exports.freezeUser = async (req, res) => {
         const { id } = req.params;
         const user = await User.findByIdAndUpdate(id, { status: 'suspended' }, { new: true }).select('-password');
         if (!user) return res.status(404).json({ error: 'Investor not found.' });
-
         await AuditLog.create({
             adminId: req.user.id, adminName: req.user.fullName || 'Admin',
             adminRole: req.user.role || 'operations', action: 'Account Freeze',
             details: user.fullName + ': Frozen by ' + req.user.role, targetUserId: user._id, ipAddress: req.ip
         });
-
-        try {
-            await smsService.sendSMS(user.phoneNumber, 'RockWin: Your account has been suspended. Contact support.');
-        } catch (e) { console.warn('SMS failed:', e.message); }
-
+        if (user.email) {
+            try {
+                await emailService.sendEmail(
+                    user.email,
+                    'RockWin Investment — Account Suspended',
+                    '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
+                    '<h1 style="color: #b00020; font-size: 24px;">Account Suspended</h1>' +
+                    '<p style="color: #4a5a72; font-size: 15px;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+                    '<p style="color: #4a5a72; font-size: 15px;">Your RockWin Investment account (' + user.accountNumber + ') has been suspended.</p>' +
+                    '<p style="color: #4a5a72; font-size: 15px;">Contact us at <a href="mailto:support@rockwin.co.ke" style="color: #006d32;">support@rockwin.co.ke</a>.</p>' +
+                    '</div>'
+                );
+            } catch (e) { console.warn('Suspension email failed:', e.message); }
+        }
         res.json({ message: 'Account frozen.', user });
     } catch (error) {
         console.error('Freeze user error:', error);
@@ -268,39 +270,37 @@ exports.freezeUser = async (req, res) => {
     }
 };
 
-exports.broadcastSms = async (req, res) => {
+exports.broadcastEmail = async (req, res) => {
     try {
-        const { recipients, message, targetAll } = req.body;
-        let phoneNumbers = [];
-
+        const { recipients, subject, message, targetAll } = req.body;
+        if (!subject || !message) {
+            return res.status(400).json({ error: 'Subject and message are required.' });
+        }
+        let users = [];
         if (targetAll) {
-            const users = await User.find({ status: 'active' });
-            phoneNumbers = users.map(u => u.phoneNumber);
+            users = await User.find({ status: 'active' }).select('fullName email');
         } else if (recipients && recipients.length > 0) {
-            phoneNumbers = recipients;
+            users = await User.find({ email: { $in: recipients } }).select('fullName email');
         } else {
             return res.status(400).json({ error: 'No recipients specified.' });
         }
-
         const results = [];
-        for (const phone of phoneNumbers) {
+        for (const user of users) {
             try {
-                const result = await smsService.sendSMS(phone, message);
-                results.push({ phone, success: result });
+                const result = await emailService.sendBroadcastEmail(user, subject, message);
+                results.push({ email: user.email, success: result.success });
             } catch (e) {
-                results.push({ phone, success: false, error: e.message });
+                results.push({ email: user.email, success: false, error: e.message });
             }
         }
-
         await AuditLog.create({
             adminId: req.user.id, adminName: req.user.fullName || 'Admin',
-            adminRole: req.user.role || 'operations', action: 'SMS Broadcast',
-            details: 'Sent to ' + phoneNumbers.length + ' investors', ipAddress: req.ip
+            adminRole: req.user.role || 'operations', action: 'Email Broadcast',
+            details: 'Sent to ' + users.length + ' investors: "' + subject + '"', ipAddress: req.ip
         });
-
-        res.json({ message: 'Broadcast sent.', total: phoneNumbers.length, results });
+        res.json({ message: 'Broadcast sent.', total: users.length, results });
     } catch (error) {
-        console.error('Broadcast SMS error:', error);
+        console.error('Broadcast email error:', error);
         res.status(500).json({ error: 'Server error.' });
     }
 };
@@ -312,7 +312,6 @@ exports.getAuditLog = async (req, res) => {
         const logs = await AuditLog.find().sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit))
             .populate('targetUserId', 'fullName phoneNumber accountNumber');
         const total = await AuditLog.countDocuments();
-
         res.json({ logs, pagination: { total, page: parseInt(page), limit: parseInt(limit), pages: Math.ceil(total / parseInt(limit)) } });
     } catch (error) {
         console.error('Get audit log error:', error);
@@ -326,22 +325,16 @@ exports.getStats = async (req, res) => {
         const activeUsers = await User.countDocuments({ status: 'active' });
         const suspendedUsers = await User.countDocuments({ status: 'suspended' });
         const pendingUsers = await User.countDocuments({ status: 'pending' });
-
-        const aumAgg = await User.aggregate([
-            { $group: { _id: null, total: { $sum: '$portfolioValue' } } }
-        ]);
-
+        const aumAgg = await User.aggregate([{ $group: { _id: null, total: { $sum: '$portfolioValue' } } }]);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-
         const todayDeposits = await Transaction.countDocuments({ type: 'deposit', createdAt: { $gte: today } });
         const todayWithdrawals = await Transaction.countDocuments({ type: 'redemption', createdAt: { $gte: today } });
         const newAccountsToday = await User.countDocuments({ createdAt: { $gte: today } });
         const highRisk = await User.countDocuments({ risk: 'high' });
-
         res.json({
             totalUsers, activeUsers, suspendedUsers, pendingUsers,
-            totalBalance: aumAgg[0]?.total || 0,
+            totalBalance: aumAgg[0] && aumAgg[0].total || 0,
             todayDeposits, todayWithdrawals, newAccountsToday, highRisk
         });
     } catch (error) {
