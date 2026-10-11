@@ -12,10 +12,7 @@
     <link rel="stylesheet" href="dashboard.css" />
 
     <style>
-        .profile-form-group {
-            margin-bottom: 1rem;
-        }
-
+        .profile-form-group { margin-bottom: 1rem; }
         .profile-form-group label {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -25,7 +22,6 @@
             display: block;
             margin-bottom: 0.3rem;
         }
-
         .profile-form-group input,
         .profile-form-group select {
             width: 100%;
@@ -38,33 +34,11 @@
             outline: none;
             transition: all 0.25s ease;
         }
-
         .profile-form-group input:focus,
         .profile-form-group select:focus {
             border-color: var(--primary-container);
             background: rgba(255, 255, 255, 0.07);
             box-shadow: 0 0 0 3px rgba(0, 109, 50, 0.12);
-        }
-
-        .section-divider {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin: 1.4rem 0 1rem;
-        }
-
-        .section-divider .line {
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .section-divider .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
-            font-weight: 600;
         }
 
         .compliance-note {
@@ -80,7 +54,6 @@
             color: var(--text-secondary);
             line-height: 1.5;
         }
-
         .compliance-note .icon {
             width: 18px;
             height: 18px;
@@ -88,7 +61,6 @@
             flex-shrink: 0;
             margin-top: 0.1rem;
         }
-
         .compliance-note strong {
             color: var(--primary-container);
             font-weight: 600;
@@ -101,27 +73,23 @@
             padding: 1rem 1.2rem;
             margin-bottom: 1rem;
         }
-
         .nok-card .nok-header {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 0.6rem;
         }
-
         .nok-card .nok-header .icon {
             width: 20px;
             height: 20px;
             color: var(--admin-accent);
         }
-
         .nok-card .nok-header .title {
             font-family: var(--font-display);
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-primary);
         }
-
         .nok-card .nok-row {
             display: flex;
             justify-content: space-between;
@@ -129,18 +97,20 @@
             font-size: 0.85rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
+        .nok-card .nok-row:last-child { border-bottom: none; }
+        .nok-card .nok-row .label { color: var(--text-muted); }
+        .nok-card .nok-row .value { color: var(--text-primary); font-weight: 500; }
 
-        .nok-card .nok-row:last-child {
-            border-bottom: none;
+        /* Loading skeleton */
+        .loading-pulse {
+            animation: pulse-load 1.5s ease-in-out infinite;
+            background: rgba(255, 255, 255, 0.05);
+            color: transparent !important;
+            border-radius: 4px;
         }
-
-        .nok-card .nok-row .label {
-            color: var(--text-muted);
-        }
-
-        .nok-card .nok-row .value {
-            color: var(--text-primary);
-            font-weight: 500;
+        @keyframes pulse-load {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.1; }
         }
     </style>
 </head>
@@ -197,8 +167,8 @@
         <!-- ====== TOP HEADER ====== -->
         <header class="top-header">
             <div class="greeting">
-                👋 Good Morning, <span id="userFirstName">Simon</span>
-                <span class="last-login">Last login: Today, <span id="lastLoginTime">5:48 PM</span></span>
+                👋 Good Morning, <span id="userFirstName">...</span>
+                <span class="last-login">Last login: Today, <span id="lastLoginTime">--:--</span></span>
             </div>
             <div class="actions">
                 <button class="btn-icon" id="searchBtn" aria-label="Search or quick actions">
@@ -214,7 +184,7 @@
                     </svg>
                     <span class="badge" id="notifBadge">0</span>
                 </button>
-                <div class="avatar" id="userAvatar">SI</div>
+                <div class="avatar" id="userAvatar">..</div>
             </div>
         </header>
 
@@ -224,19 +194,18 @@
             <!-- ====== LEFT COLUMN ====== -->
             <div class="left-col">
 
-                <!-- Page Title -->
                 <h1 style="font-family:var(--font-display); font-size:1.8rem; font-weight:700; margin-bottom:1.5rem;">Investor Profile</h1>
 
                 <!-- Profile Card -->
                 <div class="balance-hero" style="background: linear-gradient(145deg, #0b1a2e, #1a2d4a); margin-bottom:1.5rem; text-align:center;">
                     <div style="margin:0 auto 0.8rem;">
-                        <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--primary-container)); display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; color:#fff; margin:0 auto; font-family:var(--font-display);">SI</div>
+                        <div id="profileAvatar" style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--primary-container)); display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; color:#fff; margin:0 auto; font-family:var(--font-display);">..</div>
                     </div>
-                    <div style="font-family:var(--font-display); font-size:1.4rem; font-weight:700; color:#fff;">Simon Irungu</div>
-                    <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">Investor since July 2026</p>
+                    <div id="profileFullName" style="font-family:var(--font-display); font-size:1.4rem; font-weight:700; color:#fff;">Loading...</div>
+                    <p id="profileMemberSince" style="color:rgba(255,255,255,0.5); font-size:0.9rem;">Investor since —</p>
                     <div style="margin-top:0.8rem; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
-                        <span style="background:rgba(46,204,113,0.15); padding:0.2rem 0.8rem; border-radius:var(--radius-full); font-size:0.7rem; color:var(--accent-green); border:1px solid rgba(46,204,113,0.2);">● KYC Verified</span>
-                        <span style="background:rgba(255,255,255,0.05); padding:0.2rem 0.8rem; border-radius:var(--radius-full); font-size:0.7rem; color:var(--text-muted); border:1px solid rgba(255,255,255,0.06);">Account: RW-654231</span>
+                        <span id="profileKycBadge" style="background:rgba(46,204,113,0.15); padding:0.2rem 0.8rem; border-radius:var(--radius-full); font-size:0.7rem; color:var(--accent-green); border:1px solid rgba(46,204,113,0.2);">● Loading</span>
+                        <span id="profileAccountBadge" style="background:rgba(255,255,255,0.05); padding:0.2rem 0.8rem; border-radius:var(--radius-full); font-size:0.7rem; color:var(--text-muted); border:1px solid rgba(255,255,255,0.06);">Account: RW-—</span>
                     </div>
                 </div>
 
@@ -248,22 +217,22 @@
                     <div style="padding:0.5rem 0;">
                         <div class="profile-form-group">
                             <label>Full Legal Name</label>
-                            <input type="text" value="Simon Irungu" />
+                            <input type="text" id="profileFullNameInput" placeholder="Loading..." />
                         </div>
                         <div class="profile-form-group">
                             <label>Phone Number</label>
-                            <input type="tel" value="+254704005726" />
+                            <input type="tel" id="profilePhoneInput" placeholder="Loading..." />
                         </div>
                         <div class="profile-form-group">
                             <label>Email Address</label>
-                            <input type="email" value="simon@example.com" />
+                            <input type="email" id="profileEmailInput" placeholder="Loading..." />
                         </div>
                         <div class="profile-form-group">
                             <label>Date of Birth</label>
-                            <input type="date" value="1990-01-15" />
+                            <input type="date" id="profileDobInput" />
                         </div>
 
-                        <button class="btn-hero-primary" onclick="showToast('✅ Profile updated successfully!', 'success')" style="padding:0.8rem 2rem; font-size:1rem; width:100%; margin-top:0.5rem;">
+                        <button class="btn-hero-primary" onclick="saveProfile()" style="padding:0.8rem 2rem; font-size:1rem; width:100%; margin-top:0.5rem;">
                             Save Changes
                         </button>
 
@@ -278,7 +247,7 @@
                     </div>
                 </div>
 
-                <!-- Next of Kin (CMA Requirement) -->
+                <!-- Next of Kin -->
                 <div class="transactions-section" style="margin-bottom:1.5rem;">
                     <div class="header">
                         <h3>Next of Kin</h3>
@@ -295,19 +264,19 @@
                             </div>
                             <div class="nok-row">
                                 <span class="label">Full Name</span>
-                                <span class="value">Jane Irungu</span>
+                                <span class="value" id="nokName">Loading...</span>
                             </div>
                             <div class="nok-row">
                                 <span class="label">Phone Number</span>
-                                <span class="value">+254712345678</span>
+                                <span class="value" id="nokPhone">Loading...</span>
                             </div>
                             <div class="nok-row">
                                 <span class="label">Relationship</span>
-                                <span class="value">Spouse</span>
+                                <span class="value" id="nokRelationship">Loading...</span>
                             </div>
                         </div>
 
-                        <button class="btn-hero-primary" onclick="showToast('📝 Next of Kin update form coming soon', 'info')" style="padding:0.8rem 2rem; font-size:0.95rem; width:100%;">
+                        <button class="btn-hero-primary" onclick="showToast('📝 Next of Kin update coming soon', 'info')" style="padding:0.8rem 2rem; font-size:0.95rem; width:100%;">
                             Update Next of Kin
                         </button>
                     </div>
@@ -321,17 +290,17 @@
                     <div style="padding:0.5rem 0;">
                         <div class="profile-form-group">
                             <label>Current Password</label>
-                            <input type="password" placeholder="••••••••" />
+                            <input type="password" id="currentPassword" placeholder="••••••••" />
                         </div>
                         <div class="profile-form-group">
                             <label>New Password</label>
-                            <input type="password" placeholder="••••••••" />
+                            <input type="password" id="newPassword" placeholder="••••••••" />
                         </div>
                         <div class="profile-form-group" style="margin-bottom:0;">
                             <label>Confirm New Password</label>
-                            <input type="password" placeholder="••••••••" />
+                            <input type="password" id="confirmNewPassword" placeholder="••••••••" />
                         </div>
-                        <button class="btn-hero-primary" onclick="showToast('🔒 Password changed successfully!', 'success')" style="padding:0.8rem 2rem; font-size:1rem; width:100%; margin-top:0.5rem;">
+                        <button class="btn-hero-primary" onclick="changePassword()" style="padding:0.8rem 2rem; font-size:1rem; width:100%; margin-top:0.5rem;">
                             Update Password
                         </button>
                     </div>
@@ -342,28 +311,28 @@
             <!-- ====== RIGHT COLUMN ====== -->
             <div class="right-col">
 
-                <!-- KYC & Compliance Info -->
+                <!-- KYC & Compliance -->
                 <div class="right-card">
-                    <div class="card-title">KYC & Compliance</div>
+                    <div class="card-title">KYC &amp; Compliance</div>
                     <div class="card-item">
                         <span class="label">ID Number</span>
-                        <span class="value" style="color:var(--text-primary);">38920192</span>
+                        <span class="value" id="kycIdNumber" style="color:var(--text-primary);">—</span>
                     </div>
                     <div class="card-item">
                         <span class="label">KYC Status</span>
-                        <span class="value green">Verified ✓</span>
+                        <span class="value green" id="kycStatus">—</span>
                     </div>
                     <div class="card-item">
                         <span class="label">KRA PIN</span>
-                        <span class="value" style="color:var(--text-primary);">A012345678X</span>
+                        <span class="value" id="kycKraPin" style="color:var(--text-primary);">—</span>
                     </div>
                     <div class="card-item">
                         <span class="label">Withholding Tax Consent</span>
-                        <span class="value green">Accepted</span>
+                        <span class="value green" id="kycTaxConsent">—</span>
                     </div>
                     <div class="card-item">
                         <span class="label">CMA Registration</span>
-                        <span class="value" style="color:var(--primary-container);">Active</span>
+                        <span class="value" id="kycCmaStatus" style="color:var(--primary-container);">—</span>
                     </div>
                 </div>
 
@@ -372,19 +341,19 @@
                     <div class="card-title">Investment Summary</div>
                     <div class="card-item">
                         <span class="label">Portfolio Value</span>
-                        <span class="value green">KES 254,320</span>
+                        <span class="value green" id="summaryPortfolioValue">KES 0.00</span>
                     </div>
                     <div class="card-item">
                         <span class="label">Units Held</span>
-                        <span class="value" style="color:var(--text-primary);">2,483.5</span>
+                        <span class="value" id="summaryUnits" style="color:var(--text-primary);">0.0</span>
                     </div>
                     <div class="card-item">
                         <span class="label">Yield Rate</span>
-                        <span class="value green">14.2% p.a.</span>
+                        <span class="value green" id="summaryYield">14.2% p.a.</span>
                     </div>
                     <div class="card-item">
                         <span class="label">Interest YTD</span>
-                        <span class="value green">KES 24,450</span>
+                        <span class="value green" id="summaryInterestYTD">KES 0.00</span>
                     </div>
                 </div>
 
@@ -395,7 +364,7 @@
                         <span class="label">📄 Investment Statement</span>
                         <span class="value blue">→</span>
                     </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="showToast('📋 Fund factsheet opening...', 'info')">
+                    <div class="card-item" style="cursor:pointer;" onclick="window.location.href='fund-factsheet.html'">
                         <span class="label">📋 Fund Factsheet</span>
                         <span class="value blue">→</span>
                     </div>
@@ -428,7 +397,7 @@
                 </svg>
                 Call
             </a>
-            <a href="mailto:support@rockwin.co.ke?subject=RockWin%20Investment%20Support%20Request&body=Hello%20Support%20Team%2C%0A%0AI%20need%20assistance%20with%3A%0A%0A1.%20%0A2.%20%0A%0AThank%20you." onclick="showToast('📧 Opening email...')">
+            <a href="mailto:support@rockwin.co.ke">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                     <polyline points="22,6 12,13 2,6"/>
@@ -443,53 +412,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ====== JAVASCRIPT ====== -->
-    <script>
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast ${type === 'error' ? 'error' : type === 'info' ? 'info' : ''}`;
-            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-            toast.innerHTML = `
-                <span class="toast-icon">${icon}</span>
-                <span class="toast-msg">${message}</span>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-12px) scale(0.96)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-        window.showToast = showToast;
+    <script src="profile.js"></script>
 
-        function handleLogout() {
-            if (confirm('Are you sure you want to sign out?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            }
-        }
-        window.handleLogout = handleLogout;
-
-        function contactWhatsApp() {
-            const phone = '+254700123456';
-            const message = 'Hello RockWin Investment Support, I need assistance with:';
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-        }
-        window.contactWhatsApp = contactWhatsApp;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            const hour12 = hours % 12 || 12;
-            const timeEl = document.getElementById('lastLoginTime');
-            if (timeEl) timeEl.textContent = `${hour12}:${minutes} ${ampm}`;
-        });
-    </script>
-<script src="profile.js"></script>
 </body>
 </html>
