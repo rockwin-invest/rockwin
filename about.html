@@ -3,499 +3,286 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About Us · RockWin Investment</title>
+    <title>About · RockWin Investment</title>
+    <meta name="description" content="RockWin Investment is a Kenyan money market fund. Learn how we operate, who runs it, and who holds the fund to account." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="index.css" />
-
-    <style>
-        .about-hero {
-            padding: 8rem 1.5rem 4rem;
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .about-hero .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(0, 109, 50, 0.12);
-            border: 1px solid rgba(0, 209, 102, 0.2);
-            padding: 0.4rem 1rem;
-            border-radius: var(--radius-full);
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--primary-container);
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            margin-bottom: 1.2rem;
-        }
-
-        .about-hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            line-height: 1.15;
-            margin-bottom: 1rem;
-        }
-
-        .about-hero h1 .highlight {
-            background: linear-gradient(135deg, var(--primary-container) 0%, #4ade80 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .about-hero p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            line-height: 1.7;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .about-section {
-            padding: 2rem 1.5rem 3rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .about-section h2 {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .about-section .section-sub {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 2.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .story-block {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-default);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .story-block p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .story-block p:last-child {
-            margin-bottom: 0;
-        }
-
-        .story-block strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .value-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-default);
-            padding: 2rem 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .value-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 209, 102, 0.2);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .value-card .icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(0, 109, 50, 0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-container);
-            margin-bottom: 1rem;
-        }
-
-        .value-card .icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .value-card h3 {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .value-card p {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .team-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-default);
-            padding: 2rem 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .team-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 209, 102, 0.2);
-        }
-
-        .team-card .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-container));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-display);
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #fff;
-            margin: 0 auto 1rem;
-        }
-
-        .team-card .name {
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-
-        .team-card .role {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 0.8rem;
-        }
-
-        .team-card .bio {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .partners-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .partner-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-default);
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .partner-card:hover {
-            border-color: rgba(0, 209, 102, 0.2);
-        }
-
-        .partner-card .partner-name {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.3rem;
-        }
-
-        .partner-card .partner-role {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-item .value {
-            font-family: var(--font-display);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-container);
-            letter-spacing: -0.02em;
-        }
-
-        .stat-item .label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.2rem;
-        }
-
-        .cta-block {
-            text-align: center;
-            padding: 3rem 1.5rem;
-            margin: 2rem auto 0;
-            max-width: 700px;
-        }
-
-        .cta-block h2 {
-            font-family: var(--font-display);
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-            letter-spacing: -0.02em;
-        }
-
-        .cta-block p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-block button {
-            padding: 0.95rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-container));
-            border: none;
-            border-radius: var(--radius-default);
-            color: #fff;
-            font-weight: 600;
-            font-size: 1rem;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 109, 50, 0.25);
-        }
-
-        .cta-block button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0, 109, 50, 0.35);
-        }
-    </style>
+    <link rel="stylesheet" href="about.css" />
 </head>
 <body>
 
-    <nav class="glass-nav" role="navigation">
-        <div class="brand">RockWin<span> Investment</span></div>
-        <div class="nav-links">
+    <!-- ====== MASTHEAD ====== -->
+    <header class="masthead" id="masthead">
+        <div class="masthead-inner">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+            </a>
+
+            <nav class="primary-nav" aria-label="Primary">
+                <a href="index.html#how">How it works</a>
+                <a href="index.html#calculator">Calculator</a>
+                <a href="fund-factsheet.html">Factsheet</a>
+                <a href="about.html" class="active">About</a>
+                <a href="login.html" class="nav-signin">Sign in</a>
+                <a href="signup.html" class="nav-cta">Open an account</a>
+            </nav>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+            <a href="index.html#how">How it works</a>
             <a href="index.html#calculator">Calculator</a>
             <a href="fund-factsheet.html">Factsheet</a>
             <a href="about.html">About</a>
-            <a href="login.html">Sign In</a>
-            <button class="btn-nav-primary" onclick="window.location.href='signup.html'">Start Investing</button>
-        </div>
-    </nav>
+            <a href="login.html">Sign in</a>
+            <a href="signup.html" class="mobile-cta">Open an account</a>
+        </nav>
+    </header>
 
-    <section class="about-hero">
-        <div class="badge">✦ Est. 2024 · Nairobi, Kenya</div>
-        <h1>Making wealth-building <span class="highlight">accessible to every Kenyan.</span></h1>
-        <p>We're on a mission to democratise access to high-quality investment products — starting with a transparent, low-fee money market fund that grows your money while you sleep.</p>
-    </section>
+    <main>
 
-    <section class="about-section">
-        <div class="story-block">
-            <h2 style="text-align:left; margin-bottom:1rem;">Our Story</h2>
-            <p><strong>RockWin Investment</strong> was founded in 2024 with a simple belief: every Kenyan deserves access to professional-grade investment products, not just those with millions in the bank.</p>
-            <p>Traditional money market funds required paperwork, physical visits, and minimum investments that excluded most people. We built RockWin to change that — with a mobile-first platform that lets anyone start investing from as little as KES 1,000, in under 3 minutes.</p>
-            <p>Today, we manage over <strong>KES 2.4 billion</strong> in assets on behalf of <strong>18,000+ investors</strong> across Kenya. Our fund is regulated by the Capital Markets Authority, held in trust by I&M Bank, and independently audited by Deloitte.</p>
-            <p>But we're just getting started. Our vision is to become Kenya's most trusted digital investment platform — offering a full suite of products that help people grow, protect, and pass on wealth.</p>
-        </div>
-    </section>
-
-    <section class="about-section">
-        <h2>What We Stand For</h2>
-        <p class="section-sub">Four principles guide everything we build.</p>
-
-        <div class="values-grid">
-            <div class="value-card">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        <path d="M9 12l2 2 4-4"/>
-                    </svg>
+        <!-- ====== HERO ====== -->
+        <section class="about-hero">
+            <div class="shell">
+                <div class="about-hero-inner">
+                    <span class="eyebrow">
+                        <span class="eyebrow-rule"></span>
+                        About RockWin
+                    </span>
+                    <h1 class="display">A money market fund built for the way Kenyans actually save.</h1>
+                    <p class="lede">
+                        RockWin Investment exists to give Kenyans a serious, transparent home for their savings. Regulated by the Capital Markets Authority, held in trust at I&amp;M Bank, and independently audited.
+                    </p>
                 </div>
-                <h3>Trust First</h3>
-                <p>Every shilling is held in trust by I&M Bank, audited by Deloitte, and regulated by CMA. Your money is always protected.</p>
             </div>
+        </section>
 
-            <div class="value-card">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
-                    </svg>
+        <!-- ====== STORY ====== -->
+        <section class="about-section">
+            <div class="shell">
+                <div class="about-story">
+                    <h2 class="about-h2">Our story</h2>
+                    <div class="about-prose">
+                        <p>
+                            Access to professional investment products in Kenya has historically required paperwork, physical visits, and minimum deposits that excluded most people. Money market funds — one of the safest and most accessible ways to grow savings — were effectively out of reach for anyone outside a narrow slice of the market.
+                        </p>
+                        <p>
+                            RockWin was built to close that gap. A mobile-first platform where anyone with a national ID, an M-PESA number, and KES 1,000 can open an account and start earning daily interest in about three minutes. No paperwork, no lock-in, no exit penalties.
+                        </p>
+                        <p>
+                            We are regulated by the Capital Markets Authority, assets are held in trust at I&amp;M Bank — separate from RockWin's own balance sheet — and the fund is independently audited. The money you deposit does not touch our operating accounts.
+                        </p>
+                    </div>
                 </div>
-                <h3>Radical Simplicity</h3>
-                <p>No paperwork. No jargon. No lock-ins. Just a clean, intuitive app that makes investing effortless.</p>
             </div>
+        </section>
 
-            <div class="value-card">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                        <polyline points="17 6 23 6 23 12"/>
-                    </svg>
+        <!-- ====== HOW WE OPERATE ====== -->
+        <section class="about-section about-section-tight">
+            <div class="shell">
+                <h2 class="about-h2">How we operate</h2>
+                <p class="about-h2-sub">Three principles, in order of priority.</p>
+
+                <ol class="principles">
+                    <li class="principle">
+                        <span class="principle-number">01</span>
+                        <div class="principle-body">
+                            <h3 class="principle-title">Your money is never ours</h3>
+                            <p class="principle-text">
+                                Client deposits are held in trust at I&amp;M Bank under a trustee agreement approved by the CMA. RockWin operates the fund but does not hold client cash on its own balance sheet. This separation is the single most important structural safeguard in a regulated collective investment scheme.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="principle">
+                        <span class="principle-number">02</span>
+                        <div class="principle-body">
+                            <h3 class="principle-title">Every rate is published</h3>
+                            <p class="principle-text">
+                                The current yield, management fee, trustee fee, custodian fee, and total expense ratio are published on the fund factsheet and updated monthly. There are no hidden charges, no exit fees, and no performance-based fees.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="principle">
+                        <span class="principle-number">03</span>
+                        <div class="principle-body">
+                            <h3 class="principle-title">Interest compounds daily, not monthly on a marketing slide</h3>
+                            <p class="principle-text">
+                                Interest accrues on your closing balance every night at the fund's current yield and is credited as units the following morning. Because it is credited as units, it compounds automatically — you do not need to do anything to earn the compounded return.
+                            </p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ====== GOVERNANCE ====== -->
+        <section class="about-section about-section-tight">
+            <div class="shell">
+                <h2 class="about-h2">Who holds us to account</h2>
+                <p class="about-h2-sub">Three independent institutions, each with a different job.</p>
+
+                <dl class="governance">
+                    <div class="governance-row">
+                        <dt>Capital Markets Authority</dt>
+                        <dd>Regulates RockWin and the fund. Approves the trust deed, information memorandum, and fee structure. Conducts ongoing supervision.</dd>
+                    </div>
+                    <div class="governance-row">
+                        <dt>I&amp;M Bank — Trustee &amp; Custodian</dt>
+                        <dd>Holds client assets in trust. Administers the fund independently of RockWin's management. Ensures the assets exist and are properly recorded.</dd>
+                    </div>
+                    <div class="governance-row">
+                        <dt>Deloitte — Independent Auditor</dt>
+                        <dd>Audits the fund annually. The audited financial statements are available on request and filed with the CMA.</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
+        <!-- ====== TEAM ====== -->
+        <section class="about-section about-section-tight">
+            <div class="shell">
+                <h2 class="about-h2">Who runs RockWin</h2>
+                <p class="about-h2-sub">The people responsible for the platform and the fund.</p>
+
+                <div class="team">
+                    <div class="team-member">
+                        <div class="team-avatar" aria-hidden="true">CK</div>
+                        <div class="team-copy">
+                            <h3 class="team-name">Charles Kamau</h3>
+                            <p class="team-role">Co-Founder &amp; CEO</p>
+                            <p class="team-bio">Former Head of Digital at a Tier-1 Kenyan bank. Twelve years across fintech and investment management.</p>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-avatar" aria-hidden="true">GM</div>
+                        <div class="team-copy">
+                            <h3 class="team-name">Grace Mwangi</h3>
+                            <p class="team-role">Co-Founder &amp; COO</p>
+                            <p class="team-bio">Previously led operations at a leading money market fund. Specialist in CMA compliance and fund administration.</p>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-avatar" aria-hidden="true">JO</div>
+                        <div class="team-copy">
+                            <h3 class="team-name">James Ochieng</h3>
+                            <p class="team-role">Chief Investment Officer</p>
+                            <p class="team-bio">CFA charterholder with fifteen years in fixed income and treasury management across East Africa.</p>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-avatar" aria-hidden="true">SK</div>
+                        <div class="team-copy">
+                            <h3 class="team-name">Sarah Kilonzo</h3>
+                            <p class="team-role">Head of Engineering</p>
+                            <p class="team-bio">Built and scaled payments infrastructure at multiple Kenyan fintechs.</p>
+                        </div>
+                    </div>
                 </div>
-                <h3>Real Returns</h3>
-                <p>We're obsessed with delivering competitive yields that beat inflation and help you build real wealth over time.</p>
             </div>
+        </section>
 
-            <div class="value-card">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
+        <!-- ====== FINAL CTA ====== -->
+        <section class="final">
+            <div class="shell final-inner">
+                <h2 class="display-final">The rest of this page is about money.<br />Take five minutes.</h2>
+                <div class="final-actions">
+                    <a href="signup.html" class="btn btn-primary">Open an account</a>
+                    <a href="fund-factsheet.html" class="final-signin">Read the factsheet →</a>
                 </div>
-                <h3>Human Support</h3>
-                <p>Real people, real answers. Our support team is available 24/7 via WhatsApp, phone, and email.</p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="about-section">
-        <h2>Our Partners</h2>
-        <p class="section-sub">RockWin is backed by Kenya's most trusted institutions.</p>
+    </main>
 
-        <div class="partners-grid">
-            <div class="partner-card">
-                <div class="partner-name">CMA Kenya</div>
-                <div class="partner-role">Regulator</div>
-            </div>
-            <div class="partner-card">
-                <div class="partner-name">I&M Bank</div>
-                <div class="partner-role">Trustee & Custodian</div>
-            </div>
-            <div class="partner-card">
-                <div class="partner-name">Deloitte</div>
-                <div class="partner-role">Independent Auditor</div>
-            </div>
-            <div class="partner-card">
-                <div class="partner-name">Africa's Talking</div>
-                <div class="partner-role">SMS Infrastructure</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="about-section">
-        <h2>By the Numbers</h2>
-        <p class="section-sub">Where we are today.</p>
-
-        <div class="stats-row">
-            <div class="stat-item">
-                <div class="value">KES 2.4B</div>
-                <div class="label">Assets Under Management</div>
-            </div>
-            <div class="stat-item">
-                <div class="value">18,000+</div>
-                <div class="label">Active Investors</div>
-            </div>
-            <div class="stat-item">
-                <div class="value">14.20%</div>
-                <div class="label">Effective Annual Yield</div>
-            </div>
-            <div class="stat-item">
-                <div class="value">99.99%</div>
-                <div class="label">Platform Uptime</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="about-section">
-        <h2>Leadership Team</h2>
-        <p class="section-sub">Experienced operators from Kenya's leading financial institutions.</p>
-
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="avatar">CK</div>
-                <div class="name">Charles Kamau</div>
-                <div class="role">Co-Founder & CEO</div>
-                <div class="bio">Former Head of Digital at a Tier-1 Kenyan bank. 12+ years in fintech and investment management.</div>
-            </div>
-            <div class="team-card">
-                <div class="avatar">GM</div>
-                <div class="name">Grace Mwangi</div>
-                <div class="role">Co-Founder & COO</div>
-                <div class="bio">Previously led operations at a leading MMF. Expert in CMA compliance and fund administration.</div>
-            </div>
-            <div class="team-card">
-                <div class="avatar">JO</div>
-                <div class="name">James Ochieng</div>
-                <div class="role">Chief Investment Officer</div>
-                <div class="bio">CFA charterholder with 15 years in fixed income and treasury management across East Africa.</div>
-            </div>
-            <div class="team-card">
-                <div class="avatar">SK</div>
-                <div class="name">Sarah Kilonzo</div>
-                <div class="role">Head of Engineering</div>
-                <div class="bio">Built and scaled payments infrastructure at multiple Kenyan fintechs. Passionate about accessible design.</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="cta-block">
-        <h2>Ready to start growing?</h2>
-        <p>Join 18,000+ Kenyans who are building wealth with RockWin Investment.</p>
-        <button onclick="window.location.href='signup.html'">Open Your Free Account</button>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom" style="padding-top:1.5rem;">
-                <span>&copy; 2026 RockWin Investment. All rights reserved. · CMA Licensed · I&M Trustee · Deloitte Audited</span>
-                <div class="socials">
-                    <a href="terms.html">Terms</a>
-                    <a href="privacy.html">Privacy</a>
-                    <a href="about.html">About</a>
+    <!-- ====== FOOTER ====== -->
+    <footer class="site-footer">
+        <div class="shell">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+                    <p class="footer-blurb">A Kenyan money market fund. Licensed by the Capital Markets Authority, assets held in trust at I&amp;M Bank, independently audited by Deloitte.</p>
                 </div>
+
+                <div class="footer-cols">
+                    <div class="footer-col">
+                        <h4>Invest</h4>
+                        <ul>
+                            <li><a href="index.html#calculator">Returns calculator</a></li>
+                            <li><a href="signup.html">Open an account</a></li>
+                            <li><a href="fund-factsheet.html">Fund factsheet</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="mailto:support@rockwin.co.ke">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="terms.html">Terms of service</a></li>
+                            <li><a href="privacy.html">Privacy policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="mailto:support@rockwin.co.ke">support@rockwin.co.ke</a></li>
+                            <li><a href="tel:+254700123456">+254 700 123 456</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; 2026 RockWin Investment. All rights reserved.</span>
+                <span>CMA-licensed money market fund · [License No.] · Assets held in trust at I&amp;M Bank</span>
             </div>
         </div>
     </footer>
+
+    <script>
+        (function() {
+            const masthead = document.getElementById('masthead');
+            const navToggle = document.getElementById('navToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (masthead) {
+                const setScrolled = () => masthead.classList.toggle('scrolled', window.scrollY > 12);
+                setScrolled();
+                window.addEventListener('scroll', setScrolled, { passive: true });
+            }
+
+            function closeMenu() {
+                if (!mobileMenu || !navToggle) return;
+                mobileMenu.classList.remove('open');
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.setAttribute('aria-label', 'Open menu');
+            }
+
+            if (navToggle && mobileMenu) {
+                navToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const open = mobileMenu.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', String(open));
+                    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                });
+                mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+                document.addEventListener('click', (e) => { if (!e.target.closest('.masthead')) closeMenu(); });
+                document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+            }
+        })();
+    </script>
 
 </body>
 </html>

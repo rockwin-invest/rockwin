@@ -1,0 +1,249 @@
+/* ============================================================
+   ROCKWIN INVESTMENT — ABOUT
+   Extends index.css (tokens, masthead, footer, buttons)
+   ============================================================ */
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.about-hero {
+    padding: 9rem 0 4.5rem;
+    border-bottom: 1px solid var(--rule);
+}
+.about-hero-inner { max-width: 60ch; }
+.about-hero .display {
+    max-width: 18ch;
+    margin-bottom: 1.75rem;
+}
+.about-hero .lede { max-width: 54ch; }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.about-section {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--rule);
+}
+.about-section-tight { padding: 4rem 0; }
+.about-section:last-of-type { border-bottom: none; }
+
+.about-h2 {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    font-variation-settings: "opsz" 120;
+}
+.about-h2-sub {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    line-height: 1.65;
+    margin-bottom: 2.5rem;
+}
+
+/* ============================================================
+   STORY
+   ============================================================ */
+.about-story {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+.about-story .about-h2 { margin-bottom: 0; }
+.about-prose { max-width: 68ch; }
+.about-prose p {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    line-height: 1.75;
+    margin-bottom: 1.15rem;
+}
+.about-prose p:last-child { margin-bottom: 0; }
+.about-prose strong { color: var(--ink); font-weight: 500; }
+
+/* ============================================================
+   PRINCIPLES (numbered, not cards)
+   ============================================================ */
+.principles {
+    border-top: 1px solid var(--rule);
+    list-style: none;
+}
+.principle {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 3rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+}
+.principle-number {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--forest);
+    letter-spacing: 0.08em;
+    padding-top: 0.35rem;
+    font-variation-settings: "opsz" 72;
+}
+.principle-title {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: -0.014em;
+    color: var(--ink);
+    margin-bottom: 0.85rem;
+    font-variation-settings: "opsz" 96;
+}
+.principle-text {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 62ch;
+}
+
+/* ============================================================
+   GOVERNANCE (definition list, not cards)
+   ============================================================ */
+.governance {
+    border-top: 1px solid var(--rule);
+}
+.governance-row {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 3rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+}
+.governance-row dt {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: -0.008em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 72;
+}
+.governance-row dd {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 62ch;
+}
+
+/* ============================================================
+   TEAM (list, not cards)
+   ============================================================ */
+.team {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem 4rem;
+}
+.team-member {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+}
+.team-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.team-name {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin-bottom: 0.15rem;
+    font-variation-settings: "opsz" 72;
+}
+.team-role {
+    font-size: 0.78rem;
+    color: var(--forest);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+}
+.team-bio {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+}
+
+/* ============================================================
+   FINAL CTA — reuses .final / .display-final / .btn from index.css
+   ============================================================ */
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+    .about-hero { padding: 7rem 0 3.5rem; }
+    .about-section { padding: 4rem 0; }
+    .about-section-tight { padding: 3rem 0; }
+
+    .about-story {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .principle {
+        grid-template-columns: 60px 1fr;
+        gap: 2rem;
+        padding: 2rem 0;
+    }
+
+    .governance-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 1.5rem 0;
+    }
+
+    .team {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .about-hero { padding: 6rem 0 2.5rem; }
+    .about-section,
+    .about-section-tight { padding: 3rem 0; }
+
+    .about-prose p { font-size: 0.98rem; }
+
+    .principle {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 1.75rem 0;
+    }
+    .principle-number {
+        padding-top: 0;
+        font-size: 0.78rem;
+    }
+    .principle-title { font-size: 1.2rem; margin-bottom: 0.6rem; }
+    .principle-text { font-size: 0.95rem; }
+
+    .governance-row dt { font-size: 1rem; }
+    .governance-row dd { font-size: 0.9rem; }
+
+    .team-member {
+        grid-template-columns: 48px 1fr;
+        gap: 1rem;
+    }
+    .team-avatar { width: 48px; height: 48px; font-size: 1rem; }
+    .team-name { font-size: 1.02rem; }
+    .team-bio { font-size: 0.86rem; }
+}

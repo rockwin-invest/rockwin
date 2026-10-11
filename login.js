@@ -14,132 +14,143 @@
     const phoneInput = document.getElementById('phoneNumber');
     const passwordInput = document.getElementById('password');
 
+    // ---------- PASSWORD SHOW / HIDE ----------
+    document.querySelectorAll('.password-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const input = document.getElementById(btn.dataset.target);
+            if (!input) return;
+
+            const reveal = input.type === 'password';
+            input.type = reveal ? 'text' : 'password';
+            btn.classList.toggle('revealed', reveal);
+            btn.setAttribute('aria-pressed', String(reveal));
+            btn.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+        });
+    });
+
     // ---------- REAL-TIME VALIDATION ----------
-    phoneInput.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, '').slice(0, 9);
-        const error = document.getElementById('phoneError');
-        if (this.value.length > 0 && this.value.length !== 9) {
-            this.classList.add('error');
-            error.classList.add('visible');
-        } else {
-            this.classList.remove('error');
-            error.classList.remove('visible');
-        }
-    });
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 9);
+            const error = document.getElementById('phoneError');
+            if (this.value.length > 0 && this.value.length !== 9) {
+                this.classList.add('error');
+                error.classList.add('visible');
+            } else {
+                this.classList.remove('error');
+                error.classList.remove('visible');
+            }
+        });
 
-    phoneInput.addEventListener('blur', function() {
-        const error = document.getElementById('phoneError');
-        if (this.value.length > 0 && this.value.length !== 9) {
-            this.classList.add('error');
-            error.classList.add('visible');
-        }
-    });
+        phoneInput.addEventListener('blur', function() {
+            this.value = this.value.replace(/\s/g, '');
+            const error = document.getElementById('phoneError');
+            if (this.value.length > 0 && this.value.length !== 9) {
+                this.classList.add('error');
+                error.classList.add('visible');
+            }
+        });
+    }
 
-    passwordInput.addEventListener('blur', function() {
-        const error = document.getElementById('passwordError');
-        if (this.value.length === 0) {
-            this.classList.add('error');
-            error.classList.add('visible');
-        } else {
-            this.classList.remove('error');
-            error.classList.remove('visible');
-        }
-    });
+    if (passwordInput) {
+        passwordInput.addEventListener('blur', function() {
+            const error = document.getElementById('passwordError');
+            if (this.value.length === 0) {
+                this.classList.add('error');
+                error.classList.add('visible');
+            } else {
+                this.classList.remove('error');
+                error.classList.remove('visible');
+            }
+        });
 
-    passwordInput.addEventListener('input', function() {
-        const error = document.getElementById('passwordError');
-        if (this.value.length > 0) {
-            this.classList.remove('error');
-            error.classList.remove('visible');
-        }
-    });
+        passwordInput.addEventListener('input', function() {
+            const error = document.getElementById('passwordError');
+            if (this.value.length > 0) {
+                this.classList.remove('error');
+                error.classList.remove('visible');
+            }
+        });
+
+        // Enter key submits
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+    }
 
     // ---------- SHOW ALERT ----------
     function showAlert(message, type) {
+        if (!alertBox) return;
         alertBox.className = 'alert-box';
         alertBox.classList.add(type);
         alertBox.textContent = message;
         if (type === 'success') {
             clearTimeout(window.alertTimeout);
-            window.alertTimeout = setTimeout(() => {
+            window.alertTimeout = setTimeout(function() {
                 alertBox.className = 'alert-box';
             }, 5000);
         }
     }
 
     // ---------- FORM SUBMISSION ----------
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (alertBox) alertBox.className = 'alert-box';
 
-        alertBox.className = 'alert-box';
+            const phoneRaw = phoneInput.value.trim();
+            const phoneNumber = '+254' + phoneRaw.replace(/\s/g, '');
+            const password = passwordInput.value;
 
-        const phoneRaw = phoneInput.value.trim();
-        const phoneNumber = '+254' + phoneRaw.replace(/\s/g, '');
-        const password = passwordInput.value;
-
-        // ---- Validation ----
-        if (!phoneRaw || phoneRaw.length !== 9) {
-            document.getElementById('phoneError').classList.add('visible');
-            phoneInput.classList.add('error');
-            return;
-        }
-
-        if (!password || password.length < 1) {
-            document.getElementById('passwordError').classList.add('visible');
-            passwordInput.classList.add('error');
-            return;
-        }
-
-        // ---- Loading ----
-        submitBtn.disabled = true;
-        btnSpinner.style.display = 'block';
-        btnText.textContent = 'Verifying...';
-
-        const payload = { phoneNumber, password };
-
-        try {
-            const response = await fetch(`${API_BASE}/api/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // ✅ Store token for subsequent API calls
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                    // Store user info if needed
-                    if (data.user) {
-                        localStorage.setItem('user', JSON.stringify(data.user));
-                    }
-                }
-                showAlert('✅ Access authorized! Redirecting...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1200);
-            } else {
-                throw new Error(data.error || 'Invalid credentials. Please try again.');
+            if (!phoneRaw || phoneRaw.length !== 9) {
+                document.getElementById('phoneError').classList.add('visible');
+                phoneInput.classList.add('error');
+                return;
             }
-        } catch (err) {
-            showAlert(err.message || 'Unable to connect to server. Check your network.', 'error');
-            submitBtn.disabled = false;
-            btnSpinner.style.display = 'none';
-            btnText.textContent = 'Sign In';
-        }
-    });
 
-    // ---------- TRIM PHONE ON BLUR ----------
-    phoneInput.addEventListener('blur', function() {
-        this.value = this.value.replace(/\s/g, '');
-    });
+            if (!password || password.length < 1) {
+                document.getElementById('passwordError').classList.add('visible');
+                passwordInput.classList.add('error');
+                return;
+            }
 
-    // ---------- ENTER KEY SUPPORT ----------
-    passwordInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            form.dispatchEvent(new Event('submit'));
-        }
-    });
+            submitBtn.disabled = true;
+            btnSpinner.style.display = 'block';
+            btnText.textContent = 'Signing in…';
+
+            try {
+                const response = await fetch(API_BASE + '/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phoneNumber, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                        if (data.user) {
+                            localStorage.setItem('user', JSON.stringify(data.user));
+                        }
+                    }
+                    showAlert('Signed in. Redirecting…', 'success');
+                    setTimeout(function() {
+                        window.location.href = 'dashboard.html';
+                    }, 900);
+                } else {
+                    throw new Error(data.error || 'Invalid credentials. Please try again.');
+                }
+            } catch (err) {
+                showAlert(err.message || 'Unable to connect to server. Check your network.', 'error');
+                submitBtn.disabled = false;
+                btnSpinner.style.display = 'none';
+                btnText.textContent = 'Sign in';
+            }
+        });
+    }
 
 })();

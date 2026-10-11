@@ -3,1018 +3,426 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RockWin Investment · Grow Your Money, Effortlessly</title>
+    <title>RockWin Investment — A Money Market Fund for Kenya</title>
+    <meta name="description" content="RockWin Investment is a Kenyan money market fund. Deposit from KES 1,000, earn interest daily, redeem to M-PESA or your bank. No lock-in, no exit fees." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="index.css" />
-
-    <style>
-        /* ============================================================
-           RETURNS CALCULATOR — Additional styles (add to index.css if you prefer)
-           ============================================================ */
-        .calculator-section {
-            padding: 4rem 1.5rem 5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .calculator-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .calculator-header h2 {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 3vw, 2.6rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
-        }
-
-        .calculator-header p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .calculator-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-default);
-            padding: 2.5rem 2.5rem;
-            box-shadow: var(--shadow-card);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .calculator-input-side {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-        .calculator-input-side label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-secondary);
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-            display: block;
-        }
-
-        .calculator-input-side .amount-input-wrap {
-            position: relative;
-        }
-
-        .calculator-input-side .amount-input-wrap .currency-prefix {
-            position: absolute;
-            left: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 1rem;
-            pointer-events: none;
-        }
-
-        .calculator-input-side input[type="number"] {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3.5rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-default);
-            color: var(--text-primary);
-            font-size: 1.3rem;
-            font-family: var(--font-display);
-            font-weight: 700;
-            outline: none;
-            transition: all 0.25s ease;
-        }
-
-        .calculator-input-side input[type="number"]:focus {
-            border-color: var(--primary-container);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 0 3px rgba(0, 109, 50, 0.12);
-        }
-
-        .calculator-input-side input[type="range"] {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 2px;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            margin-top: 0.3rem;
-        }
-
-        .calculator-input-side input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-container));
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 109, 50, 0.4);
-        }
-
-        .calculator-input-side input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-container));
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 109, 50, 0.4);
-        }
-
-        .calculator-input-side .term-selector {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .calculator-input-side .term-selector button {
-            flex: 1;
-            padding: 0.6rem 0.8rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-default);
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 500;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .calculator-input-side .term-selector button:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text-primary);
-        }
-
-        .calculator-input-side .term-selector button.active {
-            background: rgba(0, 109, 50, 0.15);
-            border-color: var(--primary-container);
-            color: var(--primary-container);
-            font-weight: 600;
-        }
-
-        .calculator-result-side {
-            background: linear-gradient(145deg, #0b1a2e, #1a2d4a);
-            border-radius: var(--radius-default);
-            padding: 2rem 1.8rem;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .calculator-result-side::before {
-            content: '';
-            position: absolute;
-            top: -40%;
-            right: -20%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(ellipse, rgba(0, 109, 50, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .calculator-result-side .result-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
-        }
-
-        .calculator-result-side .result-value {
-            font-family: var(--font-display);
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.02em;
-            margin: 0.3rem 0 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .calculator-result-side .result-value .currency {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 500;
-        }
-
-        .calculator-result-side .result-earnings {
-            font-size: 0.85rem;
-            color: var(--accent-green);
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
-            margin-bottom: 1rem;
-        }
-
-        .calculator-result-side .result-breakdown {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.6);
-            position: relative;
-            z-index: 1;
-        }
-
-        .calculator-result-side .result-breakdown .item {
-            text-align: left;
-        }
-
-        .calculator-result-side .result-breakdown .item .label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 0.2rem;
-        }
-
-        .calculator-result-side .result-breakdown .item .value {
-            font-family: var(--font-display);
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .calculator-note {
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 1.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        /* ============================================================
-           TRUST BAR — CMA / Trustee / Auditor
-           ============================================================ */
-        .compliance-bar {
-            padding: 2rem 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            background: rgba(255, 255, 255, 0.01);
-        }
-
-        .compliance-bar .compliance-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .compliance-bar .compliance-item .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-        }
-
-        .compliance-bar .compliance-item .value {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .compliance-bar .compliance-item .sub {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 0.1rem;
-        }
-
-        /* ============================================================
-           YIELD BADGE IN HERO
-           ============================================================ */
-        .yield-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            background: linear-gradient(135deg, rgba(0, 109, 50, 0.15), rgba(0, 209, 102, 0.1));
-            border: 1px solid rgba(0, 209, 102, 0.25);
-            border-radius: var(--radius-full);
-            padding: 0.5rem 1.2rem;
-            margin-bottom: 1.2rem;
-            width: fit-content;
-        }
-
-        .yield-badge .pulse {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--primary-container);
-            animation: yieldPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes yieldPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.75); }
-        }
-
-        .yield-badge .yield-text {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary-container);
-            letter-spacing: 0.02em;
-        }
-
-        .yield-badge .yield-text strong {
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 700;
-            color: #4ade80;
-        }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 768px) {
-            .calculator-card {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                padding: 1.8rem 1.2rem;
-            }
-
-            .calculator-result-side .result-value {
-                font-size: 2rem;
-            }
-
-            .compliance-bar .compliance-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .compliance-bar .compliance-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .calculator-input-side .term-selector {
-                gap: 0.4rem;
-            }
-
-            .calculator-input-side .term-selector button {
-                font-size: 0.7rem;
-                padding: 0.5rem 0.5rem;
-            }
-        }
-    </style>
 </head>
 <body>
 
-    <!-- ====== GLASS NAV ====== -->
-    <nav class="glass-nav" id="glassNav" role="navigation">
-        <div class="brand">RockWin<span> Investment</span></div>
-        <div class="nav-links" id="navLinks">
+    <!-- ====== MASTHEAD ====== -->
+    <header class="masthead" id="masthead">
+        <div class="masthead-inner">
+            <a href="/" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+            </a>
+
+            <nav class="primary-nav" aria-label="Primary">
+                <a href="#how">How it works</a>
+                <a href="#calculator">Calculator</a>
+                <a href="#fees">Fees</a>
+                <a href="#faq">FAQ</a>
+                <a href="login.html" class="nav-signin">Sign in</a>
+                <a href="signup.html" class="nav-cta">Open an account</a>
+            </nav>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+            <a href="#how">How it works</a>
             <a href="#calculator">Calculator</a>
-            <a href="#features">Features</a>
-            <a href="#testimonials">Testimonials</a>
-            <a href="login.html">Sign In</a>
-            <button class="btn-nav-primary" onclick="window.location.href='signup.html'">Start Investing</button>
-        </div>
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </nav>
+            <a href="#fees">Fees</a>
+            <a href="#faq">FAQ</a>
+            <a href="login.html">Sign in</a>
+            <a href="signup.html" class="mobile-cta">Open an account</a>
+        </nav>
+    </header>
 
-    <!-- ====== HERO ====== -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
+    <main>
 
-            <!-- Left: Text -->
-            <div class="hero-text">
-                <div class="yield-badge">
-                    <span class="pulse"></span>
-                    <span class="yield-text">Current Yield: <strong>14.2% p.a.</strong></span>
-                </div>
-                <h1>
-                    Grow your money,<br />
-                    <span class="highlight">effortlessly.</span>
-                </h1>
-                <p>Invest from as little as KES 1,000, earn daily interest, and withdraw anytime. No lock‑in. No paperwork. No stress.</p>
-                <div class="hero-cta">
-                    <button class="btn-hero-primary" onclick="window.location.href='signup.html'">Start Investing in 3 Minutes</button>
-                    <button class="btn-hero-secondary" onclick="document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });">Calculate Returns</button>
-                </div>
-                <div class="trust-numbers">
-                    <div class="stat">
-                        <div class="value">KES 2.4B+</div>
-                        <div class="label">Assets Under Management</div>
+        <!-- ====== HERO ====== -->
+        <section class="hero">
+            <div class="shell hero-grid">
+
+                <div class="hero-copy">
+                    <div class="eyebrow">
+                        <span class="eyebrow-rule"></span>
+                        Money Market Fund · Kenya
                     </div>
-                    <div class="stat">
-                        <div class="value">18,000+</div>
-                        <div class="label">Active Investors</div>
+                    <h1 class="display">
+                        Save with intention.<br />
+                        Earn every day.
+                    </h1>
+                    <p class="lede">
+                        RockWin is a Kenyan money market fund for people who want a serious home for their savings. Deposit from KES 1,000. Interest posts daily. Redeem to M-PESA or your bank when you need it.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="signup.html" class="btn btn-primary">Open an account</a>
+                        <a href="#how" class="btn btn-ghost">See how it works</a>
                     </div>
-                    <div class="stat">
-                        <div class="value">14.2%</div>
-                        <div class="label">Effective Annual Yield</div>
-                    </div>
+                    <p class="hero-note">
+                        Regulated by the Capital Markets Authority · Assets held in trust at I&amp;M Bank
+                    </p>
                 </div>
-            </div>
 
-            <!-- Right: Phone Mockup (MMF version) -->
-            <div class="hero-mockup">
-                <div class="mockup-glow"></div>
+                <figure class="portfolio-card" aria-label="Illustrative portfolio growth">
+                    <div class="portfolio-card-head">
+                        <div class="portfolio-card-meta">
+                            <span class="meta-label">Portfolio value</span>
+                            <span class="meta-value">KES 254,320</span>
+                            <span class="meta-sub">Illustrative · 12 months</span>
+                        </div>
+                        <div class="portfolio-card-rate">
+                            <span class="rate-value">+14.2%</span>
+                            <span class="rate-label">p.a. · net of fees</span>
+                        </div>
+                    </div>
 
-                <!-- Floating elements -->
-                <div class="float-card" style="top:-10%;right:-15%;">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                    <svg class="portfolio-chart" viewBox="0 0 480 200" preserveAspectRatio="none" role="img" aria-labelledby="chartTitle">
+                        <title id="chartTitle">Illustrative growth of a KES 215,400 deposit over 12 months</title>
+
+                        <!-- Gridlines -->
+                        <line x1="40" y1="20"  x2="460" y2="20"  stroke="rgba(15,26,20,0.06)" stroke-width="1" />
+                        <line x1="40" y1="65"  x2="460" y2="65"  stroke="rgba(15,26,20,0.06)" stroke-width="1" />
+                        <line x1="40" y1="110" x2="460" y2="110" stroke="rgba(15,26,20,0.06)" stroke-width="1" />
+                        <line x1="40" y1="160" x2="460" y2="160" stroke="rgba(15,26,20,0.12)" stroke-width="1" />
+
+                        <!-- Y-axis labels -->
+                        <text x="34" y="24"  text-anchor="end" class="chart-label">260k</text>
+                        <text x="34" y="69"  text-anchor="end" class="chart-label">240k</text>
+                        <text x="34" y="114" text-anchor="end" class="chart-label">220k</text>
+                        <text x="34" y="164" text-anchor="end" class="chart-label">200k</text>
+
+                        <!-- Area fill -->
+                        <path d="M40,144.9 L78,138.2 L116,128.6 L154,121.1 L192,108.2 L230,99.2 L269,86.6 L307,75.7 L345,62.3 L384,52.8 L422,43.5 L460,35.9 L460,160 L40,160 Z"
+                              fill="rgba(27,67,50,0.06)" />
+
+                        <!-- Line -->
+                        <path d="M40,144.9 L78,138.2 L116,128.6 L154,121.1 L192,108.2 L230,99.2 L269,86.6 L307,75.7 L345,62.3 L384,52.8 L422,43.5 L460,35.9"
+                              fill="none" stroke="#1B4332" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round" />
+
+                        <!-- Latest point -->
+                        <circle cx="460" cy="35.9" r="4" fill="#1B4332" />
+                        <circle cx="460" cy="35.9" r="8" fill="none" stroke="#1B4332" stroke-width="1" opacity="0.3" />
                     </svg>
-                    <div class="value">+ KES 1,842</div>
-                    <div class="label">Interest Today</div>
-                </div>
-                <div class="float-card" style="bottom:-5%;left:-15%;">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                        <polyline points="17 6 23 6 23 12"/>
-                    </svg>
-                    <div class="value">+14.2%</div>
-                    <div class="label">Annual Yield</div>
-                </div>
 
-                <div class="mockup-frame">
-                    <!-- Floating notification -->
-                    <div class="mockup-notification">
-                        <span class="dot"></span>
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                            <polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
-                        <span>Interest credited · KES 1,842</span>
+                    <div class="portfolio-chart-axis">
+                        <span>Jan</span>
+                        <span>Apr</span>
+                        <span>Jul</span>
+                        <span>Oct</span>
+                        <span>Dec</span>
                     </div>
 
-                    <div class="mockup-screen">
+                    <figcaption class="portfolio-card-foot">
+                        Illustrative only. Actual returns depend on fund performance. Rate published 12 October 2026.
+                    </figcaption>
+                </figure>
 
-                        <!-- Status -->
-                        <div class="mockup-status">
-                            <span>9:41</span>
-                            <span>📶 📶</span>
-                        </div>
+            </div>
+        </section>
 
-                        <!-- Portfolio Card -->
-                        <div class="mockup-balance-card">
-                            <div class="label">Portfolio Value</div>
-                            <div class="amount">
-                                <span class="currency">KES</span> <span id="mockupBalance">254,320</span>
-                            </div>
-                            <div class="row">
-                                <span>2,483.5 units</span>
-                                <span style="color:var(--accent-green);">▲ 14.2%</span>
-                            </div>
-                        </div>
-
-                        <!-- Graph -->
-                        <div class="mockup-graph">
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                        </div>
-
-                        <!-- Account card -->
-                        <div class="mockup-card-item">
-                            <span class="card-brand">✦ RockWin</span>
-                            <span class="card-number">MMF · 0.10% mgmt fee</span>
-                            <span style="font-size:0.4rem;color:var(--text-muted);">CMA</span>
-                        </div>
-
-                        <!-- Quick Actions -->
-                        <div class="mockup-actions">
-                            <div class="action primary">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14"/>
-                                    <path d="M5 12h14"/>
-                                </svg>
-                                Deposit
-                            </div>
-                            <div class="action">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 19V5"/>
-                                    <path d="M19 12l-7-7-7 7"/>
-                                </svg>
-                                Redeem
-                            </div>
-                            <div class="action">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                                    <line x1="1" y1="10" x2="23" y2="10"/>
-                                </svg>
-                                Statement
-                            </div>
-                            <div class="action">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="5" r="1.5"/>
-                                    <circle cx="12" cy="12" r="1.5"/>
-                                    <circle cx="12" cy="19" r="1.5"/>
-                                </svg>
-                                More
-                            </div>
-                        </div>
-
-                        <!-- Recent Activity -->
-                        <div class="mockup-transactions">
-                            <div class="mockup-tx">
-                                <div class="left">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
-                                    </svg>
-                                    <span class="name">Interest Credit</span>
-                                    <span class="meta">Daily accrual</span>
-                                </div>
-                                <span class="amount positive">+ KES 1,842</span>
-                            </div>
-                            <div class="mockup-tx">
-                                <div class="left">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 5v14"/>
-                                        <path d="M5 12h14"/>
-                                    </svg>
-                                    <span class="name">M-PESA Deposit</span>
-                                    <span class="meta">Via Paybill</span>
-                                </div>
-                                <span class="amount positive">+ KES 50,000</span>
-                            </div>
-                            <div class="mockup-tx">
-                                <div class="left">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 19V5"/>
-                                        <path d="M19 12l-7-7-7 7"/>
-                                    </svg>
-                                    <span class="name">Redemption</span>
-                                    <span class="meta">To Bank</span>
-                                </div>
-                                <span class="amount negative">- KES 20,000</span>
-                            </div>
-                        </div>
-
-                        <!-- Bottom Navigation -->
-                        <div class="mockup-bottom-nav">
-                            <div class="nav-item active">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                                </svg>
-                                Home
-                            </div>
-                            <div class="nav-item">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14"/>
-                                    <path d="M5 12h14"/>
-                                </svg>
-                                Invest
-                            </div>
-                            <div class="nav-item">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 3v18h18"/>
-                                    <path d="M7 12l3-3 4 4 5-6"/>
-                                </svg>
-                                Portfolio
-                            </div>
-                            <div class="nav-item">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                                </svg>
-                                Alerts
-                            </div>
-                            <div class="nav-item">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                                Profile
-                            </div>
-                        </div>
-
-                        <div class="mockup-footer">RockWin Investment · CMA Regulated</div>
-                    </div>
+        <!-- ====== TRUST LINE ====== -->
+        <section class="trust">
+            <div class="shell trust-grid">
+                <div class="trust-item">
+                    <span class="trust-label">Regulated by</span>
+                    <span class="trust-value">Capital Markets Authority</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-label">Trustee &amp; custodian</span>
+                    <span class="trust-value">I&amp;M Bank Kenya</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-label">Independent auditor</span>
+                    <span class="trust-value">Deloitte</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-label">Withholding tax</span>
+                    <span class="trust-value">15% · remitted to KRA</span>
                 </div>
             </div>
+        </section>
 
-        </div>
-    </section>
+        <!-- ====== HOW IT WORKS ====== -->
+        <section class="section" id="how">
+            <div class="shell">
+                <header class="section-head">
+                    <span class="section-eyebrow">How it works</span>
+                    <h2 class="section-title">Three steps. No paperwork.</h2>
+                </header>
 
-    <!-- ====== COMPLIANCE / TRUST BAR ====== -->
-    <section class="compliance-bar">
-        <div class="compliance-grid">
-            <div class="compliance-item">
-                <div class="label">Regulated By</div>
-                <div class="value">CMA Kenya</div>
-                <div class="sub">Capital Markets Authority</div>
+                <ol class="steps">
+                    <li class="step">
+                        <span class="step-number">01</span>
+                        <h3 class="step-title">Open your account</h3>
+                        <p class="step-body">Provide your ID, phone number and next of kin. Verification typically completes the same day.</p>
+                    </li>
+                    <li class="step">
+                        <span class="step-number">02</span>
+                        <h3 class="step-title">Deposit from KES 1,000</h3>
+                        <p class="step-body">Fund your account by M-PESA, bank transfer, or card. Units are credited at the current daily net asset value.</p>
+                    </li>
+                    <li class="step">
+                        <span class="step-number">03</span>
+                        <h3 class="step-title">Earn interest daily</h3>
+                        <p class="step-body">Interest is calculated on your closing balance every day and credited to your portfolio the following morning.</p>
+                    </li>
+                </ol>
             </div>
-            <div class="compliance-item">
-                <div class="label">Trustee & Custodian</div>
-                <div class="value">I&M Bank</div>
-                <div class="sub">Assets held in trust</div>
-            </div>
-            <div class="compliance-item">
-                <div class="label">Independent Auditor</div>
-                <div class="value">Deloitte</div>
-                <div class="sub">Annual financial audit</div>
-            </div>
-            <div class="compliance-item">
-                <div class="label">Withholding Tax</div>
-                <div class="value">15%</div>
-                <div class="sub">On interest earned · KRA compliant</div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ====== RETURNS CALCULATOR ====== -->
-    <section class="calculator-section" id="calculator">
-        <div class="calculator-header">
-            <h2>See how much you could earn</h2>
-            <p>Enter an amount and choose a period to see your projected returns at our current yield of <strong style="color:var(--primary-container);">14.2% p.a.</strong></p>
-        </div>
+        <!-- ====== CALCULATOR ====== -->
+        <section class="section section-dark" id="calculator">
+            <div class="shell">
+                <header class="section-head section-head-dark">
+                    <span class="section-eyebrow">Returns calculator</span>
+                    <h2 class="section-title">See what your money could earn.</h2>
+                    <p class="section-sub">Based on the current effective annual yield of 14.2%, compounded daily, less 15% withholding tax.</p>
+                </header>
 
-        <div class="calculator-card">
-            <!-- Input side -->
-            <div class="calculator-input-side">
-                <div>
-                    <label for="calcAmount">Amount to invest (KES)</label>
-                    <div class="amount-input-wrap">
-                        <span class="currency-prefix">KES</span>
-                        <input type="number" id="calcAmount" value="50000" min="1000" step="1000" />
-                    </div>
-                    <input type="range" id="calcAmountSlider" min="1000" max="1000000" step="1000" value="50000" />
-                </div>
-
-                <div>
-                    <label>Investment period</label>
-                    <div class="term-selector" id="termSelector">
-                        <button data-months="3">3 months</button>
-                        <button data-months="6">6 months</button>
-                        <button data-months="12" class="active">12 months</button>
-                        <button data-months="24">24 months</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Result side -->
-            <div class="calculator-result-side">
-                <div class="result-label">You could earn</div>
-                <div class="result-value">
-                    <span class="currency">KES</span> <span id="calcEarnings">7,100</span>
-                </div>
-                <div class="result-earnings">in interest over 12 months</div>
-                <div class="result-breakdown">
-                    <div class="item">
-                        <div class="label">Initial Investment</div>
-                        <div class="value" id="calcInitial">KES 50,000</div>
-                    </div>
-                    <div class="item" style="text-align:right;">
-                        <div class="label">Total Value</div>
-                        <div class="value" id="calcTotal">KES 57,100</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <p class="calculator-note">
-            Calculations are estimates based on the current effective annual yield of 14.2% p.a. Actual returns may vary based on market conditions, fund performance, and the compounding frequency applied by the fund manager. Interest is subject to a 15% withholding tax as required by KRA.
-        </p>
-    </section>
-
-    <!-- ====== LOGO CLOUD ====== -->
-    <section class="logo-cloud">
-        <div class="container">
-            <div class="sub">Payments and partners you already use</div>
-            <div class="logos">
-                <span>M‑PESA</span>
-                <span>Safaricom</span>
-                <span>I&M Bank</span>
-                <span>Deloitte</span>
-                <span>Visa</span>
-                <span>Mastercard</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====== FEATURE STORIES ====== -->
-    <section class="feature-stories" id="features">
-        <div class="container">
-
-            <!-- Feature 1 -->
-            <div class="feature-story reveal">
-                <div class="visual">
-                    <div class="img-placeholder">
-                        <div class="mini-mockup">
-                            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
-                                <div class="bar" style="width:40%;"></div>
-                                <div class="bar" style="width:20%;"></div>
+                <div class="calc">
+                    <div class="calc-inputs">
+                        <div class="calc-field">
+                            <label for="calcAmount">Amount to invest</label>
+                            <div class="amount-wrap">
+                                <span class="amount-prefix">KES</span>
+                                <input type="number" id="calcAmount" value="100000" min="1000" step="1000" inputmode="numeric" />
                             </div>
-                            <div style="background:rgba(255,255,255,0.03);border-radius:0.4rem;padding:0.4rem;border:1px solid rgba(255,255,255,0.03);">
-                                <div class="bar green" style="width:70%;"></div>
-                                <div style="display:flex;gap:0.3rem;margin-top:0.3rem;">
-                                    <div class="bar" style="width:30%;"></div>
-                                    <div class="bar" style="width:40%;"></div>
-                                </div>
+                            <input type="range" id="calcSlider" min="1000" max="2000000" step="1000" value="100000" aria-label="Amount slider" />
+                            <div class="range-marks">
+                                <span>1k</span><span>500k</span><span>1M</span><span>2M</span>
                             </div>
-                            <div style="margin-top:0.3rem;display:flex;flex-direction:column;gap:0.15rem;">
-                                <div class="row"><span>Interest Today</span><span style="color:var(--accent-green);">+KES 42</span></div>
-                                <div class="row"><span>Interest YTD</span><span style="color:var(--accent-green);">+KES 8,742</span></div>
+                        </div>
+
+                        <div class="calc-field">
+                            <label>Investment period</label>
+                            <div class="term-selector" role="group" aria-label="Investment period">
+                                <button type="button" data-months="3">3 months</button>
+                                <button type="button" data-months="6">6 months</button>
+                                <button type="button" data-months="12" class="active">12 months</button>
+                                <button type="button" data-months="24">24 months</button>
+                                <button type="button" data-months="36">36 months</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="text">
-                    <span class="tag">Earn daily</span>
-                    <h2>Watch your money grow every day</h2>
-                    <p>Interest accrues daily and compounds monthly. Log in anytime to see exactly how much you've earned — down to the shilling.</p>
-                    <a href="#" class="learn-more">Learn more →</a>
-                </div>
-            </div>
 
-            <!-- Feature 2 (reverse) -->
-            <div class="feature-story reverse reveal delay-1">
-                <div class="visual">
-                    <div class="img-placeholder">
-                        <div class="mini-mockup" style="align-items:center;justify-content:center;padding:1rem;">
-                            <div style="display:flex;gap:0.5rem;width:100%;">
-                                <div class="bar" style="width:40%;"></div>
-                                <div class="bar green" style="width:50%;"></div>
-                            </div>
-                            <div style="display:flex;gap:0.5rem;width:100%;margin-top:0.3rem;">
-                                <div class="bar" style="width:60%;"></div>
-                                <div class="bar" style="width:30%;"></div>
-                            </div>
-                            <div style="margin-top:0.5rem;background:rgba(0,109,50,0.1);border-radius:0.4rem;padding:0.3rem 0.6rem;border:1px solid rgba(0,109,50,0.1);color:var(--accent-green);font-size:0.5rem;font-weight:600;">✓ Redemption processed in 24 hrs</div>
+                    <div class="calc-output">
+                        <div class="output-row">
+                            <span class="output-label">Interest earned</span>
+                            <span class="output-value" id="calcInterest">KES 15,303</span>
                         </div>
+                        <div class="output-row output-row-sub">
+                            <span class="output-label">Less withholding tax (15%)</span>
+                            <span class="output-value-sub" id="calcTax">− KES 2,295</span>
+                        </div>
+                        <div class="output-divider"></div>
+                        <div class="output-row output-row-total">
+                            <span class="output-label">You take home</span>
+                            <span class="output-value-total" id="calcNet">KES 12,008</span>
+                        </div>
+                        <div class="output-row">
+                            <span class="output-label">Total value</span>
+                            <span class="output-value-sub" id="calcTotal">KES 112,008</span>
+                        </div>
+
+                        <p class="output-note">
+                            Estimates only. Assumes daily compounding at 14.2% p.a. and does not account for management fees. Past performance is not a guarantee of future returns.
+                        </p>
                     </div>
                 </div>
-                <div class="text">
-                    <span class="tag">Withdraw anytime</span>
-                    <h2>Your money, when you need it</h2>
-                    <p>No lock‑in periods. No penalties. Redeem to M‑PESA or your bank account in as fast as 24 hours, any day of the week.</p>
-                    <a href="#" class="learn-more">Learn more →</a>
+            </div>
+        </section>
+
+        <!-- ====== INSIDE YOUR PORTFOLIO ====== -->
+        <!-- ====== INSIDE YOUR PORTFOLIO ====== -->
+<!-- ====== INSIDE YOUR PORTFOLIO ====== -->
+<section class="section">
+    <div class="shell">
+        <header class="section-head">
+            <span class="section-eyebrow">Inside the account</span>
+            <h2 class="section-title">A portfolio you can actually read.</h2>
+            <p class="section-sub">Every deposit, every interest credit, every redemption — logged and dated, in a dashboard that updates the moment your money moves.</p>
+        </header>
+
+        <figure class="product-shot">
+            <img
+                src="https://images.unsplash.com/photo-1534951009808-766178b47a4f?q=80&w=1800&auto=format&fit=crop"
+                alt="Illustrative image — actual RockWin portfolio interface coming soon."
+                loading="lazy"
+                decoding="async" />
+           <!--   <figcaption class="product-shot-caption">
+                Illustrative image. Actual product interface coming soon.
+            </figcaption>-->
+        </figure>
+    </div>
+</section>
+
+        <!-- ====== FEES & TAX ====== -->
+        <section class="section section-tight" id="fees">
+            <div class="shell">
+                <header class="section-head">
+                    <span class="section-eyebrow">Fees &amp; tax</span>
+                    <h2 class="section-title">What you pay, in plain numbers.</h2>
+                </header>
+
+                <table class="fees-table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Account opening</th>
+                            <td class="align-right">Free</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Deposits (M-PESA, bank, card)</th>
+                            <td class="align-right">Free</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Management fee</th>
+                            <td class="align-right">1.5% p.a. of assets</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Redemptions</th>
+                            <td class="align-right">Free</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Withholding tax on interest</th>
+                            <td class="align-right">15% · remitted to KRA</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ====== FAQ ====== -->
+        <section class="section" id="faq">
+            <div class="shell">
+                <header class="section-head">
+                    <span class="section-eyebrow">Questions</span>
+                    <h2 class="section-title">Things people ask before they open an account.</h2>
+                </header>
+
+                <div class="faq">
+                    <details class="faq-item">
+                        <summary>What is a money market fund?</summary>
+                        <div class="faq-body">
+                            <p>A money market fund is a collective investment scheme that pools money from many investors and invests it in short-term, low-risk instruments such as treasury bills, fixed deposits and commercial paper. Because the underlying holdings are short-term and high-quality, money market funds are designed to preserve capital while paying a competitive yield.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>How is my interest calculated?</summary>
+                        <div class="faq-body">
+                            <p>Interest accrues on your closing balance every day, based on the fund's current yield. Each morning, the previous day's interest is credited to your portfolio by increasing your unit count at the current net asset value. Because interest is credited as units, it compounds automatically.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>How long does a redemption take?</summary>
+                        <div class="faq-body">
+                            <p>Redemption requests are processed on each business day. M-PESA and bank transfers typically complete within 24 hours. Larger redemptions may take up to 48 hours depending on the settlement window of the underlying instruments.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>Is there a minimum investment or lock-in period?</summary>
+                        <div class="faq-body">
+                            <p>Minimum investment is KES 1,000. There is no lock-in period and no exit penalty. You can redeem any portion of your balance at any time.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>How safe is my money?</summary>
+                        <div class="faq-body">
+                            <p>RockWin is regulated by the Capital Markets Authority. Assets are held in trust by I&amp;M Bank, separate from RockWin's own balance sheet. The fund is independently audited by Deloitte. Money market funds are not guaranteed, but they are designed to be among the lowest-risk collective investment schemes available in Kenya.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>What documents do I need to open an account?</summary>
+                        <div class="faq-body">
+                            <p>You need a valid Kenyan national ID or passport, your M-PESA phone number, an email address and the name, phone number and relationship of your next of kin. The entire process takes about three minutes online.</p>
+                        </div>
+                    </details>
                 </div>
             </div>
+        </section>
 
-            <!-- Feature 3 -->
-            <div class="feature-story reveal delay-2">
-                <div class="visual">
-                    <div class="img-placeholder">
-                        <div class="mini-mockup" style="align-items:center;justify-content:center;padding:1rem;gap:0.3rem;">
-                            <div style="display:flex;gap:0.5rem;width:100%;">
-                                <div class="bar" style="width:30%;"></div>
-                                <div class="bar" style="width:45%;"></div>
-                                <div class="bar" style="width:15%;"></div>
-                            </div>
-                            <div style="background:rgba(255,255,255,0.02);border-radius:0.4rem;padding:0.4rem;width:100%;border:1px solid rgba(255,255,255,0.03);">
-                                <div style="display:flex;justify-content:space-between;font-size:0.4rem;color:var(--text-muted);"><span>Security</span><span>🔒</span></div>
-                                <div style="display:flex;gap:0.3rem;margin-top:0.15rem;">
-                                    <div class="bar green" style="width:100%;height:3px;"></div>
-                                </div>
-                                <div style="display:flex;justify-content:space-between;font-size:0.35rem;color:var(--text-muted);margin-top:0.15rem;">
-                                    <span>CMA Regulated</span>
-                                    <span>I&M Trustee</span>
-                                </div>
-                            </div>
-                            <div style="font-size:0.4rem;color:var(--text-muted);text-align:center;">🔐 Audited by Deloitte</div>
-                        </div>
+        <!-- ====== FINAL CTA ====== -->
+        <section class="final">
+            <div class="shell final-inner">
+                <h2 class="display-final">The rest of this page is about money.<br />Take five minutes.</h2>
+                <div class="final-actions">
+                    <a href="signup.html" class="btn btn-primary">Open an account</a>
+                    <a href="login.html" class="final-signin">Already have an account? Sign in →</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="site-footer">
+        <div class="shell">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+                    <p class="footer-blurb">A Kenyan money market fund. Licensed by the Capital Markets Authority, assets held in trust at I&amp;M Bank, independently audited by Deloitte.</p>
+                </div>
+
+                <div class="footer-cols">
+                    <div class="footer-col">
+                        <h4>Invest</h4>
+                        <ul>
+                            <li><a href="#calculator">Returns calculator</a></li>
+                            <li><a href="signup.html">Open an account</a></li>
+                            <li><a href="fund-factsheet.html">Fund factsheet</a></li>
+                            <li><a href="#">Information memorandum</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="#">Our team</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="terms.html">Terms of service</a></li>
+                            <li><a href="privacy.html">Privacy policy</a></li>
+                            <li><a href="#">CMA license</a></li>
+                            <li><a href="#">Trust deed</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#faq">FAQs</a></li>
+                            <li><a href="mailto:support@rockwin.co.ke">support@rockwin.co.ke</a></li>
+                            <li><a href="tel:+254700123456">+254 700 123 456</a></li>
+                        </ul>
                     </div>
                 </div>
-                <div class="text">
-                    <span class="tag">Trust & transparency</span>
-                    <h2>Regulated, audited, and secured</h2>
-                    <p>Licensed by the Capital Markets Authority. Assets held in trust by I&M Bank. Independently audited by Deloitte every year.</p>
-                    <a href="#" class="learn-more">Learn more →</a>
-                </div>
             </div>
 
-        </div>
-    </section>
-
-    <!-- ====== TESTIMONIALS ====== -->
-    <section class="testimonials" id="testimonials">
-        <div class="container">
-            <h2>What our investors say</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial reveal delay-1">
-                    <div class="avatar">GM</div>
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"I started with KES 5,000 and now my emergency fund is earning more than my savings account ever did. The daily interest notifications are addictive."</blockquote>
-                    <div class="name">Grace M.</div>
-                    <div class="role">Business Owner, Nairobi</div>
-                </div>
-                <div class="testimonial reveal delay-2">
-                    <div class="avatar">JO</div>
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"I love that I can redeem to M‑PESA whenever I need cash. No waiting for a fixed term to end. RockWin has become my go‑to place to park money."</blockquote>
-                    <div class="name">James O.</div>
-                    <div class="role">Freelancer, Mombasa</div>
-                </div>
-                <div class="testimonial reveal delay-3">
-                    <div class="avatar">SK</div>
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"Knowing my funds are held in trust by I&M and audited by Deloitte gives me total peace of mind. I've been recommending RockWin to everyone."</blockquote>
-                    <div class="name">Sarah K.</div>
-                    <div class="role">Teacher, Kisumu</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====== SECURITY (Minimal) ====== -->
-    <section class="security-mini" id="security">
-        <div class="container">
-            <h2>Your money, protected</h2>
-            <p class="sub">Real safeguards, not marketing promises.</p>
-            <div class="security-mini-grid">
-                <div class="security-mini-item reveal delay-1">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        <path d="M9 12l2 2 4-4"/>
-                    </svg>
-                    <h4>CMA Licensed</h4>
-                    <p>Regulated by Kenya's Capital Markets Authority</p>
-                </div>
-                <div class="security-mini-item reveal delay-2">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 21h18"/>
-                        <path d="M5 21V7l8-4v18"/>
-                        <path d="M19 21V11l-6-4"/>
-                        <path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/>
-                    </svg>
-                    <h4>I&M Trustee</h4>
-                    <p>Assets held in trust, separate from RockWin</p>
-                </div>
-                <div class="security-mini-item reveal delay-3">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                        <polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                    <h4>Deloitte Audited</h4>
-                    <p>Annual independent financial audits</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====== FINAL CTA ====== -->
-    <section class="final-cta">
-        <div class="container">
-            <h2>Ready to make your money work?</h2>
-            <p>Open your RockWin Investment account today — it's free, fast, and takes under 3 minutes.</p>
-            <button class="btn-hero-primary" onclick="window.location.href='signup.html'">Start Investing in 3 Minutes</button>
-            <span class="sign-in-link">Already have an account? <a href="login.html">Sign in</a></span>
-        </div>
-    </section>
-
-    <!-- ====== FOOTER (Richer, multi-column) ====== -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="col">
-                    <div class="brand">RockWin<span> Investment</span></div>
-                    <p>Grow your money effortlessly. Licensed money market fund regulated by the Capital Markets Authority.</p>
-                </div>
-                <div class="col">
-                    <h4>Invest</h4>
-                    <ul>
-                        <li><a href="#calculator">Returns Calculator</a></li>
-                        <li><a href="signup.html">Open Account</a></li>
-                        <li><a href="#">Fund Factsheet</a></li>
-                        <li><a href="#">Information Memorandum</a></li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <h4>Legal & Compliance</h4>
-                    <ul>
-                        <li><a href="#">CMA License</a></li>
-                        <li><a href="#">Trust Deed</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Help Centre</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Status</a></li>
-                        <li><a href="#">FAQs</a></li>
-                    </ul>
-                </div>
-            </div>
             <div class="footer-bottom">
-                <span>&copy; 2026 RockWin Investment. All rights reserved. · CMA Licensed · I&M Trustee · Deloitte Audited</span>
-                <div class="socials">
-                    <a href="#" aria-label="Twitter">𝕏</a>
-                    <a href="#" aria-label="LinkedIn">in</a>
-                    <a href="#" aria-label="Facebook">f</a>
-                    <a href="#" aria-label="Instagram">ig</a>
-                </div>
+                <span>&copy; 2026 RockWin Investment. All rights reserved.</span>
+                <span>CMA-licensed money market fund · [License No.] · Assets held in trust at I&amp;M Bank</span>
             </div>
         </div>
     </footer>
 
-    <!-- ====== JAVASCRIPT ====== -->
     <script src="index.js"></script>
-
-    <!-- Returns Calculator Logic -->
-    <script>
-        (function() {
-            'use strict';
-
-            const ANNUAL_YIELD = 0.142; // 14.2%
-
-            const amountInput = document.getElementById('calcAmount');
-            const amountSlider = document.getElementById('calcAmountSlider');
-            const earningsEl = document.getElementById('calcEarnings');
-            const initialEl = document.getElementById('calcInitial');
-            const totalEl = document.getElementById('calcTotal');
-            const termButtons = document.querySelectorAll('#termSelector button');
-
-            let selectedMonths = 12;
-
-            function formatKES(num) {
-                return num.toLocaleString('en-KE', { maximumFractionDigits: 0 });
-            }
-
-            function calculate() {
-                const principal = parseFloat(amountInput.value) || 0;
-                const years = selectedMonths / 12;
-
-                // Simple interest approximation (compounding in real MMFs happens daily)
-                const interest = principal * ANNUAL_YIELD * years;
-                const total = principal + interest;
-
-                earningsEl.textContent = formatKES(interest);
-                initialEl.textContent = 'KES ' + formatKES(principal);
-                totalEl.textContent = 'KES ' + formatKES(total);
-            }
-
-            // Amount input
-            amountInput.addEventListener('input', function() {
-                const val = Math.max(1000, Math.min(1000000, parseFloat(this.value) || 0));
-                amountSlider.value = val;
-                calculate();
-            });
-
-            // Slider input
-            amountSlider.addEventListener('input', function() {
-                amountInput.value = this.value;
-                calculate();
-            });
-
-            // Term buttons
-            termButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    termButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedMonths = parseInt(this.dataset.months);
-                    calculate();
-                });
-            });
-
-            // Initial calculation
-            calculate();
-
-        })();
-    </script>
-
 </body>
 </html>

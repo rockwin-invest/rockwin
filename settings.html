@@ -2,667 +2,405 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Account · RockWin Investment</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="dashboard.css" />
-
-    <style>
-        /* Toggle switch */
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            flex-shrink: 0;
-            cursor: pointer;
-            display: inline-block;
-        }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
-        .toggle-slider {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 9999px; transition: all 0.3s ease;
-        }
-        .toggle-slider::before {
-            content: ''; position: absolute;
-            height: 18px; width: 18px; left: 3px; bottom: 3px;
-            background: #fff; border-radius: 50%;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .toggle-switch input:checked + .toggle-slider {
-            background: linear-gradient(135deg, var(--primary), var(--primary-container));
-        }
-        .toggle-switch input:checked + .toggle-slider::before {
-            transform: translateX(20px);
-        }
-
-        /* Settings sections */
-        .settings-section { margin-bottom: 1.5rem; }
-        .settings-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.9rem 0;
-            border-bottom: 1px solid var(--border-subtle);
-            gap: 1rem;
-        }
-        .settings-row:last-child { border-bottom: none; }
-        .settings-row .info { flex: 1; min-width: 0; }
-        .settings-row .info .name {
-            font-weight: 500;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-        .settings-row .info .meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.1rem;
-            line-height: 1.5;
-        }
-        .settings-row .control {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            flex-shrink: 0;
-        }
-        .settings-row .control .status-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            min-width: 2rem;
-            text-align: right;
-        }
-        .settings-row .control .status-label.on { color: var(--accent-green); }
-
-        /* Form input for profile */
-        .profile-form-group { margin-bottom: 1rem; }
-        .profile-form-group label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-muted);
-            font-weight: 600;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        .profile-form-group input,
-        .profile-form-group select {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-default);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.25s ease;
-        }
-        .profile-form-group input:focus,
-        .profile-form-group select:focus {
-            border-color: var(--primary-container);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 0 3px rgba(0, 109, 50, 0.12);
-        }
-        .profile-form-group input:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Compliance badge */
-        .compliance-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.65rem;
-            font-weight: 600;
-            padding: 0.15rem 0.6rem;
-            border-radius: var(--radius-full);
-            background: rgba(46, 204, 113, 0.1);
-            color: var(--accent-green);
-            border: 1px solid rgba(46, 204, 113, 0.2);
-            margin-left: 0.5rem;
-        }
-
-        /* Info notes */
-        .kra-note,
-        .compliance-note {
-            background: rgba(251, 191, 36, 0.06);
-            border: 1px solid rgba(251, 191, 36, 0.15);
-            border-radius: var(--radius-default);
-            padding: 0.8rem 1rem;
-            margin-top: 0.8rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.6rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-        .compliance-note {
-            background: rgba(0, 109, 50, 0.06);
-            border-color: rgba(0, 209, 102, 0.15);
-        }
-        .kra-note .icon, .compliance-note .icon {
-            width: 18px; height: 18px;
-            flex-shrink: 0;
-            margin-top: 0.1rem;
-        }
-        .kra-note .icon { color: #fbbf24; }
-        .compliance-note .icon { color: var(--primary-container); }
-        .kra-note strong, .compliance-note strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        /* Next of Kin card */
-        .nok-card {
-            background: rgba(139, 92, 246, 0.05);
-            border: 1px solid rgba(139, 92, 246, 0.15);
-            border-radius: var(--radius-default);
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
-        }
-        .nok-card .nok-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.6rem;
-        }
-        .nok-card .nok-header .icon {
-            width: 20px; height: 20px;
-            color: var(--admin-accent);
-        }
-        .nok-card .nok-header .title {
-            font-family: var(--font-display);
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .nok-card .nok-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.35rem 0;
-            font-size: 0.85rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .nok-card .nok-row:last-child { border-bottom: none; }
-        .nok-card .nok-row .label { color: var(--text-muted); }
-        .nok-card .nok-row .value { color: var(--text-primary); font-weight: 500; }
-
-        /* Save button */
-        .btn-save {
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            width: 100%;
-            margin-top: 0.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
-            border: none;
-            border-radius: var(--radius-default);
-            color: #fff;
-            font-weight: 600;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 109, 50, 0.2);
-        }
-        .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 109, 50, 0.3);
-        }
-        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        /* Smaller save for password */
-        .btn-save-sm {
-            padding: 0.8rem 2rem;
-            font-size: 0.95rem;
-            width: 100%;
-            margin-top: 0.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
-            border: none;
-            border-radius: var(--radius-default);
-            color: #fff;
-            font-weight: 600;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-save-sm:hover { transform: translateY(-2px); }
-        .btn-save-sm:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    </style>
+    <link rel="stylesheet" href="settings.css" />
 </head>
 <body>
 
-    <!-- ====== SIDEBAR (2 links only) ====== -->
-    <aside class="sidebar" id="sidebar">
-        <div class="brand">RockWin<span> Investment</span></div>
-        <nav>
-            <a href="dashboard.html">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-                Portfolio
+    <div class="app-layout">
+
+        <!-- ====== SIDEBAR ====== -->
+        <aside class="sidebar">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
             </a>
-            <a href="settings.html" class="active">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-                Account
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <button class="btn-logout" onclick="handleLogout()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+            <nav class="sidebar-nav" aria-label="Main">
+                <a href="dashboard.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Portfolio
+                </a>
+                <a href="settings.html" class="active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Account
+                </a>
+            </nav>
+
+            <button class="sidebar-logout" onclick="handleLogout()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
-                Logout
+                Sign out
             </button>
-        </div>
-    </aside>
+        </aside>
 
-    <!-- ====== MAIN CONTENT ====== -->
-    <main class="main-content">
+        <!-- ====== MAIN ====== -->
+        <main class="app-main">
 
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="greeting">
-                👋 Good Morning, <span id="userFirstName">...</span>
-                <span class="last-login">Last login: Today, <span id="lastLoginTime">--:--</span></span>
-            </div>
-            <div class="actions">
-                <button class="btn-icon" id="searchBtn" aria-label="Search">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                    </svg>
-                </button>
-                <button class="btn-icon" id="notifBtn" aria-label="Notifications">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                    </svg>
-                    <span class="badge" id="notifBadge" style="display:none;">0</span>
-                </button>
-                <div class="avatar" id="userAvatar">..</div>
-            </div>
-        </header>
+            <!-- Page header -->
+            <header class="page-header">
+                <div class="greeting">
+                    <span id="greetingText">Good morning</span>, <span id="userFirstName">…</span>
+                </div>
+                <div class="page-header-actions">
+                    <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                        </svg>
+                        <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+                    </button>
+                    <div class="avatar" id="userAvatar">..</div>
+                </div>
+            </header>
 
-        <!-- Account Page -->
-        <h1 style="font-family:var(--font-display); font-size:1.8rem; font-weight:700; margin-bottom:1.5rem;">Account</h1>
-
-        <!-- Profile Card -->
-        <div class="balance-hero" style="background: linear-gradient(145deg, #0b1a2e, #1a2d4a); margin-bottom:1.5rem; text-align:center;">
-            <div style="margin:0 auto 0.8rem;">
-                <div id="profileAvatar" style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--primary-container)); display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; color:#fff; margin:0 auto; font-family:var(--font-display);">..</div>
-            </div>
-            <div id="profileFullName" style="font-family:var(--font-display); font-size:1.4rem; font-weight:700; color:#fff;">Loading...</div>
-            <p id="profileMemberSince" style="color:rgba(255,255,255,0.5); font-size:0.9rem;">Investor since —</p>
-            <div style="margin-top:0.8rem; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
-                <span id="profileKycBadge" style="background:rgba(46,204,113,0.15); padding:0.2rem 0.8rem; border-radius:var(--radius-full); font-size:0.7rem; color:var(--accent-green); border:1px solid rgba(46,204,113,0.2);">● Loading</span>
-                <span id="profileAccountBadge" style="background:rgba(255,255,255,0.05); padding:0.2rem 0.8rem; border-radius:var(--radius-full); font-size:0.7rem; color:var(--text-muted); border:1px solid rgba(255,255,255,0.06);">Account: RW-—</span>
-            </div>
-        </div>
-
-        <div class="dashboard-grid">
-
-            <!-- ====== LEFT COLUMN ====== -->
-            <div class="left-col">
-
-                <!-- Personal Information -->
-                <div class="transactions-section settings-section">
-                    <div class="header">
-                        <h3>👤 Personal Information</h3>
+            <!-- Profile banner -->
+            <section class="profile-banner">
+                <div class="profile-avatar" id="profileAvatar">..</div>
+                <div class="profile-info">
+                    <h1 class="profile-name" id="profileFullName">Loading…</h1>
+                    <div class="profile-meta">
+                        <span id="profileMemberSince">Investor since —</span>
+                        <span class="profile-meta-dot">·</span>
+                        <span id="profileAccountBadge">Account: RW-—</span>
                     </div>
-                    <div style="padding:0.5rem 0;">
-                        <div class="profile-form-group">
-                            <label>Full Legal Name</label>
-                            <input type="text" id="settingsFullName" placeholder="Loading..." />
-                        </div>
-                        <div class="profile-form-group">
-                            <label>Phone Number</label>
-                            <input type="tel" id="settingsPhone" placeholder="Loading..." />
-                        </div>
-                        <div class="profile-form-group">
-                            <label>Email Address</label>
-                            <input type="email" id="settingsEmail" placeholder="Loading..." />
-                        </div>
-                        <div class="profile-form-group">
-                            <label>Date of Birth</label>
-                            <input type="date" id="settingsDob" disabled />
-                        </div>
-                        <button class="btn-save" onclick="saveProfile()">Save Changes</button>
-
-                        <div class="compliance-note">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-                            </svg>
-                            <span>Your ID number and date of birth cannot be changed online. Visit any RockWin office with your original documents for <strong>CMA compliance verification</strong>.</span>
-                        </div>
+                    <div class="profile-badges">
+                        <span class="badge-status" id="profileKycBadge">Loading</span>
                     </div>
                 </div>
+            </section>
 
-                <!-- Next of Kin -->
-                <div class="transactions-section settings-section">
-                    <div class="header">
-                        <h3>👨‍👩‍👧 Next of Kin</h3>
-                        <span style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; font-weight:600;">CMA Required</span>
-                    </div>
-                    <div style="padding:0.5rem 0;">
-                        <div class="nok-card">
-                            <div class="nok-header">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                                <div class="title">Primary Beneficiary</div>
-                            </div>
-                            <div class="nok-row">
-                                <span class="label">Full Name</span>
-                                <span class="value" id="nokName">Loading...</span>
-                            </div>
-                            <div class="nok-row">
-                                <span class="label">Phone Number</span>
-                                <span class="value" id="nokPhone">Loading...</span>
-                            </div>
-                            <div class="nok-row">
-                                <span class="label">Relationship</span>
-                                <span class="value" id="nokRelationship">Loading...</span>
+            <!-- Settings grid -->
+            <div class="settings-grid">
+
+                <!-- ====== LEFT COLUMN ====== -->
+                <div class="settings-col-main">
+
+                    <!-- Personal Information -->
+                    <section class="settings-card">
+                        <header class="settings-card-head">
+                            <h2>Personal information</h2>
+                            <p>Changes here update your client record.</p>
+                        </header>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingsFullName">Full legal name</label>
+                                <input type="text" id="settingsFullName" placeholder="Loading…" />
                             </div>
                         </div>
-                    </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingsPhone">Mobile phone number</label>
+                                <div class="phone-group">
+                                    <span class="phone-prefix">+254</span>
+                                    <input type="tel" id="settingsPhone" placeholder="Loading…" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="settingsEmail">Email address</label>
+                                <input type="email" id="settingsEmail" placeholder="Loading…" />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingsDob">Date of birth</label>
+                                <input type="date" id="settingsDob" disabled />
+                                <div class="field-hint">Contact support to update this field.</div>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary" onclick="saveProfile()">Save changes</button>
+                    </section>
+
+                    <!-- Next of Kin -->
+                    <section class="settings-card">
+                        <header class="settings-card-head">
+                            <div class="head-row">
+                                <h2>Next of kin</h2>
+                                <span class="head-tag">Required by CMA</span>
+                            </div>
+                            <p>Your designated beneficiary.</p>
+                        </header>
+
+                        <dl class="detail-list">
+                            <div class="detail-row">
+                                <dt>Full name</dt>
+                                <dd id="nokName">Loading…</dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>Phone number</dt>
+                                <dd id="nokPhone">Loading…</dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>Relationship</dt>
+                                <dd id="nokRelationship">Loading…</dd>
+                            </div>
+                        </dl>
+
+                        <p class="card-note">To change your next of kin, contact support with a written request and a copy of your ID.</p>
+                    </section>
+
+                    <!-- Change Password -->
+                    <section class="settings-card">
+                        <header class="settings-card-head">
+                            <h2>Change password</h2>
+                            <p>Use at least 8 characters, including one uppercase letter and one number.</p>
+                        </header>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentPassword">Current password</label>
+                                <div class="password-wrap">
+                                    <input type="password" id="currentPassword" placeholder="Enter current password" autocomplete="current-password" />
+                                    <button type="button" class="password-toggle" data-target="currentPassword" aria-label="Show password" aria-pressed="false">
+                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                            <line x1="1" y1="1" x2="23" y2="23"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newPassword">New password</label>
+                                <div class="password-wrap">
+                                    <input type="password" id="newPassword" placeholder="Enter new password" autocomplete="new-password" />
+                                    <button type="button" class="password-toggle" data-target="newPassword" aria-label="Show password" aria-pressed="false">
+                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                            <line x1="1" y1="1" x2="23" y2="23"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmNewPassword">Confirm new password</label>
+                                <div class="password-wrap">
+                                    <input type="password" id="confirmNewPassword" placeholder="Re-enter new password" autocomplete="new-password" />
+                                    <button type="button" class="password-toggle" data-target="confirmNewPassword" aria-label="Show password" aria-pressed="false">
+                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                            <line x1="1" y1="1" x2="23" y2="23"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary btn-save-sm" onclick="changePassword()">Update password</button>
+                    </section>
+
+                    <!-- Notifications -->
+                    <section class="settings-card">
+                        <header class="settings-card-head">
+                            <h2>Notifications</h2>
+                            <p>Choose what we tell you about, and how.</p>
+                        </header>
+
+                        <div class="setting-list">
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-name">Email alerts</div>
+                                    <div class="setting-meta">Investment, redemption, and account updates via email</div>
+                                </div>
+                                <div class="setting-control">
+                                    <span class="setting-state on" id="email-status">On</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="email-toggle" checked onchange="handleToggle('email', this.checked)" />
+                                        <span class="toggle-track"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-name">Daily interest credit alerts</div>
+                                    <div class="setting-meta">Get notified when daily interest is credited</div>
+                                </div>
+                                <div class="setting-control">
+                                    <span class="setting-state on" id="interest-status">On</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="interest-toggle" checked onchange="handleToggle('interest', this.checked)" />
+                                        <span class="toggle-track"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-name">Login alerts</div>
+                                    <div class="setting-meta">Get an email when a new sign-in is detected</div>
+                                </div>
+                                <div class="setting-control">
+                                    <span class="setting-state on" id="login-status">On</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="login-toggle" checked onchange="handleToggle('login', this.checked)" />
+                                        <span class="toggle-track"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-name">Marketing communications</div>
+                                    <div class="setting-meta">Offers, product updates, and fund news</div>
+                                </div>
+                                <div class="setting-control">
+                                    <span class="setting-state" id="marketing-status">Off</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="marketing-toggle" onchange="handleToggle('marketing', this.checked)" />
+                                        <span class="toggle-track"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Tax & Compliance -->
+                    <section class="settings-card">
+                        <header class="settings-card-head">
+                            <h2>Tax &amp; compliance</h2>
+                            <p>Statutory requirements that apply to every RockWin account.</p>
+                        </header>
+
+                        <div class="setting-list">
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-name">KRA withholding tax consent</div>
+                                    <div class="setting-meta">15% withholding tax on interest earned, remitted directly to KRA</div>
+                                </div>
+                                <div class="setting-control">
+                                    <span class="setting-state on" id="kra-status">On</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked disabled />
+                                        <span class="toggle-track"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="card-note">Withholding tax consent is <strong>mandatory</strong> under CMA rules and cannot be disabled. Tax is deducted at source before interest is credited to your portfolio.</p>
+                    </section>
+
+                    <!-- Danger Zone -->
+                    <section class="settings-card settings-card-danger">
+                        <header class="settings-card-head">
+                            <h2>Close account</h2>
+                            <p>Permanently close your portfolio and redeem all units. This cannot be undone.</p>
+                        </header>
+
+                        <button class="btn-danger" onclick="handleCloseAccount()">Close account</button>
+                    </section>
+
                 </div>
 
-                <!-- Change Password -->
-                <div class="transactions-section settings-section">
-                    <div class="header">
-                        <h3>🔒 Change Password</h3>
-                    </div>
-                    <div style="padding:0.5rem 0;">
-                        <div class="profile-form-group">
-                            <label>Current Password</label>
-                            <input type="password" id="currentPassword" placeholder="••••••••" />
-                        </div>
-                        <div class="profile-form-group">
-                            <label>New Password</label>
-                            <input type="password" id="newPassword" placeholder="••••••••" />
-                        </div>
-                        <div class="profile-form-group">
-                            <label>Confirm New Password</label>
-                            <input type="password" id="confirmNewPassword" placeholder="••••••••" />
-                        </div>
-                        <button class="btn-save-sm" onclick="changePassword()">Update Password</button>
-                    </div>
-                </div>
+                <!-- ====== RIGHT COLUMN ====== -->
+                <aside class="settings-col-side">
 
-                <!-- Notification Preferences -->
-                <div class="transactions-section settings-section">
-                    <div class="header">
-                        <h3>🔔 Notifications</h3>
-                    </div>
-                    <div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name">Email Alerts</div>
-                                <div class="meta">Investment, redemption, and account updates via email</div>
+                    <!-- Investment Summary -->
+                    <section class="side-card">
+                        <h3 class="side-card-title">Investment summary</h3>
+                        <dl class="side-list">
+                            <div class="side-row">
+                                <dt>Portfolio value</dt>
+                                <dd id="summaryPortfolioValue">KES 0.00</dd>
                             </div>
-                            <div class="control">
-                                <span class="status-label on" id="email-status">On</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="email-toggle" checked onchange="handleToggle('email', this.checked)" />
-                                    <span class="toggle-slider"></span>
-                                </label>
+                            <div class="side-row">
+                                <dt>Units held</dt>
+                                <dd id="summaryUnits">0.0</dd>
                             </div>
-                        </div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name">Daily Interest Credit Alerts</div>
-                                <div class="meta">Get notified when daily interest is credited</div>
+                            <div class="side-row">
+                                <dt>Yield rate</dt>
+                                <dd class="accent" id="summaryYield">14.2% p.a.</dd>
                             </div>
-                            <div class="control">
-                                <span class="status-label on" id="interest-status">On</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="interest-toggle" checked onchange="handleToggle('interest', this.checked)" />
-                                    <span class="toggle-slider"></span>
-                                </label>
+                            <div class="side-row">
+                                <dt>Interest YTD</dt>
+                                <dd class="accent" id="summaryInterestYTD">KES 0.00</dd>
                             </div>
-                        </div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name">Login Alerts</div>
-                                <div class="meta">Get an email when a new sign-in is detected</div>
-                            </div>
-                            <div class="control">
-                                <span class="status-label on" id="login-status">On</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="login-toggle" checked onchange="handleToggle('login', this.checked)" />
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name">Marketing Communications</div>
-                                <div class="meta">Offers, product updates, and fund news</div>
-                            </div>
-                            <div class="control">
-                                <span class="status-label" id="marketing-status">Off</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="marketing-toggle" onchange="handleToggle('marketing', this.checked)" />
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </dl>
+                    </section>
 
-                <!-- Security -->
-                <div class="transactions-section settings-section">
-                    <div class="header">
-                        <h3>🔐 Security</h3>
-                    </div>
-                    <div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name">Two-Factor Authentication</div>
-                                <div class="meta">Add an extra layer of security to your account</div>
+                    <!-- KYC & Compliance -->
+                    <section class="side-card">
+                        <h3 class="side-card-title">KYC &amp; compliance</h3>
+                        <dl class="side-list">
+                            <div class="side-row">
+                                <dt>ID number</dt>
+                                <dd id="kycIdNumber">—</dd>
                             </div>
-                            <div class="control">
-                                <span class="status-label" id="2fa-status">Off</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="2fa-toggle" onchange="handleToggle('2fa', this.checked)" />
-                                    <span class="toggle-slider"></span>
-                                </label>
+                            <div class="side-row">
+                                <dt>KYC status</dt>
+                                <dd class="accent" id="kycStatus">—</dd>
                             </div>
-                        </div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name">Biometric Login</div>
-                                <div class="meta">Use fingerprint or face recognition on supported devices</div>
+                            <div class="side-row">
+                                <dt>KRA PIN</dt>
+                                <dd id="kycKraPin">Not set</dd>
                             </div>
-                            <div class="control">
-                                <span class="status-label" id="bio-status">Off</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="bio-toggle" onchange="handleToggle('bio', this.checked)" />
-                                    <span class="toggle-slider"></span>
-                                </label>
+                            <div class="side-row">
+                                <dt>Tax consent</dt>
+                                <dd id="kycTaxConsent">Accepted</dd>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- KRA Tax Compliance -->
-                <div class="transactions-section settings-section">
-                    <div class="header">
-                        <h3>⚖️ Tax &amp; Compliance</h3>
-                    </div>
-                    <div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name">KRA Withholding Tax Consent</div>
-                                <div class="meta">15% withholding tax on interest earned, as required by KRA</div>
+                            <div class="side-row">
+                                <dt>CMA registration</dt>
+                                <dd class="accent" id="kycCmaStatus">Active</dd>
                             </div>
-                            <div class="control">
-                                <span class="status-label on" id="kra-status">On</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked disabled />
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
+                        </dl>
+                    </section>
 
-                        <div class="kra-note">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-                            </svg>
-                            <span>Withholding tax consent is <strong>mandatory</strong> for CMA compliance and cannot be disabled. Tax is deducted at source and remitted directly to KRA.</span>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Quick Links -->
+                    <section class="side-card">
+                        <h3 class="side-card-title">Resources</h3>
+                        <ul class="side-links">
+                            <li><a href="fund-factsheet.html">Fund factsheet</a></li>
+                            <li><a href="terms.html">Terms of service</a></li>
+                            <li><a href="privacy.html">Privacy policy</a></li>
+                            <li><a href="#" onclick="contactWhatsApp(); return false;">Contact support</a></li>
+                        </ul>
+                    </section>
 
-                <!-- Danger Zone -->
-                <div class="transactions-section settings-section" style="border:1px solid rgba(248,113,113,0.2);">
-                    <div class="header">
-                        <h3 style="color:var(--error);">⚠️ Danger Zone</h3>
-                    </div>
-                    <div>
-                        <div class="settings-row">
-                            <div class="info">
-                                <div class="name" style="color:var(--error);">Close Investment Account</div>
-                                <div class="meta">Permanently close your portfolio and withdraw all units. This cannot be undone.</div>
-                            </div>
-                            <div class="control">
-                                <button class="btn-action danger" onclick="handleCloseAccount()" style="padding:0.4rem 1rem;">
-                                    Close Account
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ====== RIGHT COLUMN ====== -->
-            <div class="right-col">
-
-                <!-- Investment Summary -->
-                <div class="right-card">
-                    <div class="card-title">💼 Investment Summary</div>
-                    <div class="card-item">
-                        <span class="label">Portfolio Value</span>
-                        <span class="value green" id="summaryPortfolioValue">KES 0.00</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Units Held</span>
-                        <span class="value" id="summaryUnits" style="color:var(--text-primary);">0.0</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Yield Rate</span>
-                        <span class="value green" id="summaryYield">14.2% p.a.</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Interest YTD</span>
-                        <span class="value green" id="summaryInterestYTD">KES 0.00</span>
-                    </div>
-                </div>
-
-                <!-- KYC & Compliance -->
-                <div class="right-card">
-                    <div class="card-title">🛡️ KYC &amp; Compliance</div>
-                    <div class="card-item">
-                        <span class="label">ID Number</span>
-                        <span class="value" id="kycIdNumber" style="color:var(--text-primary);">—</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">KYC Status</span>
-                        <span class="value green" id="kycStatus">—</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">KRA PIN</span>
-                        <span class="value" id="kycKraPin" style="color:var(--text-primary);">Not set</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Tax Consent</span>
-                        <span class="value green" id="kycTaxConsent">Accepted</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">CMA Registration</span>
-                        <span class="value" id="kycCmaStatus" style="color:var(--primary-container);">Active</span>
-                    </div>
-                </div>
-
-                <!-- Compliance & Trust -->
-                <div class="right-card">
-                    <div class="card-title">🏛️ Compliance &amp; Trust</div>
-                    <div class="card-item">
-                        <span class="label">Regulated by</span>
-                        <span class="value green">CMA Kenya</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Trustee</span>
-                        <span class="value" style="color:var(--text-primary);">I&amp;M Bank</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Auditor</span>
-                        <span class="value" style="color:var(--text-primary);">Deloitte</span>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div class="right-card">
-                    <div class="card-title">Quick Links</div>
-                    <div class="card-item" style="cursor:pointer;" onclick="window.location.href='fund-factsheet.html'">
-                        <span class="label">📋 Fund Factsheet</span>
-                        <span class="value blue">→</span>
-                    </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="window.open('terms.html', '_blank')">
-                        <span class="label">📜 Terms of Service</span>
-                        <span class="value blue">→</span>
-                    </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="window.open('privacy.html', '_blank')">
-                        <span class="label">🔒 Privacy Policy</span>
-                        <span class="value blue">→</span>
-                    </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="contactWhatsApp()">
-                        <span class="label">💬 Contact Support</span>
-                        <span class="value blue">→</span>
-                    </div>
-                </div>
+                </aside>
 
             </div>
 
-        </div>
+            <!-- Footer -->
+            <footer class="page-footer">
+                <span>RockWin Investment · CMA licensed · Trustee-held at I&amp;M Bank</span>
+            </footer>
 
-        <!-- Help Footer -->
-        <div class="help-footer">
-            <span>Need help?</span>
-            <a href="#" onclick="contactWhatsApp()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                </svg>
-                Chat
-            </a>
-            <a href="tel:+254700123456">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                </svg>
-                Call
-            </a>
-            <a href="mailto:support@rockwin.co.ke">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                Email
-            </a>
-        </div>
+        </main>
 
-    </main>
+    </div>
 
     <div class="toast-container" id="toastContainer"></div>
 

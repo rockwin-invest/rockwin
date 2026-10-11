@@ -1,127 +1,125 @@
- (function() {
-            'use strict';
+(function() {
+    'use strict';
 
-            // ---------- NAV TOGGLE ----------
-            const toggle = document.getElementById('navToggle');
-            const navLinks = document.getElementById('navLinks');
+    // ---------- MASTHEAD: subtle background on scroll ----------
+    const masthead = document.getElementById('masthead');
+    if (masthead) {
+        const setScrolled = () => {
+            masthead.classList.toggle('scrolled', window.scrollY > 12);
+        };
+        setScrolled();
+        window.addEventListener('scroll', setScrolled, { passive: true });
+    }
 
-            toggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                navLinks.classList.toggle('open');
-                const spans = this.querySelectorAll('span');
-                if (navLinks.classList.contains('open')) {
-                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                    spans[1].style.opacity = '0';
-                    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-                } else {
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
-                }
-            });
+    // ---------- MOBILE MENU ----------
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
 
-            navLinks.querySelectorAll('a, button').forEach(el => {
-                el.addEventListener('click', function() {
-                    navLinks.classList.remove('open');
-                    const spans = toggle.querySelectorAll('span');
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
+    function closeMenu() {
+        if (!mobileMenu || !navToggle) return;
+        mobileMenu.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Open menu');
+    }
+
+    if (navToggle && mobileMenu) {
+        navToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = mobileMenu.classList.toggle('open');
+            navToggle.setAttribute('aria-expanded', String(isOpen));
+            navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.masthead')) closeMenu();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenu();
+        });
+    }
+
+    // ---------- CALCULATOR ----------
+    const ANNUAL_YIELD = 0.142;
+    const WITHHOLDING_TAX = 0.15;
+    const DAYS_PER_YEAR = 365;
+
+    const amountInput = document.getElementById('calcAmount');
+    const sliderInput = document.getElementById('calcSlider');
+    const termButtons = document.querySelectorAll('#calculator .term-selector button');
+
+    const interestEl = document.getElementById('calcInterest');
+    const taxEl      = document.getElementById('calcTax');
+    const netEl      = document.getElementById('calcNet');
+    const totalEl    = document.getElementById('calcTotal');
+
+    let selectedMonths = 12;
+
+    function formatKES(num) {
+        return 'KES ' + Math.round(num).toLocaleString('en-KE');
+    }
+
+    function calculate() {
+        if (!amountInput) return;
+
+        const principal = Math.max(1000, parseFloat(amountInput.value) || 0);
+        const years = selectedMonths / 12;
+        const dailyRate = ANNUAL_YIELD / DAYS_PER_YEAR;
+
+        // Daily compounding
+        const grossValue    = principal * Math.pow(1 + dailyRate, years * DAYS_PER_YEAR);
+        const grossInterest = grossValue - principal;
+
+        // 15% withholding tax on interest only
+        const tax            = grossInterest * WITHHOLDING_TAX;
+        const netInterest    = grossInterest - tax;
+        const netTotalValue  = principal + netInterest;
+
+        if (interestEl) interestEl.textContent = formatKES(grossInterest);
+        if (taxEl)      taxEl.textContent      = '− ' + formatKES(tax);
+        if (netEl)      netEl.textContent      = formatKES(netInterest);
+        if (totalEl)    totalEl.textContent    = formatKES(netTotalValue);
+    }
+
+    if (amountInput) {
+        amountInput.addEventListener('input', () => {
+            let val = Math.max(1000, Math.min(2000000, parseFloat(amountInput.value) || 0));
+            if (sliderInput) sliderInput.value = val;
+            calculate();
+        });
+    }
+
+    if (sliderInput) {
+        sliderInput.addEventListener('input', () => {
+            if (amountInput) amountInput.value = sliderInput.value;
+            calculate();
+        });
+    }
+
+    termButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            termButtons.forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedMonths = parseInt(btn.dataset.months, 10);
+            calculate();
+        });
+    });
+
+    calculate();
+
+    // ---------- FAQ: close others when one opens ----------
+    document.querySelectorAll('.faq-item').forEach((item) => {
+        item.addEventListener('toggle', () => {
+            if (item.open) {
+                document.querySelectorAll('.faq-item[open]').forEach((other) => {
+                    if (other !== item) other.open = false;
                 });
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.glass-nav')) {
-                    navLinks.classList.remove('open');
-                    const spans = toggle.querySelectorAll('span');
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
-                }
-            });
-
-            // ---------- NAVBAR SHRINK ON SCROLL ----------
-            const nav = document.getElementById('glassNav');
-            let lastScroll = 0;
-
-            window.addEventListener('scroll', function() {
-                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-                if (currentScroll > 60) {
-                    nav.classList.add('scrolled');
-                } else {
-                    nav.classList.remove('scrolled');
-                }
-                lastScroll = currentScroll;
-            });
-
-            // ---------- ANIMATE MOCKUP BALANCE ----------
-            const balanceEl = document.getElementById('mockupBalance');
-            const target = 52480;
-            let current = 0;
-            const step = 180;
-
-            function animateBalance() {
-                if (current < target) {
-                    current += step;
-                    if (current > target) current = target;
-                    balanceEl.textContent = current.toLocaleString();
-                    requestAnimationFrame(animateBalance);
-                }
             }
-            setTimeout(animateBalance, 600);
+        });
+    });
 
-            // ---------- SCROLL REVEAL (Intersection Observer) ----------
-            const revealElements = document.querySelectorAll('.reveal');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -40px 0px'
-            });
-
-            revealElements.forEach(el => observer.observe(el));
-
-            // ---------- SMOOTH SCROLL ----------
-            document.querySelector('.btn-hero-secondary')?.addEventListener('click', function(e) {
-                const target = document.getElementById('features');
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-
-            // ---------- GRAPH BARS ANIMATE ON SCROLL ----------
-            const graphObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const bars = entry.target.querySelectorAll('.bar');
-                        bars.forEach((bar, index) => {
-                            setTimeout(() => {
-                                bar.style.opacity = '1';
-                                bar.style.height = ['40%', '65%', '30%', '80%', '55%', '90%', '45%'][
-                                index] || '50%';
-                            }, index * 80);
-                        });
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            const graph = document.querySelector('.mockup-graph');
-            if (graph) {
-                // Reset bars first
-                graph.querySelectorAll('.bar').forEach(b => {
-                    b.style.height = '10%';
-                    b.style.opacity = '0.3';
-                });
-                graphObserver.observe(graph);
-            }
-
-            console.log('✅ Equin Bank · Premium Minimal');
-            console.log('💡 Designed for a $100M fintech feel.');
-
-        })();
+})();

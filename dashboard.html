@@ -2,585 +2,359 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio · RockWin Investment</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="dashboard.css" />
-
-    <!-- PDF Generation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-
-    <style>
-        /* ---------- MODAL STYLES ---------- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            z-index: 999; display: none; align-items: center; justify-content: center;
-            padding: 1.5rem; animation: modalFadeIn 0.3s ease;
-        }
-        .modal-overlay.open { display: flex; }
-        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-
-        .modal-box {
-            background: var(--bg-card); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-default); max-width: 500px; width: 100%;
-            max-height: 90vh; overflow-y: auto; padding: 2rem 2rem 1.8rem;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-            animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .modal-box.wide { max-width: 600px; }
-        @keyframes modalSlideUp { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-        .modal-box .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
-        .modal-box .modal-header h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--text-primary); }
-        .modal-box .modal-header .modal-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.1rem; }
-        .modal-box .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.2rem 0.4rem; transition: color 0.2s; line-height: 1; }
-        .modal-box .modal-close:hover { color: var(--text-primary); }
-
-        .modal-box .form-group { margin-bottom: 1.1rem; }
-        .modal-box .form-group label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.25rem; }
-        .modal-box .form-group input,
-        .modal-box .form-group select,
-        .modal-box .form-group textarea { width: 100%; padding: 0.7rem 1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: var(--radius-default); color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-body); transition: all 0.25s ease; outline: none; resize: vertical; }
-        .modal-box .form-group input:focus,
-        .modal-box .form-group select:focus,
-        .modal-box .form-group textarea:focus { border-color: var(--primary-container); background: rgba(255, 255, 255, 0.07); box-shadow: 0 0 0 3px rgba(0, 109, 50, 0.12); }
-        .modal-box .form-group .input-hint { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.15rem; }
-
-        .modal-box .btn-modal-primary { width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%); border: none; border-radius: var(--radius-default); color: var(--on-primary); font-size: 1rem; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 109, 50, 0.2); margin-top: 0.3rem; }
-        .modal-box .btn-modal-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0, 109, 50, 0.3); }
-        .modal-box .btn-modal-secondary { width: 100%; padding: 0.8rem; background: transparent; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: var(--radius-default); color: var(--text-secondary); font-size: 1rem; font-weight: 500; font-family: var(--font-body); cursor: pointer; transition: all 0.25s ease; margin-top: 0.3rem; }
-        .modal-box .btn-modal-secondary:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.12); }
-        .modal-box .modal-confirm-text { text-align: center; padding: 1rem 0; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
-        .modal-box .modal-confirm-text .highlight { color: var(--text-primary); font-weight: 600; }
-        .modal-box .modal-actions-row { display: flex; gap: 0.8rem; }
-        .modal-box .modal-actions-row .btn-modal-primary,
-        .modal-box .modal-actions-row .btn-modal-secondary { flex: 1; margin-top: 0; }
-
-        .tax-info { background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.15); border-radius: var(--radius-default); padding: 0.8rem 1rem; margin: 0.5rem 0 1rem; text-align: center; }
-        .tax-info .tax-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
-        .tax-info .tax-detail { font-size: 0.75rem; color: var(--text-secondary); }
-        .tax-info .net-amount { font-size: 0.85rem; color: var(--accent-green); font-weight: 600; }
-
-        .transaction-list-modal { max-height: 400px; overflow-y: auto; }
-        .transaction-list-modal .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03); font-size: 0.85rem; }
-        .transaction-list-modal .tx-item:last-child { border-bottom: none; }
-        .transaction-list-modal .tx-item .tx-name { font-weight: 500; color: var(--text-primary); }
-        .transaction-list-modal .tx-item .tx-meta { font-size: 0.7rem; color: var(--text-muted); }
-        .transaction-list-modal .tx-item .tx-amount.positive { color: var(--accent-green); }
-        .transaction-list-modal .tx-item .tx-amount.negative { color: var(--error); }
-
-        .goal-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: var(--radius-default); padding: 1rem; margin-bottom: 0.8rem; }
-        .goal-item .goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .goal-item .goal-name { font-weight: 600; color: var(--text-primary); font-size: 0.9rem; }
-        .goal-item .goal-amount { font-size: 0.75rem; color: var(--text-secondary); }
-        .goal-item .goal-track { height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; margin-bottom: 0.4rem; }
-        .goal-item .goal-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-container)); border-radius: 3px; }
-        .goal-item .goal-percentage { font-size: 0.7rem; color: var(--accent-green); font-weight: 600; }
-
-        @media (max-width: 500px) {
-            .modal-box { padding: 1.5rem 1.2rem; margin: 0.5rem; }
-            .modal-box .modal-header h3 { font-size: 1rem; }
-            .modal-box .form-group input,
-            .modal-box .form-group select,
-            .modal-box .form-group textarea { font-size: 0.85rem; padding: 0.6rem 0.8rem; }
-            .modal-box .btn-modal-primary, .modal-box .btn-modal-secondary { font-size: 0.9rem; padding: 0.7rem; }
-            .modal-box .modal-actions-row { flex-direction: column; gap: 0.5rem; }
-            .modal-box.wide { max-width: 100%; margin: 0.5rem; }
-        }
-
-        .unit-badge {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            font-size: 0.7rem; color: rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-full); padding: 0.2rem 0.7rem;
-            margin-top: 0.4rem;
-        }
-        .unit-badge .dot-green { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
-    </style>
 </head>
 <body>
 
-    <!-- ====== SIDEBAR ====== -->
-    <aside class="sidebar" id="sidebar">
-        <div class="brand">RockWin<span> Investment</span></div>
-        <nav>
-            <a href="dashboard.html" class="active">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-                Portfolio
+    <div class="app-layout">
+
+        <!-- ====== SIDEBAR ====== -->
+        <aside class="sidebar" id="sidebar">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
             </a>
-            <a href="goals.html">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-                </svg>
-                Goals
-            </a>
-            <a href="profile.html">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                </svg>
-                Profile
-            </a>
-            <a href="settings.html">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
-                Settings
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <button class="btn-logout" onclick="handleLogout()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+            <nav class="sidebar-nav" aria-label="Main">
+                <a href="dashboard.html" class="active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Portfolio
+                </a>
+                <a href="settings.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Account
+                </a>
+            </nav>
+
+            <button class="sidebar-logout" onclick="handleLogout()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
-                Logout
+                Sign out
             </button>
-        </div>
-    </aside>
+        </aside>
 
-    <!-- ====== MAIN CONTENT ====== -->
-    <main class="main-content">
+        <!-- ====== MAIN ====== -->
+        <main class="app-main">
 
-        <!-- ====== TOP HEADER ====== -->
-        <header class="top-header">
-            <div class="greeting">
-                👋 Good Morning, <span id="userFirstName">...</span>
-                <span class="last-login">Last login: Today, <span id="lastLoginTime">--:--</span></span>
-            </div>
-            <div class="actions">
-                <button class="btn-icon" id="searchBtn" aria-label="Search or quick actions">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                    </svg>
-                </button>
-                <button class="btn-icon" id="notifBtn" aria-label="Notifications">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                    </svg>
-                    <span class="badge" id="notifBadge" style="display:none;">0</span>
-                </button>
-                <div class="avatar" id="userAvatar">..</div>
-            </div>
-        </header>
-
-        <!-- ====== DASHBOARD GRID ====== -->
-        <div class="dashboard-grid">
-
-            <!-- ====== LEFT COLUMN ====== -->
-            <div class="left-col">
-
-                <!-- Portfolio Hero -->
-                <div class="balance-hero">
-                    <div class="label">Portfolio Value</div>
-                    <div class="amount" id="primaryBalance">
-                        <span class="currency">KES</span> <span id="balanceFigure">0.00</span>
-                    </div>
-                    <div class="unit-badge">
-                        <span class="dot-green"></span>
-                        <span id="unitsDisplay">0.0 units</span>
-                        <span style="opacity:0.4;">·</span>
-                        <span id="yieldDisplay" style="color:var(--primary-container); font-weight:600;">14.2% p.a.</span>
-                    </div>
-                    <div class="actions-row" style="margin-top:0.6rem;">
-                        <button class="btn-hide" id="hideBalanceBtn">👁️ Hide</button>
-                    </div>
-                    <div class="reward-badge">
-                        <span class="dot"></span>
-                        <span id="rewardMessage">Welcome to RockWin Investment</span>
-                    </div>
+            <!-- Page header -->
+            <header class="page-header">
+                <div class="greeting">
+                    <span id="greetingText">Good morning</span>, <span id="userFirstName">…</span>
+                    <span class="last-login">Last login: today, <span id="lastLoginTime">--:--</span></span>
                 </div>
-
-                <!-- Contextual Message -->
-                <div class="context-message" id="contextMessage">
-                    <span class="icon">💡</span>
-                    <span class="text"><strong>Get started</strong> — make your first investment to begin earning interest.</span>
-                </div>
-
-                <!-- Primary Action: Invest -->
-                <button class="primary-action" onclick="openModal('depositModal')">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 5v14"/><path d="M5 12h14"/>
-                    </svg>
-                    Invest Now
-                </button>
-
-                <!-- Quick Actions -->
-                <div class="quick-actions">
-                    <button class="quick-action" onclick="openModal('depositModal')">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14"/><path d="M5 12h14"/>
+                <div class="page-header-actions">
+                    <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 01-3.46 0"/>
                         </svg>
-                        <span class="label">Invest</span>
+                        <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
                     </button>
-                    <button class="quick-action" onclick="openModal('withdrawModal')">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/>
-                        </svg>
-                        <span class="label">Redeem</span>
-                    </button>
-                    <button class="quick-action" onclick="openModal('goalsModal')">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-                        </svg>
-                        <span class="label">Goals</span>
-                    </button>
-                    <button class="quick-action" onclick="openModal('moreModal')">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
-                        </svg>
-                        <span class="label">More</span>
-                    </button>
+                    <div class="avatar" id="userAvatar">..</div>
+                </div>
+            </header>
+
+            <!-- Dashboard grid -->
+            <div class="dashboard-grid">
+
+                <!-- Main column -->
+                <div class="main-col">
+
+                    <!-- Balance card -->
+                    <section class="balance-card">
+                        <div class="balance-label">Portfolio value</div>
+                        <div class="balance-amount" id="primaryBalance">
+                            <span class="currency">KES</span> <span id="balanceFigure">0.00</span>
+                        </div>
+                        <div class="balance-meta">
+                            <span id="unitsDisplay">0.0 units</span>
+                            <span class="meta-dot">·</span>
+                            <span id="yieldDisplay">14.2% p.a.</span>
+                        </div>
+                        <div class="balance-actions">
+                            <button class="btn-hide" id="hideBalanceBtn" type="button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <span>Hide balance</span>
+                            </button>
+                        </div>
+                        <div class="balance-reward" id="rewardMessage">Welcome to RockWin Investment</div>
+                    </section>
+
+                    <!-- Context message -->
+                    <div class="context-message" id="contextMessage">
+                        <span class="icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                        </span>
+                        <span class="text"><strong>Get started</strong> — make your first investment to begin earning interest.</span>
+                    </div>
+
+                    <!-- Quick actions -->
+                    <div class="quick-actions">
+                        <button class="quick-action" onclick="openModal('depositModal')" type="button">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                                <path d="M12 5v14"/><path d="M5 12h14"/>
+                            </svg>
+                            <span>Invest</span>
+                        </button>
+                        <button class="quick-action" onclick="openModal('withdrawModal')" type="button">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                                <path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/>
+                            </svg>
+                            <span>Redeem</span>
+                        </button>
+                        <button class="quick-action" onclick="openModal('moreModal')" type="button">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                                <circle cx="12" cy="5" r="1.5"/>
+                                <circle cx="12" cy="12" r="1.5"/>
+                                <circle cx="12" cy="19" r="1.5"/>
+                            </svg>
+                            <span>More</span>
+                        </button>
+                    </div>
+
+                    <!-- Recent activity -->
+                    <section class="transactions-card">
+                        <header class="card-head">
+                            <h3>Recent activity</h3>
+                            <a href="#" onclick="openModal('allTransactionsModal'); return false;">View all</a>
+                        </header>
+                        <div id="transactionList">
+                            <!-- Rendered by dashboard.js -->
+                        </div>
+                    </section>
+
                 </div>
 
-                <!-- Transactions -->
-                <section class="transactions-section">
-                    <div class="header">
-                        <h3>Recent Activity</h3>
-                        <a href="#" onclick="openModal('allTransactionsModal')">View All →</a>
-                    </div>
-                    <div id="transactionList">
-                        <!-- Rendered by dashboard.js -->
-                    </div>
-                </section>
+                <!-- Side column -->
+                <aside class="side-col">
 
-            </div>
+                    <!-- Earnings snapshot -->
+                    <section class="side-card">
+                        <h3 class="side-card-title">Earnings snapshot</h3>
+                        <dl class="side-list">
+                            <div class="side-row">
+                                <dt>Interest today</dt>
+                                <dd class="stats-today accent">Loading…</dd>
+                            </div>
+                            <div class="side-row">
+                                <dt>This month</dt>
+                                <dd class="stats-month accent">Loading…</dd>
+                            </div>
+                            <div class="side-row">
+                                <dt>Year to date</dt>
+                                <dd class="stats-ytd">Loading…</dd>
+                            </div>
+                            <div class="side-row">
+                                <dt>Current yield</dt>
+                                <dd class="stats-yield accent">Loading…</dd>
+                            </div>
+                        </dl>
+                    </section>
 
-            <!-- ====== RIGHT COLUMN ====== -->
-            <div class="right-col">
+                    <!-- Quick links -->
+                    <section class="side-card">
+                        <h3 class="side-card-title">Resources</h3>
+                        <ul class="side-links">
+                            <li><a href="#" onclick="downloadStatement(); return false;">Download statement</a></li>
+                            <li><a href="#" onclick="contactWhatsApp(); return false;">Contact support</a></li>
+                            <li><a href="fund-factsheet.html">Fund factsheet</a></li>
+                            <li><a href="settings.html">Account settings</a></li>
+                        </ul>
+                    </section>
 
-                <!-- Quick Stats -->
-                <div class="right-card">
-                    <div class="card-title">Earnings Snapshot</div>
-                    <div class="card-item">
-                        <span class="label">Interest today</span>
-                        <span class="value green stats-today">Loading...</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">This month</span>
-                        <span class="value green stats-month">Loading...</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Year to date</span>
-                        <span class="value blue stats-ytd">Loading...</span>
-                    </div>
-                    <div class="card-item">
-                        <span class="label">Current yield</span>
-                        <span class="value green stats-yield">Loading...</span>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div class="right-card">
-                    <div class="card-title">Quick Links</div>
-                    <div class="card-item" style="cursor:pointer;" onclick="downloadStatement()">
-                        <span class="label">📄 Download Statement</span>
-                        <span class="value blue">→</span>
-                    </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="window.location.href='goals.html'">
-                        <span class="label">🎯 Investment Goals</span>
-                        <span class="value blue">→</span>
-                    </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="contactWhatsApp()">
-                        <span class="label">💬 Contact Support</span>
-                        <span class="value blue">→</span>
-                    </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="window.location.href='settings.html'">
-                        <span class="label">⚙️ Settings</span>
-                        <span class="value blue">→</span>
-                    </div>
-                </div>
+                </aside>
 
             </div>
 
-        </div>
+            <!-- Footer -->
+            <footer class="page-footer">
+                <span>RockWin Investment · CMA licensed · Trustee-held at I&amp;M Bank</span>
+            </footer>
 
-        <!-- ====== HELP FOOTER ====== -->
-        <div class="help-footer">
-            <span>Need help?</span>
-            <a href="#" onclick="contactWhatsApp()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                </svg>
-                Chat
-            </a>
-            <a href="tel:+254700123456">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                </svg>
-                Call
-            </a>
-            <a href="mailto:support@rockwin.co.ke">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                Email
-            </a>
-        </div>
+        </main>
 
-    </main>
+    </div>
 
-    <!-- ====== FAB ====== -->
-    <button class="fab" id="fabBtn" aria-label="Quick actions">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    <!-- ====== FAB (mobile) ====== -->
+    <button class="fab" id="fabBtn" aria-label="Quick actions" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
     </button>
 
     <div class="fab-menu" id="fabMenu">
         <div class="fab-item" onclick="openModal('depositModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
             Invest
         </div>
         <div class="fab-item" onclick="openModal('withdrawModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/></svg>
             Redeem
         </div>
-        <div class="fab-item" onclick="window.location.href='goals.html'">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            Goals
-        </div>
         <div class="fab-item" onclick="downloadStatement()">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16"/><polyline points="20 10 12 18 8 14"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4v16h16"/><polyline points="20 10 12 18 8 14"/></svg>
             Statement
         </div>
     </div>
 
-    <!-- ====== BOTTOM NAV ====== -->
-    <nav class="bottom-nav" id="bottomNav">
-        <button class="nav-item active" onclick="window.location.href='dashboard.html'">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <!-- ====== BOTTOM NAV (mobile) ====== -->
+    <nav class="bottom-nav" id="bottomNav" aria-label="Primary">
+        <button class="nav-item active" onclick="window.location.href='dashboard.html'" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                 <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
             <span>Portfolio</span>
         </button>
-        <button class="nav-item" onclick="openModal('depositModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-            <span>Invest</span>
-        </button>
-        <button class="nav-item" onclick="window.location.href='goals.html'">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            <span>Goals</span>
-        </button>
-        <button class="nav-item" onclick="openNotifDrawer()">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 01-3.46 0"/>
+        <button class="nav-item" onclick="window.location.href='settings.html'" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
             </svg>
-            <span>Alerts</span>
-        </button>
-        <button class="nav-item" onclick="window.location.href='profile.html'">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
-            <span>Profile</span>
+            <span>Account</span>
         </button>
     </nav>
 
-    <!-- ====== UNIVERSAL ACTION SHEET ====== -->
-    <div class="action-sheet-overlay" id="actionSheetOverlay"></div>
-    <div class="action-sheet" id="actionSheet">
-        <div class="handle"></div>
-        <div class="search-input-wrap">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input type="text" id="actionSearchInput" placeholder="Search or quick action..." autofocus />
-        </div>
-        <div class="action-grid">
-            <div class="item" onclick="handleAction('Invest'); openModal('depositModal')">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-                Invest
-            </div>
-            <div class="item" onclick="handleAction('Redeem'); openModal('withdrawModal')">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/></svg>
-                Redeem
-            </div>
-            <div class="item" onclick="handleAction('View Statement'); downloadStatement()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16"/><polyline points="20 10 12 18 8 14"/></svg>
-                Statement
-            </div>
-            <div class="item" onclick="handleAction('Goals'); window.location.href='goals.html'">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                Goals
-            </div>
-            <div class="item" onclick="handleAction('Contact Support'); contactWhatsApp()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                Support
-            </div>
-            <div class="item" onclick="handleAction('Settings'); window.location.href='settings.html'">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-                Settings
-            </div>
-        </div>
-    </div>
-
-    <!-- ====== MODALS ====== -->
-
-    <!-- 1. INVEST MODAL -->
+    <!-- ====== MODAL: DEPOSIT ====== -->
     <div class="modal-overlay" id="depositModal">
         <div class="modal-box">
             <div class="modal-header">
                 <div>
-                    <h3>💰 Invest Funds</h3>
-                    <div class="modal-sub">Grow your portfolio</div>
+                    <h3>Invest funds</h3>
+                    <div class="modal-sub">Deposit to your portfolio</div>
                 </div>
-                <button class="modal-close" onclick="closeModal('depositModal')">✕</button>
+                <button class="modal-close" onclick="closeModal('depositModal')" aria-label="Close" type="button">✕</button>
             </div>
             <form id="depositForm" onsubmit="handleDeposit(event)">
                 <div class="form-group">
-                    <label for="depositMethod">Payment Method</label>
-                    <select id="depositMethod" required>
-                        <option value="">Select method...</option>
-                        <option value="mpesa">M-PESA</option>
-                        <option value="bank">Bank Transfer</option>
-                        <option value="standing">Standing Order</option>
-                    </select>
+                    <label for="depositAmount">Amount (KES)</label>
+                    <input type="number" id="depositAmount" placeholder="0.00" min="100" step="100" required inputmode="numeric" />
+                    <div class="input-hint">Minimum KES 100.</div>
                 </div>
                 <div class="form-group">
-    <label for="depositAmount">Amount (KES)</label>
-    <input type="number" id="depositAmount" placeholder="0.00" min="100" step="100" required />
-    <div class="input-hint">Minimum investment: KES 100</div>
-</div>
-<div class="form-group">
-    <label for="depositPhone">M-Pesa Phone Number</label>
-    <input type="tel" id="depositPhone" placeholder="+254712345678" required />
-    <div class="input-hint">The number that will receive the M-Pesa prompt.</div>
-</div>
-                <div class="form-group" id="mpesaDetails" style="display:none;">
-                    <label>M-PESA Instructions</label>
-                    <div style="background:rgba(255,255,255,0.03); padding:0.8rem 1rem; border-radius:var(--radius-default); font-size:0.85rem; color:var(--text-secondary);">
-                      <p style="font-size:0.75rem; color:var(--text-muted);">When you click "Confirm Investment", an M-Pesa prompt will pop up on your phone. Enter your PIN to complete the deposit. Your portfolio updates automatically.</p>  </div>
+                    <label for="depositPhone">M-PESA phone number</label>
+                    <input type="tel" id="depositPhone" placeholder="+254 712 345 678" required autocomplete="tel" />
+                    <div class="input-hint">The number that receives the M-PESA prompt.</div>
                 </div>
-                <button type="submit" class="btn-modal-primary">Confirm Investment</button>
+                <button type="submit" class="btn-modal-primary">Confirm investment</button>
                 <button type="button" class="btn-modal-secondary" onclick="closeModal('depositModal')">Cancel</button>
             </form>
         </div>
     </div>
 
-    <!-- 2. REDEEM MODAL -->
+    <!-- ====== MODAL: WITHDRAW ====== -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal-box">
             <div class="modal-header">
                 <div>
-                    <h3>📤 Redeem Funds</h3>
+                    <h3>Redeem funds</h3>
                     <div class="modal-sub">Withdraw from your portfolio</div>
                 </div>
-                <button class="modal-close" onclick="closeModal('withdrawModal')">✕</button>
+                <button class="modal-close" onclick="closeModal('withdrawModal')" aria-label="Close" type="button">✕</button>
             </div>
             <form id="withdrawForm" onsubmit="handleWithdraw(event)">
                 <div class="form-group">
                     <label for="withdrawDestination">Destination</label>
                     <select id="withdrawDestination" required>
-                        <option value="">Select destination...</option>
+                        <option value="">Select…</option>
                         <option value="mpesa">M-PESA</option>
-                        <option value="bank">Bank Account</option>
+                        <option value="bank">Bank account</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="withdrawAccount">Account Number / Phone</label>
-                    <input type="text" id="withdrawAccount" placeholder="e.g. +254712345678" required />
+                    <label for="withdrawAccount">Account number / phone</label>
+                    <input type="text" id="withdrawAccount" placeholder="+254 712 345 678" required />
                 </div>
                 <div class="form-group">
                     <label for="withdrawAmount">Amount (KES)</label>
-                    <input type="number" id="withdrawAmount" placeholder="0.00" min="1000" step="0.01" required />
-                    <div class="input-hint">Minimum redemption: KES 1,000.</div>
+                    <input type="number" id="withdrawAmount" placeholder="0.00" min="1000" step="0.01" required inputmode="numeric" />
+                    <div class="input-hint">Minimum redemption KES 1,000.</div>
                 </div>
-                <button type="submit" class="btn-modal-primary">Confirm Redemption</button>
+                <button type="submit" class="btn-modal-primary">Confirm redemption</button>
                 <button type="button" class="btn-modal-secondary" onclick="closeModal('withdrawModal')">Cancel</button>
             </form>
         </div>
     </div>
 
-    <!-- 3. GOALS MODAL -->
-    <div class="modal-overlay" id="goalsModal">
-        <div class="modal-box wide">
-            <div class="modal-header">
-                <div>
-                    <h3>🎯 Investment Goals</h3>
-                    <div class="modal-sub">Track your savings milestones</div>
-                </div>
-                <button class="modal-close" onclick="closeModal('goalsModal')">✕</button>
-            </div>
-            <div id="goalsModalList">
-                <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">Loading goals...</div>
-            </div>
-            <button class="btn-modal-primary" onclick="window.location.href='goals.html'" style="margin-top:1rem;">Manage Goals</button>
-            <button class="btn-modal-secondary" onclick="closeModal('goalsModal')">Close</button>
-        </div>
-    </div>
-
-    <!-- 4. ALL TRANSACTIONS MODAL -->
+    <!-- ====== MODAL: ALL TRANSACTIONS ====== -->
     <div class="modal-overlay" id="allTransactionsModal">
         <div class="modal-box wide">
             <div class="modal-header">
                 <div>
-                    <h3>📊 All Activity</h3>
+                    <h3>All activity</h3>
                     <div class="modal-sub">Complete transaction history</div>
                 </div>
-                <button class="modal-close" onclick="closeModal('allTransactionsModal')">✕</button>
+                <button class="modal-close" onclick="closeModal('allTransactionsModal')" aria-label="Close" type="button">✕</button>
             </div>
             <div class="transaction-list-modal" id="allTransactionList">
-                <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">Loading...</div>
+                <div class="empty-state">Loading…</div>
             </div>
             <button class="btn-modal-secondary" onclick="closeModal('allTransactionsModal')">Close</button>
         </div>
     </div>
 
-    <!-- 5. MORE OPTIONS MODAL -->
+    <!-- ====== MODAL: MORE ====== -->
     <div class="modal-overlay" id="moreModal">
         <div class="modal-box">
             <div class="modal-header">
                 <div>
-                    <h3>📌 More Options</h3>
-                    <div class="modal-sub">Additional services</div>
+                    <h3>More</h3>
+                    <div class="modal-sub">Other services</div>
                 </div>
-                <button class="modal-close" onclick="closeModal('moreModal')">✕</button>
+                <button class="modal-close" onclick="closeModal('moreModal')" aria-label="Close" type="button">✕</button>
             </div>
-            <div style="display:flex; flex-direction:column; gap:0.6rem; padding:0.5rem 0;">
-                <button class="btn-modal-primary" onclick="downloadStatement()" style="margin:0; background:linear-gradient(135deg, #2563eb, #1d4ed8);">
-                    📄 Download Statement
+            <div class="more-list">
+                <button class="more-item" onclick="downloadStatement()" type="button">
+                    <span>Download statement</span>
+                    <span class="more-arrow">→</span>
                 </button>
-                <button class="btn-modal-primary" onclick="window.location.href='goals.html'" style="margin:0; background:linear-gradient(135deg, #8b5cf6, #7c3aed);">
-                    🎯 Investment Goals
+                <button class="more-item" onclick="window.open('fund-factsheet.html', '_blank')" type="button">
+                    <span>Fund factsheet</span>
+                    <span class="more-arrow">→</span>
                 </button>
-                <button class="btn-modal-primary" onclick="window.open('fund-factsheet.html', '_blank')" style="margin:0; background:linear-gradient(135deg, #e67e22, #d35400);">
-                    📊 View Fund Factsheet
+                <button class="more-item" onclick="contactWhatsApp()" type="button">
+                    <span>Contact support</span>
+                    <span class="more-arrow">→</span>
                 </button>
-                <button class="btn-modal-primary" onclick="contactWhatsApp()" style="margin:0; background:linear-gradient(135deg, #25D366, #128C7E);">
-                    💬 Contact Support
-                </button>
-                <button class="btn-modal-primary" onclick="window.location.href='settings.html'" style="margin:0; background:linear-gradient(135deg, var(--admin-accent), #7c3aed);">
-                    ⚙️ Settings
+                <button class="more-item" onclick="window.location.href='settings.html'" type="button">
+                    <span>Account settings</span>
+                    <span class="more-arrow">→</span>
                 </button>
             </div>
-            <button class="btn-modal-secondary" onclick="closeModal('moreModal')">Close</button>
         </div>
     </div>
 
     <!-- ====== NOTIFICATION DRAWER ====== -->
     <div class="notif-overlay" id="notifOverlay" onclick="closeNotifDrawer()"></div>
     <div class="notif-drawer" id="notifDrawer">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-            <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;">🔔 Notifications</h3>
-            <button onclick="closeNotifDrawer()" style="background:none;border:none;color:var(--text-secondary);font-size:1.4rem;cursor:pointer;">✕</button>
-        </div>
+        <header class="notif-head">
+            <h3>Notifications</h3>
+            <button class="notif-close" onclick="closeNotifDrawer()" aria-label="Close" type="button">✕</button>
+        </header>
         <div id="notifList">
-            <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">
-                <div style="font-size:2rem;margin-bottom:0.5rem;">📭</div>
+            <div class="empty-state">
                 <p>No new notifications</p>
             </div>
         </div>
@@ -589,7 +363,6 @@
     <!-- ====== TOAST CONTAINER ====== -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- ====== EXTERNAL JAVASCRIPT (NO INLINE!) ====== -->
     <script src="dashboard.js"></script>
 
 </body>

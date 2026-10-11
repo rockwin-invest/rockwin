@@ -4,287 +4,814 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Privacy Policy · RockWin Investment</title>
+    <meta name="description" content="How RockWin Investment collects, uses, and protects your personal data." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="index.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <style>
-        .legal-hero {
-            padding: 8rem 1.5rem 2rem;
-            max-width: 800px;
+        /* ============================================================
+           DESIGN TOKENS
+           ============================================================ */
+        :root {
+            --paper:          #F5F1E8;
+            --paper-deep:     #EDE7DA;
+            --ink:            #0F1A14;
+            --ink-soft:       #4A534D;
+            --ink-mute:       #8A9089;
+            --rule:           rgba(15, 26, 20, 0.08);
+            --rule-strong:    rgba(15, 26, 20, 0.16);
+            --forest:         #1B4332;
+            --forest-hover:   #0F2D20;
+            --forest-soft:    rgba(27, 67, 50, 0.08);
+
+            --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+            --body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+            --shell: 1200px;
+            --gutter: 1.5rem;
+        }
+
+        /* ============================================================
+           RESET
+           ============================================================ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--body);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+        svg { display: block; }
+        ul, ol { list-style: none; }
+
+        .shell {
+            max-width: var(--shell);
             margin: 0 auto;
+            padding: 0 var(--gutter);
+            width: 100%;
         }
 
-        .legal-hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.6rem;
+        /* ============================================================
+           MASTHEAD
+           ============================================================ */
+        .masthead {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: transparent;
+            transition: background 0.25s ease, border-color 0.25s ease;
+            border-bottom: 1px solid transparent;
         }
-
-        .legal-hero .updated {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
+        .masthead.scrolled {
+            background: var(--paper);
+            border-bottom-color: var(--rule);
+        }
+        .masthead-inner {
+            max-width: var(--shell);
+            margin: 0 auto;
+            padding: 1.15rem var(--gutter);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+        .wordmark {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--display);
             font-weight: 600;
-        }
-
-        .legal-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 5rem;
-        }
-
-        .legal-content h2 {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 2.5rem 0 1rem;
-            color: var(--text-primary);
+            font-size: 1.15rem;
             letter-spacing: -0.01em;
+            font-variation-settings: "opsz" 72;
         }
-
-        .legal-content h3 {
-            font-family: var(--font-display);
-            font-size: 1.05rem;
+        .wordmark-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            background: var(--forest);
+            color: var(--paper);
+            border-radius: 6px;
             font-weight: 600;
-            margin: 1.8rem 0 0.6rem;
-            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-variation-settings: "opsz" 72;
+        }
+        .wordmark-sub { color: var(--ink-mute); font-weight: 500; }
+
+        .primary-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+        .primary-nav a {
+            color: var(--ink-soft);
+            transition: color 0.2s ease;
+        }
+        .primary-nav a:hover { color: var(--ink); }
+        .primary-nav a.active { color: var(--ink); font-weight: 500; }
+        .nav-signin { margin-left: 0.5rem; }
+        .nav-cta {
+            background: var(--forest);
+            color: var(--paper) !important;
+            padding: 0.55rem 1.15rem;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        .nav-cta:hover { background: var(--forest-hover); }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding: 6px;
+        }
+        .nav-toggle span {
+            width: 22px; height: 1.5px;
+            background: var(--ink);
+            transition: transform 0.25s ease, opacity 0.2s ease;
+        }
+        .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+        .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+        .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0 var(--gutter) 1.5rem;
+            background: var(--paper);
+            border-bottom: 1px solid var(--rule);
+        }
+        .mobile-menu a {
+            padding: 0.85rem 0;
+            font-size: 1rem;
+            color: var(--ink-soft);
+            border-bottom: 1px solid var(--rule);
+        }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a.mobile-cta {
+            color: var(--forest);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .mobile-menu.open { display: flex; }
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+        .legal-hero {
+            padding: 9rem 0 2.5rem;
+            border-bottom: 1px solid var(--rule);
+        }
+        .legal-hero-inner { max-width: 60ch; }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-weight: 500;
+            color: var(--ink-mute);
+            margin-bottom: 1.5rem;
+        }
+        .eyebrow-rule {
+            width: 32px; height: 1px;
+            background: var(--ink-mute);
+            display: inline-block;
+        }
+        .legal-hero h1 {
+            font-family: var(--display);
+            font-weight: 500;
+            font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+            line-height: 1.08;
+            letter-spacing: -0.025em;
+            color: var(--ink);
+            margin-bottom: 1.25rem;
+            font-variation-settings: "opsz" 144;
+        }
+        .legal-hero .lede {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.65;
+            max-width: 54ch;
+        }
+        .legal-updated {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--rule);
+            font-size: 0.82rem;
+            color: var(--ink-mute);
+            max-width: 48ch;
+        }
+        .legal-updated strong { color: var(--ink); font-weight: 500; }
+
+        /* ============================================================
+           LAYOUT
+           ============================================================ */
+        .legal-layout {
+            padding: 3.5rem 0 5rem;
+        }
+        .legal-grid {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 5rem;
+            align-items: start;
         }
 
-        .legal-content p {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.8;
+        /* ---------- TOC ---------- */
+        .toc {
+            position: sticky;
+            top: 6rem;
+        }
+        .toc-title {
+            font-family: var(--body);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--ink-mute);
+            font-weight: 500;
             margin-bottom: 1rem;
         }
-
-        .legal-content ul {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.8;
-            margin: 0.5rem 0 1rem 1.5rem;
-            padding-left: 1rem;
+        .toc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            border-left: 1px solid var(--rule);
+        }
+        .toc-list a {
+            display: block;
+            padding: 0.4rem 0 0.4rem 1rem;
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            border-left: 2px solid transparent;
+            margin-left: -1px;
+            transition: color 0.15s ease, border-color 0.15s ease;
+            line-height: 1.4;
+        }
+        .toc-list a:hover {
+            color: var(--forest);
+            border-left-color: var(--forest);
         }
 
-        .legal-content li {
-            margin-bottom: 0.5rem;
+        /* ---------- CONTENT ---------- */
+        .legal-content {
+            max-width: 72ch;
         }
-
-        .legal-content strong {
-            color: var(--text-primary);
-            font-weight: 600;
+        .legal-intro {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.75;
+            margin-bottom: 1.75rem;
         }
-
-        .legal-content a {
-            color: var(--primary-container);
-            text-decoration: none;
-        }
-
-        .legal-content a:hover {
-            text-decoration: underline;
-        }
-
         .legal-callout {
-            background: rgba(0, 109, 50, 0.06);
-            border-left: 3px solid var(--primary-container);
-            border-radius: var(--radius-default);
-            padding: 1rem 1.2rem;
-            margin: 1.5rem 0;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+            background: var(--forest-soft);
+            border-left: 3px solid var(--forest);
+            border-radius: 0 6px 6px 0;
+            padding: 1.15rem 1.35rem;
+            margin-bottom: 3rem;
+            font-size: 0.9rem;
+            color: var(--ink-soft);
             line-height: 1.7;
         }
+        .legal-callout strong { color: var(--ink); font-weight: 500; }
 
+        .legal-section {
+            padding-top: 3rem;
+            border-top: 1px solid var(--rule);
+            margin-top: 3rem;
+        }
+        .legal-section:first-of-type {
+            padding-top: 0;
+            border-top: none;
+            margin-top: 0;
+        }
+
+        .legal-section h2 {
+            font-family: var(--display);
+            font-weight: 500;
+            font-size: 1.5rem;
+            letter-spacing: -0.018em;
+            color: var(--ink);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            font-variation-settings: "opsz" 120;
+            scroll-margin-top: 6rem;
+        }
+        .legal-section h2 .num {
+            font-family: var(--body);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--forest);
+            letter-spacing: 0.08em;
+            flex-shrink: 0;
+        }
+        .legal-section h3 {
+            font-family: var(--display);
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: -0.01em;
+            color: var(--ink);
+            margin: 2rem 0 0.75rem;
+            font-variation-settings: "opsz" 72;
+        }
+
+        .legal-section p {
+            font-size: 0.96rem;
+            color: var(--ink-soft);
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+        .legal-section p:last-child { margin-bottom: 0; }
+
+        .legal-section ul {
+            margin: 1rem 0 1.25rem;
+            padding-left: 0;
+            list-style: none;
+        }
+        .legal-section ul li {
+            font-size: 0.96rem;
+            color: var(--ink-soft);
+            line-height: 1.7;
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            border-bottom: 1px solid var(--rule);
+            position: relative;
+        }
+        .legal-section ul li:last-child { border-bottom: none; }
+        .legal-section ul li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--ink-mute);
+            font-weight: 400;
+        }
+
+        .legal-section strong { color: var(--ink); font-weight: 500; }
+
+        .legal-section a {
+            color: var(--forest);
+            border-bottom: 1px solid rgba(27, 67, 50, 0.25);
+            transition: border-color 0.15s ease;
+        }
+        .legal-section a:hover { border-color: var(--forest); }
+
+        /* ---------- DATA TABLE ---------- */
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1rem 0;
-            font-size: 0.85rem;
+            margin: 1.25rem 0 1.5rem;
         }
-
-        .data-table th {
+        .data-table thead th {
             text-align: left;
-            padding: 0.7rem 0.8rem;
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-muted);
-            font-size: 0.65rem;
+            padding: 0.75rem 1rem 0.75rem 0;
+            font-size: 0.7rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            letter-spacing: 0.12em;
+            color: var(--ink-mute);
+            border-bottom: 1px solid var(--rule-strong);
         }
-
-        .data-table td {
-            padding: 0.7rem 0.8rem;
-            color: var(--text-secondary);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        .data-table thead th:last-child { padding-right: 0; }
+        .data-table tbody tr {
+            border-bottom: 1px solid var(--rule);
+        }
+        .data-table tbody td {
+            padding: 1rem 1rem 1rem 0;
+            font-size: 0.92rem;
+            color: var(--ink-soft);
             line-height: 1.6;
+            vertical-align: top;
+        }
+        .data-table tbody td:first-child {
+            font-family: var(--display);
+            font-weight: 500;
+            letter-spacing: -0.008em;
+            color: var(--ink);
+            white-space: nowrap;
+            padding-right: 2rem;
+            font-variation-settings: "opsz" 72;
+            width: 180px;
+        }
+        .data-table tbody td:last-child { padding-right: 0; }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .page-footer {
+            padding: 2rem 0 3rem;
+            border-top: 1px solid var(--rule);
+        }
+        .page-footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.78rem;
+            color: var(--ink-mute);
+        }
+        .page-footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .page-footer-links a {
+            color: var(--ink-mute);
+            transition: color 0.15s ease;
+        }
+        .page-footer-links a:hover { color: var(--forest); }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 900px) {
+            .legal-hero { padding: 7rem 0 2rem; }
+            .legal-layout { padding: 2.5rem 0 4rem; }
+            .legal-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .toc {
+                position: static;
+                padding-bottom: 1.5rem;
+                border-bottom: 1px solid var(--rule);
+            }
+            .toc-list {
+                border-left: none;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .toc-list a {
+                padding: 0.35rem 0.85rem;
+                border: 1px solid var(--rule);
+                border-radius: 9999px;
+                font-size: 0.78rem;
+                margin-left: 0;
+                background: var(--paper);
+            }
+            .toc-list a:hover {
+                border-color: var(--forest);
+                background: var(--forest-soft);
+            }
         }
 
-        .data-table td strong {
-            color: var(--text-primary);
+        @media (max-width: 720px) {
+            :root { --gutter: 1.25rem; }
+            .primary-nav { display: none; }
+            .nav-toggle { display: flex; }
+
+            .legal-hero { padding: 6rem 0 2rem; }
+            .legal-layout { padding: 2rem 0 3rem; }
+
+            .legal-section h2 { font-size: 1.3rem; gap: 0.75rem; }
+            .legal-section h2 .num { font-size: 0.72rem; }
+            .legal-section h3 { font-size: 1.02rem; }
+
+            .legal-section p,
+            .legal-section ul li { font-size: 0.92rem; }
+
+            .legal-callout { padding: 1rem 1.15rem; font-size: 0.86rem; }
+
+            .data-table thead th { font-size: 0.65rem; padding: 0.65rem 0.5rem 0.65rem 0; }
+            .data-table tbody td { font-size: 0.85rem; padding: 0.85rem 0.5rem 0.85rem 0; }
+            .data-table tbody td:first-child { width: auto; padding-right: 1rem; font-size: 0.88rem; }
+
+            .page-footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ============================================================
+           PRINT
+           ============================================================ */
+        @media print {
+            .masthead, .nav-toggle, .toc, .page-footer-links { display: none; }
+            body { background: #fff; color: #000; font-size: 11pt; }
+            .legal-hero { padding: 0 0 1rem; }
+            .legal-layout { padding: 1rem 0; }
+            .legal-grid { display: block; }
+            .legal-section { page-break-inside: avoid; }
+            .legal-section h2 { page-break-after: avoid; }
+            .legal-section a { color: #000; text-decoration: underline; }
+            .data-table { page-break-inside: avoid; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="glass-nav" role="navigation">
-        <div class="brand">RockWin<span> Investment</span></div>
-        <div class="nav-links">
+    <!-- ====== MASTHEAD ====== -->
+    <header class="masthead" id="masthead">
+        <div class="masthead-inner">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+            </a>
+
+            <nav class="primary-nav" aria-label="Primary">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="terms.html">Terms</a>
+                <a href="privacy.html" class="active">Privacy</a>
+                <a href="login.html" class="nav-signin">Sign in</a>
+                <a href="signup.html" class="nav-cta">Open an account</a>
+            </nav>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="terms.html">Terms</a>
-            <a href="login.html">Sign In</a>
-            <button class="btn-nav-primary" onclick="window.location.href='signup.html'">Start Investing</button>
-        </div>
-    </nav>
+            <a href="login.html">Sign in</a>
+            <a href="signup.html" class="mobile-cta">Open an account</a>
+        </nav>
+    </header>
 
-    <section class="legal-hero">
-        <div class="updated">Last updated: 11 October 2026</div>
-        <h1>Privacy Policy</h1>
-    </section>
+    <main>
 
-    <section class="legal-content">
+        <!-- ====== HERO ====== -->
+        <section class="legal-hero">
+            <div class="shell">
+                <div class="legal-hero-inner">
+                    <span class="eyebrow">
+                        <span class="eyebrow-rule"></span>
+                        Legal
+                    </span>
+                    <h1>Privacy Policy</h1>
+                    <p class="lede">
+                        How RockWin Investment collects, uses, and protects your personal data.
+                    </p>
+                    <p class="legal-updated">
+                        Last updated <strong>11 October 2026</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-        <p>RockWin Investment Ltd ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and protect your personal data when you use the RockWin Investment platform.</p>
+        <!-- ====== CONTENT ====== -->
+        <section class="legal-layout">
+            <div class="shell">
+                <div class="legal-grid">
 
-        <div class="legal-callout">
-            This policy complies with the <strong>Kenya Data Protection Act (2019)</strong> and the <strong>Capital Markets Authority</strong> regulations on client data handling.
-        </div>
+                    <!-- Table of contents -->
+                    <aside class="toc" aria-label="Contents">
+                        <div class="toc-title">Contents</div>
+                        <nav class="toc-list">
+                            <a href="#s1">1. Data we collect</a>
+                            <a href="#s2">2. How we use it</a>
+                            <a href="#s3">3. Legal basis</a>
+                            <a href="#s4">4. Data sharing</a>
+                            <a href="#s5">5. Retention</a>
+                            <a href="#s6">6. Your rights</a>
+                            <a href="#s7">7. Security</a>
+                            <a href="#s8">8. Cookies</a>
+                            <a href="#s9">9. Children</a>
+                            <a href="#s10">10. Changes</a>
+                            <a href="#s11">11. Contact</a>
+                        </nav>
+                    </aside>
 
-        <h2>1. Data We Collect</h2>
-        <p>We collect the following categories of personal data:</p>
+                    <!-- Privacy content -->
+                    <article class="legal-content">
 
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>Data Collected</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Identity Data</strong></td>
-                    <td>Full legal name, National ID / Passport number, date of birth, photograph (for KYC)</td>
-                </tr>
-                <tr>
-                    <td><strong>Contact Data</strong></td>
-                    <td>Phone number, email address, physical address</td>
-                </tr>
-                <tr>
-                    <td><strong>Financial Data</strong></td>
-                    <td>M-PESA number, bank account details, transaction history, portfolio value, units held</td>
-                </tr>
-                <tr>
-                    <td><strong>Next of Kin</strong></td>
-                    <td>Name, phone number, relationship (CMA requirement)</td>
-                </tr>
-                <tr>
-                    <td><strong>Tax Data</strong></td>
-                    <td>KRA PIN, tax consent status</td>
-                </tr>
-                <tr>
-                    <td><strong>Technical Data</strong></td>
-                    <td>IP address, device type, browser, login timestamps</td>
-                </tr>
-            </tbody>
-        </table>
+                        <p class="legal-intro">
+                            RockWin Investment Ltd ("we", "us", "our") is committed to protecting your privacy. This policy explains what personal data we collect, why we collect it, how we use it, and what rights you have over it.
+                        </p>
 
-        <h2>2. How We Use Your Data</h2>
-        <p>We process your personal data for the following purposes:</p>
-        <ul>
-            <li><strong>KYC verification</strong> — to comply with CMA and anti-money laundering (AML) laws</li>
-            <li><strong>Account management</strong> — to operate your investment account, process deposits, and execute redemptions</li>
-            <li><strong>Interest accrual</strong> — to calculate and credit daily interest to your portfolio</li>
-            <li><strong>Tax compliance</strong> — to deduct and remit 15% withholding tax to KRA</li>
-            <li><strong>Communications</strong> — to send SMS alerts, email statements, and regulatory notices</li>
-            <li><strong>Fraud prevention</strong> — to detect and prevent fraudulent activity</li>
-            <li><strong>Service improvement</strong> — to analyse usage patterns and improve the platform</li>
-        </ul>
+                        <div class="legal-callout">
+                            This policy complies with the <strong>Kenya Data Protection Act (2019)</strong> and the <strong>Capital Markets Authority</strong> regulations on client data handling.
+                        </div>
 
-        <h2>3. Legal Basis for Processing</h2>
-        <p>We process your data based on:</p>
-        <ul>
-            <li><strong>Contractual necessity</strong> — to deliver the investment services you signed up for</li>
-            <li><strong>Legal obligation</strong> — to comply with CMA, KRA, and AML regulations</li>
-            <li><strong>Consent</strong> — for marketing communications and optional features</li>
-            <li><strong>Legitimate interest</strong> — for fraud prevention and service security</li>
-        </ul>
+                        <section class="legal-section" id="s1">
+                            <h2><span class="num">01</span> Data we collect</h2>
+                            <p>We collect the following categories of personal data when you open or use a RockWin account:</p>
 
-        <h2>4. Data Sharing</h2>
-        <p>We may share your data with:</p>
-        <ul>
-            <li><strong>I&M Bank</strong> — as Trustee and Custodian</li>
-            <li><strong>Deloitte</strong> — as Independent Auditor</li>
-            <li><strong>Capital Markets Authority</strong> — for regulatory reporting</li>
-            <li><strong>Kenya Revenue Authority</strong> — for tax remittance</li>
-            <li><strong>Africa's Talking</strong> — for SMS delivery</li>
-            <li><strong>KYC verification partners</strong> — for identity verification</li>
-        </ul>
-        <p>We do <strong>not sell your data</strong> to third parties.</p>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Data collected</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Identity</td>
+                                        <td>Full legal name, National ID or Passport number, date of birth, and any supporting documents required for KYC verification.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact</td>
+                                        <td>Phone number, email address, and postal or physical address.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Financial</td>
+                                        <td>M-PESA number, bank account details, transaction history, portfolio value, and units held.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Next of kin</td>
+                                        <td>Name, phone number, and relationship — required by the CMA.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tax</td>
+                                        <td>KRA PIN and withholding tax consent status.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Technical</td>
+                                        <td>IP address, device type, browser, and login timestamps.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </section>
 
-        <h2>5. Data Retention</h2>
-        <p>We retain your personal data for as long as your account is active, plus <strong>7 years</strong> after account closure, as required by CMA regulations. After this period, data is anonymised or securely deleted.</p>
+                        <section class="legal-section" id="s2">
+                            <h2><span class="num">02</span> How we use your data</h2>
+                            <p>We process your personal data for the following purposes, each tied to operating your account or complying with the law:</p>
+                            <ul>
+                                <li><strong>KYC verification</strong> — to comply with CMA and anti-money laundering laws</li>
+                                <li><strong>Account management</strong> — to operate your account, process deposits, and execute redemptions</li>
+                                <li><strong>Interest accrual</strong> — to calculate and credit daily interest to your portfolio</li>
+                                <li><strong>Tax compliance</strong> — to deduct and remit 15% withholding tax to KRA</li>
+                                <li><strong>Communications</strong> — to send statements, alerts, and regulatory notices</li>
+                                <li><strong>Fraud prevention</strong> — to detect and prevent fraudulent activity</li>
+                                <li><strong>Service improvement</strong> — to analyse usage patterns and improve the platform</li>
+                            </ul>
+                        </section>
 
-        <h2>6. Your Rights</h2>
-        <p>Under the Data Protection Act (2019), you have the right to:</p>
-        <ul>
-            <li>Access your personal data</li>
-            <li>Correct inaccurate data</li>
-            <li>Request deletion (subject to regulatory retention requirements)</li>
-            <li>Object to certain processing</li>
-            <li>Request data portability</li>
-            <li>Withdraw consent (for optional processing)</li>
-        </ul>
-        <p>To exercise these rights, contact: <a href="mailto:privacy@rockwin.co.ke">privacy@rockwin.co.ke</a></p>
+                        <section class="legal-section" id="s3">
+                            <h2><span class="num">03</span> Legal basis for processing</h2>
+                            <p>Under the Data Protection Act (2019), we rely on the following legal bases:</p>
+                            <ul>
+                                <li><strong>Contractual necessity</strong> — to deliver the investment services you signed up for</li>
+                                <li><strong>Legal obligation</strong> — to comply with CMA, KRA, and AML regulations</li>
+                                <li><strong>Consent</strong> — for marketing communications and optional features</li>
+                                <li><strong>Legitimate interest</strong> — for fraud prevention and account security</li>
+                            </ul>
+                        </section>
 
-        <h2>7. Data Security</h2>
-        <p>We implement the following security measures:</p>
-        <ul>
-            <li><strong>256-bit encryption</strong> for data in transit and at rest</li>
-            <li><strong>Two-factor authentication</strong> for account access</li>
-            <li><strong>Role-based access control</strong> for internal staff</li>
-            <li><strong>Regular security audits</strong> by third-party firms</li>
-            <li><strong>Daily backups</strong> stored in encrypted form</li>
-        </ul>
+                        <section class="legal-section" id="s4">
+                            <h2><span class="num">04</span> Data sharing</h2>
+                            <p>We share personal data only with organisations that are necessary to operate the fund or meet our legal obligations:</p>
+                            <ul>
+                                <li><strong>I&amp;M Bank</strong> — as trustee and custodian of fund assets</li>
+                                <li><strong>Deloitte</strong> — as independent auditor</li>
+                                <li><strong>Capital Markets Authority</strong> — for regulatory reporting</li>
+                                <li><strong>Kenya Revenue Authority</strong> — for tax remittance</li>
+                                <li><strong>Payment and messaging providers</strong> — to process deposits and deliver notifications</li>
+                                <li><strong>KYC verification partners</strong> — for identity verification</li>
+                            </ul>
+                            <p>We do <strong>not sell your data</strong> to third parties.</p>
+                        </section>
 
-        <h2>8. Cookies</h2>
-        <p>Our platform uses cookies and similar technologies to maintain your session and remember your preferences. You can disable cookies in your browser, but some features may not function correctly.</p>
+                        <section class="legal-section" id="s5">
+                            <h2><span class="num">05</span> Data retention</h2>
+                            <p>We retain your personal data for as long as your account is active, plus <strong>7 years</strong> after account closure, as required by CMA regulations. After this period, data is anonymised or securely deleted.</p>
+                        </section>
 
-        <h2>9. Children</h2>
-        <p>Our services are not intended for anyone under 18. We do not knowingly collect data from minors.</p>
+                        <section class="legal-section" id="s6">
+                            <h2><span class="num">06</span> Your rights</h2>
+                            <p>Under the Data Protection Act (2019), you have the right to:</p>
+                            <ul>
+                                <li>Access your personal data</li>
+                                <li>Correct inaccurate data</li>
+                                <li>Request deletion, subject to regulatory retention requirements</li>
+                                <li>Object to certain processing</li>
+                                <li>Request data portability</li>
+                                <li>Withdraw consent for optional processing</li>
+                            </ul>
+                            <p>To exercise any of these rights, contact <a href="mailto:privacy@rockwin.co.ke">privacy@rockwin.co.ke</a>. We respond to verified requests within 30 days.</p>
+                        </section>
 
-        <h2>10. Changes to This Policy</h2>
-        <p>We may update this Privacy Policy from time to time. Material changes will be communicated via SMS and email at least 14 days before they take effect.</p>
+                        <section class="legal-section" id="s7">
+                            <h2><span class="num">07</span> Data security</h2>
+                            <p>We apply the following safeguards to protect your data:</p>
+                            <ul>
+                                <li><strong>Encryption in transit</strong> — all traffic uses TLS</li>
+                                <li><strong>Encryption at rest</strong> — sensitive data is encrypted in the database</li>
+                                <li><strong>Role-based access control</strong> — internal staff only see the data their role requires</li>
+                                <li><strong>Regular security reviews</strong> — periodic reviews of access and dependencies</li>
+                                <li><strong>Encrypted backups</strong> — daily backups stored in encrypted form</li>
+                            </ul>
+                        </section>
 
-        <h2>11. Contact</h2>
-        <p>For privacy questions or to exercise your rights:</p>
-        <ul>
-            <li>Email: <a href="mailto:privacy@rockwin.co.ke">privacy@rockwin.co.ke</a></li>
-            <li>Phone: +254 700 123 456</li>
-            <li>Data Protection Officer: <a href="mailto:dpo@rockwin.co.ke">dpo@rockwin.co.ke</a></li>
-        </ul>
+                        <section class="legal-section" id="s8">
+                            <h2><span class="num">08</span> Cookies</h2>
+                            <p>Our platform uses cookies and similar technologies to maintain your session and remember your preferences. You can disable cookies in your browser, but some features may not function correctly.</p>
+                        </section>
 
-    </section>
+                        <section class="legal-section" id="s9">
+                            <h2><span class="num">09</span> Children</h2>
+                            <p>Our services are not intended for anyone under 18. We do not knowingly collect data from minors.</p>
+                        </section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom" style="padding-top:1.5rem;">
+                        <section class="legal-section" id="s10">
+                            <h2><span class="num">10</span> Changes to this policy</h2>
+                            <p>We may update this Privacy Policy from time to time. Material changes will be communicated by email at least 14 days before they take effect.</p>
+                        </section>
+
+                        <section class="legal-section" id="s11">
+                            <h2><span class="num">11</span> Contact</h2>
+                            <p>For privacy questions or to exercise your rights:</p>
+                            <ul>
+                                <li>Email: <a href="mailto:privacy@rockwin.co.ke">privacy@rockwin.co.ke</a></li>
+                                <li>Phone: +254 700 123 456</li>
+                                <li>Data Protection Officer: <a href="mailto:dpo@rockwin.co.ke">dpo@rockwin.co.ke</a></li>
+                            </ul>
+                        </section>
+
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="page-footer">
+        <div class="shell">
+            <div class="page-footer-inner">
                 <span>&copy; 2026 RockWin Investment. All rights reserved.</span>
-                <div class="socials">
+                <nav class="page-footer-links" aria-label="Footer">
                     <a href="terms.html">Terms</a>
                     <a href="privacy.html">Privacy</a>
                     <a href="about.html">About</a>
-                </div>
+                </nav>
             </div>
         </div>
     </footer>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- MASTHEAD scroll state ----------
+            const masthead = document.getElementById('masthead');
+            if (masthead) {
+                const setScrolled = () => masthead.classList.toggle('scrolled', window.scrollY > 12);
+                setScrolled();
+                window.addEventListener('scroll', setScrolled, { passive: true });
+            }
+
+            // ---------- MOBILE MENU ----------
+            const navToggle = document.getElementById('navToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            function closeMenu() {
+                if (!mobileMenu || !navToggle) return;
+                mobileMenu.classList.remove('open');
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.setAttribute('aria-label', 'Open menu');
+            }
+
+            if (navToggle && mobileMenu) {
+                navToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const open = mobileMenu.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', String(open));
+                    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                });
+
+                mobileMenu.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', closeMenu);
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.masthead')) closeMenu();
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') closeMenu();
+                });
+            }
+
+        })();
+    </script>
 
 </body>
 </html>

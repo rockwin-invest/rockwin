@@ -1,385 +1,359 @@
- /* ---------- DESIGN TOKENS (matching homepage & signup) ---------- */
-        :root {
-            --bg-body: #070b17;
-            --bg-card: #0e1629;
-            --bg-elevated: #16203a;
-            --border-subtle: rgba(255, 255, 255, 0.06);
-            --text-primary: #f0f4ff;
-            --text-secondary: rgba(255, 255, 255, 0.6);
-            --text-muted: rgba(255, 255, 255, 0.35);
+/* ============================================================
+   ROCKWIN INVESTMENT — LOGIN
+   Warm ivory · forest green · ink
+   ============================================================ */
 
-            --primary: #006d32;
-            --primary-container: #00d166;
-            --on-primary: #ffffff;
-            --accent-green: #2ecc71;
+:root {
+    --paper:          #F5F1E8;
+    --paper-deep:     #EDE7DA;
+    --ink:            #0F1A14;
+    --ink-soft:       #4A534D;
+    --ink-mute:       #8A9089;
+    --rule:           rgba(15, 26, 20, 0.08);
+    --rule-strong:    rgba(15, 26, 20, 0.16);
+    --forest:         #1B4332;
+    --forest-hover:   #0F2D20;
+    --error:          #8A3A2E;
+    --error-bg:       rgba(138, 58, 46, 0.06);
+    --success:        #1B4332;
+    --success-bg:     rgba(27, 67, 50, 0.06);
 
-            --error: #f87171;
-            --error-bg: rgba(248, 113, 113, 0.12);
+    --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+    --body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
 
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-body: 'Inter', sans-serif;
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+svg { display: block; }
 
-            --radius-default: 0.75rem;
-            --radius-full: 9999px;
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+}
+.masthead-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.05rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+.wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+}
+.wordmark-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    background: var(--forest);
+    color: var(--paper);
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+.wordmark-sub { color: var(--ink-mute); font-weight: 500; }
 
-            --shadow-card: 0 12px 48px rgba(0, 0, 0, 0.3);
-            --shadow-hover: 0 16px 60px rgba(0, 0, 0, 0.4);
-        }
+.masthead-right {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-size: 0.88rem;
+}
+.masthead-note { color: var(--ink-mute); }
+.masthead-link {
+    font-weight: 500;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 1px;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+.masthead-link:hover { border-color: var(--forest); color: var(--forest); }
 
-        /* ---------- RESET & BASE ---------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* ============================================================
+   MAIN — single centered column
+   ============================================================ */
+.login-main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 10rem 1.5rem 4rem;
+}
 
-        body {
-            background: var(--bg-body);
-            color: var(--text-primary);
-            font-family: var(--font-body);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            background-image:
-                radial-gradient(circle at 70% 30%, rgba(0, 109, 50, 0.04) 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(0, 109, 50, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(0, 109, 50, 0.02) 0%, transparent 40%);
-            background-size: 100% 100%;
-            position: relative;
-        }
+.login-card { width: 100%; }
 
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            opacity: 0.3;
-            z-index: 0;
-        }
+.card-head { margin-bottom: 2rem; }
+.card-title {
+    font-family: var(--display);
+    font-size: clamp(1.75rem, 4vw, 2.1rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    font-variation-settings: "opsz" 120;
+}
+.card-sub {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+}
 
-        /* ---------- CARD ---------- */
-        .login-card {
-            width: 100%;
-            max-width: 440px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-default);
-            padding: 2.8rem 2.5rem;
-            box-shadow: var(--shadow-card);
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
-        }
+/* ============================================================
+   FORM
+   ============================================================ */
+.form-group { margin-bottom: 1.25rem; }
 
-        .login-card:hover {
-            box-shadow: var(--shadow-hover);
-        }
+.form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.005em;
+}
 
-        /* ---------- HEADER ---------- */
-        .card-header {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
+.form-group input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    color: var(--ink);
+    font-size: 1rem;
+    font-family: var(--body);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+.form-group input::placeholder { color: var(--ink-mute); }
+.form-group input:focus {
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.08);
+}
+.form-group input.error {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(138, 58, 46, 0.08);
+}
 
-        .card-header .brand {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 1.8rem;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #ffffff 0%, var(--primary-container) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: inline-block;
-        }
+.error-message {
+    display: none;
+    font-size: 0.75rem;
+    color: var(--error);
+    margin-top: 0.4rem;
+    line-height: 1.5;
+}
+.error-message.visible { display: block; }
 
-        .card-header .sub {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 0.2rem;
-        }
+/* ---------- Phone group ---------- */
+.phone-group {
+    display: flex;
+    align-items: stretch;
+}
+.phone-prefix {
+    flex: 0 0 auto;
+    padding: 0.85rem 0.95rem;
+    background: var(--paper-deep);
+    border: 1px solid var(--rule-strong);
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+.phone-group input {
+    border-radius: 0 6px 6px 0;
+    flex: 1;
+    min-width: 0;
+}
+.phone-group input:focus {
+    border-radius: 0 6px 6px 0;
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.08);
+}
 
-        .card-header .sub .highlight {
-            color: var(--primary-container);
-            font-weight: 600;
-        }
+/* ---------- Password + eye toggle ---------- */
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 3rem; }
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: var(--ink-mute);
+    transition: color 0.15s ease, background 0.15s ease;
+}
+.password-toggle:hover { color: var(--ink); background: rgba(15, 26, 20, 0.04); }
+.password-toggle:focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 2px;
+}
+.password-toggle svg { width: 18px; height: 18px; }
+.password-toggle .eye-closed { display: none; }
+.password-toggle.revealed .eye-open { display: none; }
+.password-toggle.revealed .eye-closed { display: block; }
 
-        .card-header .rating {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            margin-top: 0.6rem;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        .card-header .rating .stars {
-            color: #f5b342;
-            letter-spacing: 1px;
-        }
+/* ---------- Forgot password link ---------- */
+.forgot-link {
+    text-align: right;
+    margin: -0.3rem 0 1.5rem;
+}
+.forgot-link a {
+    font-size: 0.8rem;
+    color: var(--ink-mute);
+    transition: color 0.2s ease;
+}
+.forgot-link a:hover { color: var(--forest); }
 
-        /* ---------- FORM ---------- */
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
+/* ---------- Submit button ---------- */
+.btn-submit {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: var(--forest);
+    color: var(--paper);
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: var(--body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    transition: background 0.2s ease;
+}
+.btn-submit:hover:not(:disabled) { background: var(--forest-hover); }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .form-group label {
-            display: block;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-        }
+.spinner {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+    border: 1.5px solid rgba(245, 241, 232, 0.35);
+    border-top-color: var(--paper);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-default);
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-family: var(--font-body);
-            transition: all 0.25s ease;
-            outline: none;
-        }
+/* ---------- Alert ---------- */
+.alert-box {
+    display: none;
+    padding: 0.85rem 1rem;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+}
+.alert-box.success {
+    display: block;
+    background: var(--success-bg);
+    border-color: rgba(27, 67, 50, 0.2);
+    color: var(--success);
+}
+.alert-box.error {
+    display: block;
+    background: var(--error-bg);
+    border-color: rgba(138, 58, 46, 0.2);
+    color: var(--error);
+}
 
-        .form-group input:focus {
-            border-color: var(--primary-container);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 0 3px rgba(0, 109, 50, 0.12);
-        }
+/* ---------- Trust footer ---------- */
+.trust-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.75rem;
+    margin-top: 3rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+    flex-wrap: wrap;
+}
+.trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--ink-mute);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.trust-item svg {
+    width: 14px;
+    height: 14px;
+    color: var(--forest);
+    flex-shrink: 0;
+}
 
-        .form-group input::placeholder {
-            color: var(--text-muted);
-        }
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+    .masthead-inner { padding: 0.9rem 1.25rem; }
+    .wordmark { font-size: 1rem; }
+    .wordmark-mark { width: 24px; height: 24px; font-size: 0.8rem; }
+    .masthead-note { display: none; }
 
-        .form-group input.error {
-            border-color: var(--error);
-            box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.12);
-        }
+    .login-main {
+        padding: 7rem 1.25rem 3rem;
+    }
 
-        .form-group .error-message {
-            display: none;
-            font-size: 0.7rem;
-            color: var(--error);
-            margin-top: 0.2rem;
-        }
+    .card-title { font-size: 1.6rem; }
+    .card-sub { font-size: 0.88rem; }
 
-        .form-group .error-message.visible {
-            display: block;
-        }
+    .form-group input {
+        padding: 0.8rem 0.9rem;
+        font-size: 1rem;
+    }
 
-        /* Phone input */
-        .phone-group {
-            display: flex;
-            gap: 0.5rem;
-        }
+    .phone-prefix {
+        padding: 0.8rem 0.85rem;
+        font-size: 0.9rem;
+    }
 
-        .phone-group .prefix {
-            flex: 0 0 auto;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-default);
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-        }
+    .btn-submit {
+        padding: 0.9rem 1rem;
+        font-size: 0.98rem;
+    }
 
-        .phone-group input {
-            flex: 1;
-        }
+    .trust-footer { gap: 1rem 1.5rem; margin-top: 2.25rem; }
+    .trust-item { font-size: 0.68rem; }
+}
 
-        /* ---------- FORGOT PASSWORD ---------- */
-        .forgot-link {
-            text-align: right;
-            margin: -0.2rem 0 1.2rem;
-        }
-
-        .forgot-link a {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .forgot-link a:hover {
-            color: var(--primary-container);
-        }
-
-        /* ---------- SUBMIT BUTTON ---------- */
-        .btn-submit {
-            width: 100%;
-            padding: 0.9rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
-            border: none;
-            border-radius: var(--radius-default);
-            color: var(--on-primary);
-            font-size: 1.05rem;
-            font-weight: 600;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 109, 50, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 109, 50, 0.35);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .spinner {
-            display: none;
-            width: 1.2rem;
-            height: 1.2rem;
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ---------- ALERT ---------- */
-        .alert-box {
-            display: none;
-            padding: 0.8rem 1rem;
-            border-radius: var(--radius-default);
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 1.2rem;
-            text-align: center;
-            border: 1px solid transparent;
-        }
-
-        .alert-box.success {
-            display: block;
-            background: rgba(46, 204, 113, 0.1);
-            border-color: rgba(46, 204, 113, 0.2);
-            color: var(--accent-green);
-        }
-
-        .alert-box.error {
-            display: block;
-            background: var(--error-bg);
-            border-color: rgba(248, 113, 113, 0.2);
-            color: var(--error);
-        }
-
-        /* ---------- TRUST FOOTER (SVG icons) ---------- */
-        .trust-footer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1.5rem;
-            margin-top: 1.8rem;
-            padding-top: 1.2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            flex-wrap: wrap;
-        }
-
-        .trust-footer span {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .trust-footer .icon {
-            width: 16px;
-            height: 16px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .trust-footer .icon.active {
-            color: var(--primary-container);
-        }
-
-        /* ---------- FOOTER LINK ---------- */
-        .card-footer-link {
-            text-align: center;
-            margin-top: 1.2rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .card-footer-link a {
-            color: var(--primary-container);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-        .card-footer-link a:hover {
-            color: #4ade80;
-        }
-
-        /* ---------- RESPONSIVE ---------- */
-        @media (max-width: 500px) {
-            .login-card {
-                padding: 1.8rem 1.2rem;
-            }
-
-            .card-header .brand {
-                font-size: 1.5rem;
-            }
-
-            .phone-group .prefix {
-                padding: 0.7rem 0.8rem;
-                font-size: 0.85rem;
-            }
-
-            .form-group input {
-                font-size: 0.95rem;
-                padding: 0.7rem 0.9rem;
-            }
-
-            .btn-submit {
-                font-size: 0.95rem;
-                padding: 0.8rem;
-            }
-
-            .trust-footer {
-                gap: 0.8rem;
-                font-size: 0.55rem;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .login-card {
-                padding: 1.2rem 0.8rem;
-            }
-            .card-header .sub {
-                font-size: 0.8rem;
-            }
-        }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

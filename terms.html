@@ -4,228 +4,741 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Terms of Service · RockWin Investment</title>
+    <meta name="description" content="Terms of Service for the RockWin Investment money market fund platform." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="index.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <style>
-        .legal-hero {
-            padding: 8rem 1.5rem 2rem;
-            max-width: 800px;
+        /* ============================================================
+           DESIGN TOKENS
+           ============================================================ */
+        :root {
+            --paper:          #F5F1E8;
+            --paper-deep:     #EDE7DA;
+            --ink:            #0F1A14;
+            --ink-soft:       #4A534D;
+            --ink-mute:       #8A9089;
+            --rule:           rgba(15, 26, 20, 0.08);
+            --rule-strong:    rgba(15, 26, 20, 0.16);
+            --forest:         #1B4332;
+            --forest-hover:   #0F2D20;
+            --forest-soft:    rgba(27, 67, 50, 0.08);
+
+            --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+            --body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+            --shell: 1200px;
+            --gutter: 1.5rem;
+        }
+
+        /* ============================================================
+           RESET
+           ============================================================ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--body);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+        svg { display: block; }
+        ul, ol { list-style: none; }
+
+        .shell {
+            max-width: var(--shell);
             margin: 0 auto;
+            padding: 0 var(--gutter);
+            width: 100%;
         }
 
-        .legal-hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.6rem;
+        /* ============================================================
+           MASTHEAD
+           ============================================================ */
+        .masthead {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: transparent;
+            transition: background 0.25s ease, border-color 0.25s ease;
+            border-bottom: 1px solid transparent;
         }
-
-        .legal-hero .updated {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
+        .masthead.scrolled {
+            background: var(--paper);
+            border-bottom-color: var(--rule);
+        }
+        .masthead-inner {
+            max-width: var(--shell);
+            margin: 0 auto;
+            padding: 1.15rem var(--gutter);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+        .wordmark {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--display);
             font-weight: 600;
-        }
-
-        .legal-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 5rem;
-        }
-
-        .legal-content h2 {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 2.5rem 0 1rem;
-            color: var(--text-primary);
+            font-size: 1.15rem;
             letter-spacing: -0.01em;
+            font-variation-settings: "opsz" 72;
         }
-
-        .legal-content h3 {
-            font-family: var(--font-display);
-            font-size: 1.05rem;
+        .wordmark-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            background: var(--forest);
+            color: var(--paper);
+            border-radius: 6px;
             font-weight: 600;
-            margin: 1.8rem 0 0.6rem;
-            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-variation-settings: "opsz" 72;
+        }
+        .wordmark-sub { color: var(--ink-mute); font-weight: 500; }
+
+        .primary-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+        .primary-nav a {
+            color: var(--ink-soft);
+            transition: color 0.2s ease;
+        }
+        .primary-nav a:hover { color: var(--ink); }
+        .primary-nav a.active { color: var(--ink); font-weight: 500; }
+        .nav-signin { margin-left: 0.5rem; }
+        .nav-cta {
+            background: var(--forest);
+            color: var(--paper) !important;
+            padding: 0.55rem 1.15rem;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        .nav-cta:hover { background: var(--forest-hover); }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding: 6px;
+        }
+        .nav-toggle span {
+            width: 22px; height: 1.5px;
+            background: var(--ink);
+            transition: transform 0.25s ease, opacity 0.2s ease;
+        }
+        .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+        .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+        .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0 var(--gutter) 1.5rem;
+            background: var(--paper);
+            border-bottom: 1px solid var(--rule);
+        }
+        .mobile-menu a {
+            padding: 0.85rem 0;
+            font-size: 1rem;
+            color: var(--ink-soft);
+            border-bottom: 1px solid var(--rule);
+        }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a.mobile-cta {
+            color: var(--forest);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .mobile-menu.open { display: flex; }
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+        .legal-hero {
+            padding: 9rem 0 2.5rem;
+            border-bottom: 1px solid var(--rule);
+        }
+        .legal-hero-inner { max-width: 60ch; }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-weight: 500;
+            color: var(--ink-mute);
+            margin-bottom: 1.5rem;
+        }
+        .eyebrow-rule {
+            width: 32px; height: 1px;
+            background: var(--ink-mute);
+            display: inline-block;
+        }
+        .legal-hero h1 {
+            font-family: var(--display);
+            font-weight: 500;
+            font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+            line-height: 1.08;
+            letter-spacing: -0.025em;
+            color: var(--ink);
+            margin-bottom: 1.25rem;
+            font-variation-settings: "opsz" 144;
+        }
+        .legal-hero .lede {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.65;
+            max-width: 54ch;
+        }
+        .legal-updated {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--rule);
+            font-size: 0.82rem;
+            color: var(--ink-mute);
+            max-width: 48ch;
+        }
+        .legal-updated strong { color: var(--ink); font-weight: 500; }
+
+        /* ============================================================
+           LAYOUT
+           ============================================================ */
+        .legal-layout {
+            padding: 3.5rem 0 5rem;
+        }
+        .legal-grid {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 5rem;
+            align-items: start;
         }
 
-        .legal-content p {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.8;
+        /* ---------- TOC ---------- */
+        .toc {
+            position: sticky;
+            top: 6rem;
+        }
+        .toc-title {
+            font-family: var(--body);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--ink-mute);
+            font-weight: 500;
             margin-bottom: 1rem;
         }
-
-        .legal-content ul {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.8;
-            margin: 0.5rem 0 1rem 1.5rem;
-            padding-left: 1rem;
+        .toc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            border-left: 1px solid var(--rule);
+        }
+        .toc-list a {
+            display: block;
+            padding: 0.4rem 0 0.4rem 1rem;
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            border-left: 2px solid transparent;
+            margin-left: -1px;
+            transition: color 0.15s ease, border-color 0.15s ease;
+            line-height: 1.4;
+        }
+        .toc-list a:hover {
+            color: var(--forest);
+            border-left-color: var(--forest);
         }
 
-        .legal-content li {
-            margin-bottom: 0.5rem;
+        /* ---------- CONTENT ---------- */
+        .legal-content {
+            max-width: 72ch;
         }
-
-        .legal-content strong {
-            color: var(--text-primary);
-            font-weight: 600;
+        .legal-intro {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.75;
+            margin-bottom: 1.75rem;
         }
-
-        .legal-content a {
-            color: var(--primary-container);
-            text-decoration: none;
-        }
-
-        .legal-content a:hover {
-            text-decoration: underline;
-        }
-
         .legal-callout {
-            background: rgba(0, 109, 50, 0.06);
-            border-left: 3px solid var(--primary-container);
-            border-radius: var(--radius-default);
-            padding: 1rem 1.2rem;
-            margin: 1.5rem 0;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+            background: var(--forest-soft);
+            border-left: 3px solid var(--forest);
+            border-radius: 0 6px 6px 0;
+            padding: 1.15rem 1.35rem;
+            margin-bottom: 3rem;
+            font-size: 0.9rem;
+            color: var(--ink-soft);
             line-height: 1.7;
+        }
+        .legal-callout strong { color: var(--ink); font-weight: 500; }
+
+        .legal-section {
+            padding-top: 3rem;
+            border-top: 1px solid var(--rule);
+            margin-top: 3rem;
+        }
+        .legal-section:first-of-type {
+            padding-top: 0;
+            border-top: none;
+            margin-top: 0;
+        }
+
+        .legal-section h2 {
+            font-family: var(--display);
+            font-weight: 500;
+            font-size: 1.5rem;
+            letter-spacing: -0.018em;
+            color: var(--ink);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            font-variation-settings: "opsz" 120;
+            scroll-margin-top: 6rem;
+        }
+        .legal-section h2 .num {
+            font-family: var(--body);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--forest);
+            letter-spacing: 0.08em;
+            flex-shrink: 0;
+        }
+        .legal-section h3 {
+            font-family: var(--display);
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: -0.01em;
+            color: var(--ink);
+            margin: 2rem 0 0.75rem;
+            font-variation-settings: "opsz" 72;
+        }
+
+        .legal-section p {
+            font-size: 0.96rem;
+            color: var(--ink-soft);
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+        .legal-section p:last-child { margin-bottom: 0; }
+
+        .legal-section ul {
+            margin: 1rem 0 1.25rem;
+            padding-left: 0;
+            list-style: none;
+        }
+        .legal-section ul li {
+            font-size: 0.96rem;
+            color: var(--ink-soft);
+            line-height: 1.7;
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            border-bottom: 1px solid var(--rule);
+            position: relative;
+        }
+        .legal-section ul li:last-child { border-bottom: none; }
+        .legal-section ul li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--ink-mute);
+            font-weight: 400;
+        }
+
+        .legal-section strong { color: var(--ink); font-weight: 500; }
+
+        .legal-section a {
+            color: var(--forest);
+            border-bottom: 1px solid rgba(27, 67, 50, 0.25);
+            transition: border-color 0.15s ease;
+        }
+        .legal-section a:hover { border-color: var(--forest); }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .page-footer {
+            padding: 2rem 0 3rem;
+            border-top: 1px solid var(--rule);
+        }
+        .page-footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.78rem;
+            color: var(--ink-mute);
+        }
+        .page-footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .page-footer-links a {
+            color: var(--ink-mute);
+            transition: color 0.15s ease;
+        }
+        .page-footer-links a:hover { color: var(--forest); }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 900px) {
+            .legal-hero { padding: 7rem 0 2rem; }
+            .legal-layout { padding: 2.5rem 0 4rem; }
+            .legal-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .toc {
+                position: static;
+                padding-bottom: 1.5rem;
+                border-bottom: 1px solid var(--rule);
+            }
+            .toc-list {
+                border-left: none;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .toc-list a {
+                padding: 0.35rem 0.85rem;
+                border: 1px solid var(--rule);
+                border-radius: 9999px;
+                font-size: 0.78rem;
+                margin-left: 0;
+                background: var(--paper);
+            }
+            .toc-list a:hover {
+                border-color: var(--forest);
+                background: var(--forest-soft);
+            }
+        }
+
+        @media (max-width: 720px) {
+            :root { --gutter: 1.25rem; }
+            .primary-nav { display: none; }
+            .nav-toggle { display: flex; }
+
+            .legal-hero { padding: 6rem 0 2rem; }
+            .legal-layout { padding: 2rem 0 3rem; }
+
+            .legal-section h2 { font-size: 1.3rem; gap: 0.75rem; }
+            .legal-section h2 .num { font-size: 0.72rem; }
+            .legal-section h3 { font-size: 1.02rem; }
+
+            .legal-section p,
+            .legal-section ul li { font-size: 0.92rem; }
+
+            .legal-callout { padding: 1rem 1.15rem; font-size: 0.86rem; }
+
+            .page-footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ============================================================
+           PRINT
+           ============================================================ */
+        @media print {
+            .masthead, .nav-toggle, .toc, .page-footer-links { display: none; }
+            body { background: #fff; color: #000; font-size: 11pt; }
+            .legal-hero { padding: 0 0 1rem; }
+            .legal-layout { padding: 1rem 0; }
+            .legal-grid { display: block; }
+            .legal-section { page-break-inside: avoid; }
+            .legal-section h2 { page-break-after: avoid; }
+            .legal-section a { color: #000; text-decoration: underline; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="glass-nav" role="navigation">
-        <div class="brand">RockWin<span> Investment</span></div>
-        <div class="nav-links">
+    <!-- ====== MASTHEAD ====== -->
+    <header class="masthead" id="masthead">
+        <div class="masthead-inner">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+            </a>
+
+            <nav class="primary-nav" aria-label="Primary">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html" class="active">Terms</a>
+                <a href="login.html" class="nav-signin">Sign in</a>
+                <a href="signup.html" class="nav-cta">Open an account</a>
+            </nav>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="privacy.html">Privacy</a>
-            <a href="login.html">Sign In</a>
-            <button class="btn-nav-primary" onclick="window.location.href='signup.html'">Start Investing</button>
-        </div>
-    </nav>
+            <a href="login.html">Sign in</a>
+            <a href="signup.html" class="mobile-cta">Open an account</a>
+        </nav>
+    </header>
 
-    <section class="legal-hero">
-        <div class="updated">Last updated: 11 October 2026</div>
-        <h1>Terms of Service</h1>
-    </section>
+    <main>
 
-    <section class="legal-content">
+        <!-- ====== HERO ====== -->
+        <section class="legal-hero">
+            <div class="shell">
+                <div class="legal-hero-inner">
+                    <span class="eyebrow">
+                        <span class="eyebrow-rule"></span>
+                        Legal
+                    </span>
+                    <h1>Terms of Service</h1>
+                    <p class="lede">
+                        These Terms govern your use of the RockWin Investment platform. By opening an account, you agree to them.
+                    </p>
+                    <p class="legal-updated">
+                        Last updated <strong>11 October 2026</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-        <p>These Terms of Service ("Terms") govern your access to and use of the RockWin Investment platform, mobile applications, and related services (collectively, the "Service"). By creating an account or using the Service, you agree to be bound by these Terms.</p>
+        <!-- ====== CONTENT ====== -->
+        <section class="legal-layout">
+            <div class="shell">
+                <div class="legal-grid">
 
-        <div class="legal-callout">
-            <strong>Please read carefully.</strong> RockWin Investment Ltd is a fund manager licensed by the Capital Markets Authority (CMA) of Kenya. Your investment is subject to market risks. Past performance is not indicative of future returns.
-        </div>
+                    <!-- Table of contents -->
+                    <aside class="toc" aria-label="Contents">
+                        <div class="toc-title">Contents</div>
+                        <nav class="toc-list">
+                            <a href="#s1">1. Eligibility</a>
+                            <a href="#s2">2. Account &amp; KYC</a>
+                            <a href="#s3">3. The investment</a>
+                            <a href="#s4">4. Deposits &amp; redemptions</a>
+                            <a href="#s5">5. Fees &amp; taxes</a>
+                            <a href="#s6">6. Suspension &amp; closure</a>
+                            <a href="#s7">7. Data &amp; privacy</a>
+                            <a href="#s8">8. Liability</a>
+                            <a href="#s9">9. Changes</a>
+                            <a href="#s10">10. Governing law</a>
+                            <a href="#s11">11. Contact</a>
+                        </nav>
+                    </aside>
 
-        <h2>1. Eligibility</h2>
-        <p>To use RockWin Investment, you must:</p>
-        <ul>
-            <li>Be at least 18 years old</li>
-            <li>Be a resident of Kenya or an approved jurisdiction</li>
-            <li>Provide accurate, current, and complete identification information as required for KYC compliance</li>
-            <li>Not be prohibited by any applicable law from using the Service</li>
-        </ul>
+                    <!-- Legal content -->
+                    <article class="legal-content">
 
-        <h2>2. Account Registration & KYC</h2>
-        <p>You agree to provide truthful information during registration, including your full legal name, National ID or Passport number, date of birth, phone number, email address, and Next of Kin details. You consent to RockWin Investment verifying this information against government databases and third-party KYC providers.</p>
-        <p>You are responsible for keeping your password secure. Notify us immediately at <a href="mailto:support@rockwin.co.ke">support@rockwin.co.ke</a> if you suspect unauthorised access.</p>
+                        <p class="legal-intro">
+                            These Terms of Service ("Terms") govern your access to and use of the RockWin Investment platform, mobile applications, and related services (collectively, the "Service"). By creating an account or using the Service, you agree to be bound by these Terms.
+                        </p>
 
-        <h2>3. Nature of the Investment</h2>
-        <p>RockWin Investment operates an open-ended money market fund. When you deposit funds:</p>
-        <ul>
-            <li>Your money is converted into <strong>units</strong> at the prevailing NAV per unit</li>
-            <li>Units represent your proportional ownership of the fund's underlying assets</li>
-            <li>Interest accrues daily and compounds monthly</li>
-            <li>You may redeem your units at any time, subject to the redemption process</li>
-        </ul>
-        <p><strong>RockWin Investment does not guarantee returns.</strong> The fund's value may fluctuate based on market conditions.</p>
+                        <div class="legal-callout">
+                            <strong>Please read carefully.</strong> RockWin Investment Ltd is a fund manager licensed by the Capital Markets Authority (CMA) of Kenya. Your investment is subject to market risk. Past performance is not indicative of future returns.
+                        </div>
 
-        <h2>4. Deposits & Redemptions</h2>
-        <h3>4.1 Deposits</h3>
-        <p>Deposits may be made via M-PESA, bank transfer, or other approved channels. Minimum initial investment is KES 1,000. Units are credited once payment is confirmed.</p>
-        <h3>4.2 Redemptions</h3>
-        <p>You may redeem units at any time. Redemption requests are processed within:</p>
-        <ul>
-            <li><strong>24 hours</strong> for M-PESA payouts</li>
-            <li><strong>2–3 business days</strong> for bank transfers</li>
-        </ul>
-        <p>A minimum balance of KES 1,000 must remain in your account, unless you are closing it entirely.</p>
+                        <section class="legal-section" id="s1">
+                            <h2><span class="num">01</span> Eligibility</h2>
+                            <p>To use RockWin Investment, you must:</p>
+                            <ul>
+                                <li>Be at least 18 years old</li>
+                                <li>Be a resident of Kenya or an approved jurisdiction</li>
+                                <li>Provide accurate, current, and complete identification information as required for KYC compliance</li>
+                                <li>Not be prohibited by any applicable law from using the Service</li>
+                            </ul>
+                        </section>
 
-        <h2>5. Fees & Taxes</h2>
-        <p>RockWin Investment charges the following fees, deducted from fund assets (not from your account directly):</p>
-        <ul>
-            <li>Management Fee: 1.20% p.a.</li>
-            <li>Trustee Fee: 0.15% p.a.</li>
-            <li>Custodian Fee: 0.10% p.a.</li>
-        </ul>
-        <p>Interest earned is subject to a <strong>15% withholding tax</strong> as required by the Kenya Revenue Authority (KRA). This tax is deducted at source and remitted directly to KRA.</p>
+                        <section class="legal-section" id="s2">
+                            <h2><span class="num">02</span> Account registration &amp; KYC</h2>
+                            <p>You agree to provide truthful information during registration, including your full legal name, National ID or Passport number, date of birth, phone number, email address, and next of kin details. You consent to RockWin Investment verifying this information against government databases and third-party KYC providers.</p>
+                            <p>You are responsible for keeping your password secure. Notify us immediately at <a href="mailto:support@rockwin.co.ke">support@rockwin.co.ke</a> if you suspect unauthorised access.</p>
+                        </section>
 
-        <h2>6. Account Suspension & Closure</h2>
-        <p>We may suspend or close your account if:</p>
-        <ul>
-            <li>We detect fraudulent or suspicious activity</li>
-            <li>You violate these Terms or applicable laws</li>
-            <li>We are required to do so by CMA, KRA, or other regulators</li>
-            <li>You fail to complete KYC verification</li>
-        </ul>
-        <p>You may close your account at any time from the Settings page. Upon closure, your units will be redeemed and paid to your registered M-PESA or bank account.</p>
+                        <section class="legal-section" id="s3">
+                            <h2><span class="num">03</span> The investment</h2>
+                            <p>RockWin Investment operates an open-ended money market fund. When you deposit funds:</p>
+                            <ul>
+                                <li>Your money is converted into <strong>units</strong> at the prevailing NAV per unit</li>
+                                <li>Units represent your proportional ownership of the fund's underlying assets</li>
+                                <li>Interest accrues daily and is credited as units each morning, so it compounds automatically</li>
+                                <li>You may redeem your units at any time, subject to the redemption process</li>
+                            </ul>
+                            <p><strong>RockWin Investment does not guarantee returns.</strong> The fund's value may fluctuate based on market conditions.</p>
+                        </section>
 
-        <h2>7. Data & Privacy</h2>
-        <p>We collect, process, and store your personal data in accordance with our <a href="privacy.html">Privacy Policy</a> and the Kenya Data Protection Act (2019). By using the Service, you consent to this processing.</p>
+                        <section class="legal-section" id="s4">
+                            <h2><span class="num">04</span> Deposits &amp; redemptions</h2>
+                            <h3>4.1 Deposits</h3>
+                            <p>Deposits may be made via M-PESA, bank transfer, or other approved channels. Minimum initial investment is KES 1,000. Units are credited once payment is confirmed.</p>
+                            <h3>4.2 Redemptions</h3>
+                            <p>You may redeem units at any time. Redemption requests are processed within:</p>
+                            <ul>
+                                <li><strong>24 hours</strong> for M-PESA payouts</li>
+                                <li><strong>2–3 business days</strong> for bank transfers</li>
+                            </ul>
+                            <p>A minimum balance of KES 1,000 must remain in your account unless you are closing it entirely.</p>
+                        </section>
 
-        <h2>8. Limitation of Liability</h2>
-        <p>To the maximum extent permitted by law, RockWin Investment Ltd, its directors, employees, and agents shall not be liable for:</p>
-        <ul>
-            <li>Investment losses due to market fluctuations</li>
-            <li>Interruptions to the Service due to technical or network issues</li>
-            <li>Delays caused by third-party payment providers</li>
-            <li>Indirect or consequential damages arising from use of the Service</li>
-        </ul>
+                        <section class="legal-section" id="s5">
+                            <h2><span class="num">05</span> Fees &amp; taxes</h2>
+                            <p>RockWin Investment charges the following fees, deducted from fund assets (not from your account directly):</p>
+                            <ul>
+                                <li>Management fee: 1.20% p.a.</li>
+                                <li>Trustee fee: 0.15% p.a.</li>
+                                <li>Custodian fee: 0.10% p.a.</li>
+                            </ul>
+                            <p>Interest earned is subject to a <strong>15% withholding tax</strong> as required by the Kenya Revenue Authority (KRA). This tax is deducted at source and remitted directly to KRA.</p>
+                        </section>
 
-        <h2>9. Changes to These Terms</h2>
-        <p>We may update these Terms from time to time. Material changes will be communicated via SMS and email at least 14 days before they take effect. Continued use of the Service after that date constitutes acceptance.</p>
+                        <section class="legal-section" id="s6">
+                            <h2><span class="num">06</span> Account suspension &amp; closure</h2>
+                            <p>We may suspend or close your account if:</p>
+                            <ul>
+                                <li>We detect fraudulent or suspicious activity</li>
+                                <li>You violate these Terms or applicable laws</li>
+                                <li>We are required to do so by the CMA, KRA, or other regulators</li>
+                                <li>You fail to complete KYC verification</li>
+                            </ul>
+                            <p>You may close your account at any time from the Settings page. Upon closure, your units will be redeemed and paid to your registered M-PESA or bank account.</p>
+                        </section>
 
-        <h2>10. Governing Law & Dispute Resolution</h2>
-        <p>These Terms are governed by the laws of Kenya. Any dispute arising from the Service shall be resolved through:</p>
-        <ul>
-            <li>Good-faith negotiation between you and RockWin Investment</li>
-            <li>Mediation, if negotiation fails</li>
-            <li>Arbitration in Nairobi under the Chartered Institute of Arbitrators (Kenya Branch)</li>
-        </ul>
+                        <section class="legal-section" id="s7">
+                            <h2><span class="num">07</span> Data &amp; privacy</h2>
+                            <p>We collect, process, and store your personal data in accordance with our <a href="privacy.html">Privacy Policy</a> and the Kenya Data Protection Act (2019). By using the Service, you consent to this processing.</p>
+                        </section>
 
-        <h2>11. Contact</h2>
-        <p>Questions about these Terms? Contact us:</p>
-        <ul>
-            <li>Email: <a href="mailto:legal@rockwin.co.ke">legal@rockwin.co.ke</a></li>
-            <li>Phone: +254 700 123 456</li>
-            <li>Address: RockWin Investment Ltd, Nairobi, Kenya</li>
-        </ul>
+                        <section class="legal-section" id="s8">
+                            <h2><span class="num">08</span> Limitation of liability</h2>
+                            <p>To the maximum extent permitted by law, RockWin Investment Ltd, its directors, employees, and agents shall not be liable for:</p>
+                            <ul>
+                                <li>Investment losses due to market fluctuations</li>
+                                <li>Interruptions to the Service due to technical or network issues</li>
+                                <li>Delays caused by third-party payment providers</li>
+                                <li>Indirect or consequential damages arising from use of the Service</li>
+                            </ul>
+                        </section>
 
-    </section>
+                        <section class="legal-section" id="s9">
+                            <h2><span class="num">09</span> Changes to these Terms</h2>
+                            <p>We may update these Terms from time to time. Material changes will be communicated via SMS and email at least 14 days before they take effect. Continued use of the Service after that date constitutes acceptance.</p>
+                        </section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom" style="padding-top:1.5rem;">
+                        <section class="legal-section" id="s10">
+                            <h2><span class="num">10</span> Governing law &amp; dispute resolution</h2>
+                            <p>These Terms are governed by the laws of Kenya. Any dispute arising from the Service shall be resolved through:</p>
+                            <ul>
+                                <li>Good-faith negotiation between you and RockWin Investment</li>
+                                <li>Mediation, if negotiation fails</li>
+                                <li>Arbitration in Nairobi under the Chartered Institute of Arbitrators (Kenya Branch)</li>
+                            </ul>
+                        </section>
+
+                        <section class="legal-section" id="s11">
+                            <h2><span class="num">11</span> Contact</h2>
+                            <p>Questions about these Terms? Contact us:</p>
+                            <ul>
+                                <li>Email: <a href="mailto:legal@rockwin.co.ke">legal@rockwin.co.ke</a></li>
+                                <li>Phone: +254 700 123 456</li>
+                                <li>Address: RockWin Investment Ltd, Nairobi, Kenya</li>
+                            </ul>
+                        </section>
+
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="page-footer">
+        <div class="shell">
+            <div class="page-footer-inner">
                 <span>&copy; 2026 RockWin Investment. All rights reserved.</span>
-                <div class="socials">
+                <nav class="page-footer-links" aria-label="Footer">
                     <a href="terms.html">Terms</a>
                     <a href="privacy.html">Privacy</a>
                     <a href="about.html">About</a>
-                </div>
+                </nav>
             </div>
         </div>
     </footer>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- MASTHEAD scroll state ----------
+            const masthead = document.getElementById('masthead');
+            if (masthead) {
+                const setScrolled = () => masthead.classList.toggle('scrolled', window.scrollY > 12);
+                setScrolled();
+                window.addEventListener('scroll', setScrolled, { passive: true });
+            }
+
+            // ---------- MOBILE MENU ----------
+            const navToggle = document.getElementById('navToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            function closeMenu() {
+                if (!mobileMenu || !navToggle) return;
+                mobileMenu.classList.remove('open');
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.setAttribute('aria-label', 'Open menu');
+            }
+
+            if (navToggle && mobileMenu) {
+                navToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const open = mobileMenu.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', String(open));
+                    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                });
+
+                mobileMenu.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', closeMenu);
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.masthead')) closeMenu();
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') closeMenu();
+                });
+            }
+
+        })();
+    </script>
 
 </body>
 </html>

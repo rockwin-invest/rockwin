@@ -1,0 +1,261 @@
+/* ============================================================
+   ROCKWIN INVESTMENT — FUND FACTSHEET
+   Extends index.css (masthead, tokens, footer)
+   ============================================================ */
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.fs-hero {
+    padding: 9rem 0 4rem;
+    border-bottom: 1px solid var(--rule);
+}
+.fs-hero-inner {
+    max-width: 60ch;
+}
+.fs-hero .display {
+    max-width: 16ch;
+    margin-bottom: 1.5rem;
+}
+.fs-hero .lede {
+    max-width: 52ch;
+    margin-bottom: 1.75rem;
+}
+.fs-updated {
+    font-size: 0.82rem;
+    color: var(--ink-mute);
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    max-width: 44ch;
+}
+.fs-updated strong { color: var(--ink); font-weight: 500; }
+
+/* ============================================================
+   METRICS STRIP
+   ============================================================ */
+.fs-metrics {
+    border-bottom: 1px solid var(--rule);
+    padding: 2rem 0;
+}
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+}
+.metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.metric-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    font-weight: 500;
+}
+.metric-value {
+    font-family: var(--display);
+    font-size: 1.85rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.05;
+    font-variation-settings: "opsz" 120;
+}
+.metric-sub {
+    font-size: 0.78rem;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.fs-section {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--rule);
+}
+.fs-section-tight {
+    padding: 4rem 0;
+}
+.fs-section:last-of-type {
+    border-bottom: none;
+}
+
+.fs-h2 {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    font-variation-settings: "opsz" 120;
+}
+.fs-h2-sub {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    line-height: 1.65;
+    margin-bottom: 2rem;
+}
+
+/* Prose */
+.fs-prose {
+    max-width: 72ch;
+}
+.fs-prose p {
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+.fs-prose p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.fs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+.fs-table tr {
+    border-bottom: 1px solid var(--rule);
+}
+.fs-table tr:first-child {
+    border-top: 1px solid var(--rule);
+}
+.fs-table th,
+.fs-table td {
+    padding: 1.15rem 0;
+    text-align: left;
+    font-weight: 400;
+    vertical-align: top;
+}
+.fs-table th {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    padding-right: 2rem;
+    width: 55%;
+}
+.fs-table td {
+    font-family: var(--display);
+    font-size: 0.98rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    text-align: right;
+    font-variation-settings: "opsz" 72;
+}
+
+.fs-table-emphasis {
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: none;
+}
+.fs-table-emphasis th {
+    color: var(--ink);
+    font-weight: 500;
+    padding-top: 1.35rem;
+}
+.fs-table-emphasis td {
+    color: var(--forest);
+    padding-top: 1.35rem;
+    font-size: 1.05rem;
+}
+
+/* ============================================================
+   DOWNLOAD BANNER
+   ============================================================ */
+.fs-download {
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--rule);
+}
+.fs-download-inner {
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 2rem 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+.fs-download-copy h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.4rem;
+}
+.fs-download-copy p {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    max-width: 48ch;
+    line-height: 1.6;
+}
+.fs-download .btn { flex-shrink: 0; }
+
+/* ============================================================
+   DISCLAIMER
+   ============================================================ */
+.fs-disclaimer {
+    background: rgba(138, 106, 46, 0.05);
+    border: 1px solid rgba(138, 106, 46, 0.14);
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.75;
+    max-width: 80ch;
+}
+.fs-disclaimer strong {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    .fs-hero { padding: 7rem 0 3rem; }
+    .fs-section { padding: 4rem 0; }
+    .fs-section-tight { padding: 3rem 0; }
+    .fs-download-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.75rem 1.5rem;
+    }
+    .fs-download .btn { width: 100%; }
+}
+
+@media (max-width: 640px) {
+    .fs-hero { padding: 6rem 0 2.5rem; }
+    .fs-section,
+    .fs-section-tight { padding: 3rem 0; }
+    .fs-metrics { padding: 1.75rem 0; }
+
+    .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem 1.25rem;
+    }
+    .metric-value { font-size: 1.45rem; }
+    .metric-label { font-size: 0.65rem; }
+    .metric-sub { font-size: 0.72rem; }
+
+    .fs-h2 { font-size: 1.35rem; }
+    .fs-h2-sub { font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .fs-prose p { font-size: 0.95rem; }
+
+    .fs-table th,
+    .fs-table td {
+        padding: 0.9rem 0;
+        font-size: 0.85rem;
+    }
+    .fs-table th { padding-right: 1rem; width: 60%; }
+    .fs-table td { font-size: 0.9rem; }
+    .fs-table-emphasis td { font-size: 0.95rem; }
+
+    .fs-download-inner { padding: 1.5rem 1.25rem; }
+    .fs-disclaimer { padding: 1.25rem 1.25rem; font-size: 0.82rem; }
+}

@@ -39,8 +39,9 @@
         if (!container) return;
         const toast = document.createElement('div');
         toast.className = 'toast ' + (type === 'error' ? 'error' : type === 'info' ? 'info' : '');
-        const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-        toast.innerHTML = '<span class="toast-icon">' + icon + '</span><span class="toast-msg">' + message + '</span>';
+        const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+        toast.innerHTML = '<span class="toast-icon">' + icon + '</span><span class="toast-msg"></span>';
+        toast.querySelector('.toast-msg').textContent = message;
         container.appendChild(toast);
         setTimeout(() => {
             toast.style.opacity = '0';
@@ -64,6 +65,21 @@
     window.contactWhatsApp = contactWhatsApp;
 
     // ============================================================
+    // PASSWORD SHOW / HIDE
+    // ============================================================
+    document.querySelectorAll('.password-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const input = document.getElementById(btn.dataset.target);
+            if (!input) return;
+            const reveal = input.type === 'password';
+            input.type = reveal ? 'text' : 'password';
+            btn.classList.toggle('revealed', reveal);
+            btn.setAttribute('aria-pressed', String(reveal));
+            btn.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+        });
+    });
+
+    // ============================================================
     // RENDER USER DATA
     // ============================================================
     function renderUser(user) {
@@ -78,7 +94,7 @@
         $('userFirstName').textContent = firstName;
         $('userAvatar').textContent = initials;
 
-        // Profile card
+        // Profile banner
         $('profileAvatar').textContent = initials;
         $('profileFullName').textContent = user.fullName;
         $('profileAccountBadge').textContent = 'Account: ' + user.accountNumber;
@@ -92,7 +108,7 @@
 
         // KYC badge
         const kycMap = { active: 'Verified', pending: 'Pending KYC', suspended: 'Suspended' };
-        $('profileKycBadge').textContent = '● ' + (kycMap[user.status] || user.status);
+        $('profileKycBadge').textContent = kycMap[user.status] || user.status;
 
         // Personal Info inputs
         $('settingsFullName').value = user.fullName || '';
@@ -117,7 +133,7 @@
 
         // KYC card
         $('kycIdNumber').textContent = user.idNumber || '—';
-        $('kycStatus').textContent = (kycMap[user.status] || user.status) + ' ✓';
+        $('kycStatus').textContent = (kycMap[user.status] || user.status);
         $('kycKraPin').textContent = user.kraPin || 'Not set';
         $('kycTaxConsent').textContent = user.kraConsent ? 'Accepted' : 'Not accepted';
         $('kycCmaStatus').textContent = 'Active';
@@ -145,7 +161,7 @@
                 method: 'PUT',
                 body: JSON.stringify({ fullName, email, phoneNumber: phone })
             });
-            showToast('Profile updated successfully!', 'success');
+            showToast('Profile updated.', 'success');
             const user = await apiFetch('/api/user/profile');
             renderUser(user);
         } catch (err) {
@@ -179,12 +195,12 @@
             $('currentPassword').value = '';
             $('newPassword').value = '';
             $('confirmNewPassword').value = '';
-            showToast('Password updated successfully.', 'success');
+            showToast('Password updated.', 'success');
         } catch (err) {
             showToast(err.message || 'Failed to update password.', 'error');
         } finally {
             btn.disabled = false;
-            btn.textContent = 'Update Password';
+            btn.textContent = 'Update password';
         }
     };
 
@@ -193,8 +209,6 @@
     // ============================================================
     window.handleToggle = function(key, enabled) {
         const statusMap = {
-            '2fa': '2fa-status',
-            'bio': 'bio-status',
             'email': 'email-status',
             'interest': 'interest-status',
             'login': 'login-status',
@@ -202,12 +216,10 @@
         };
 
         const labelMap = {
-            '2fa': 'Two-Factor Authentication',
-            'bio': 'Biometric Login',
-            'email': 'Email Alerts',
-            'interest': 'Daily Interest Alerts',
-            'login': 'Login Alerts',
-            'marketing': 'Marketing Communications'
+            'email': 'Email alerts',
+            'interest': 'Daily interest alerts',
+            'login': 'Login alerts',
+            'marketing': 'Marketing communications'
         };
 
         const statusEl = $(statusMap[key]);
@@ -225,13 +237,13 @@
     window.handleCloseAccount = function() {
         const confirmText = prompt(
             'To confirm account closure, type "CLOSE" below:\n\n' +
-            '⚠️ All units will be redeemed to your registered M-PESA or bank account within 3 business days.'
+            'All units will be redeemed to your registered M-PESA or bank account within 3 business days.'
         );
 
         if (confirmText === 'CLOSE') {
-            showToast('Account closure request submitted. Our team will contact you within 24 hours.', 'error');
+            showToast('Closure request submitted. Our team will contact you within 24 hours.', 'info');
         } else if (confirmText !== null) {
-            showToast('Account closure cancelled — confirmation text did not match.', 'info');
+            showToast('Closure cancelled — text did not match.', 'info');
         }
     };
 
@@ -253,17 +265,12 @@
     document.addEventListener('DOMContentLoaded', async function() {
         const now = new Date();
         const hour = now.getHours();
-        let greeting = 'Good Morning';
-        if (hour >= 12 && hour < 17) greeting = 'Good Afternoon';
-        else if (hour >= 17) greeting = 'Good Evening';
+        let greeting = 'Good morning';
+        if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
+        else if (hour >= 17) greeting = 'Good evening';
 
-        const greetingEl = document.querySelector('.greeting');
-        if (greetingEl) greetingEl.childNodes[0].nodeValue = '👋 ' + greeting + ', ';
-
-        const mins = now.getMinutes().toString().padStart(2, '0');
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const h12 = hour % 12 || 12;
-        if ($('lastLoginTime')) $('lastLoginTime').textContent = h12 + ':' + mins + ' ' + ampm;
+        const greetingText = $('greetingText');
+        if (greetingText) greetingText.textContent = greeting;
 
         try {
             const user = await apiFetch('/api/user/profile');

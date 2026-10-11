@@ -3,91 +3,111 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In · RockWin Investment</title>
+    <title>Sign in · RockWin Investment</title>
+    <meta name="description" content="Sign in to your RockWin Investment portfolio." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="login.css" />
 </head>
 <body>
 
-    <div class="login-card">
-
-        <!-- Header -->
-        <div class="card-header">
-            <div class="brand">RockWin<span> Investment</span></div>
-            <p class="sub">Welcome back — <span class="highlight">sign in to your portfolio</span></p>
-            <div class="rating">
-                <span class="stars">★★★★★</span>
-                <span>4.9 · Trusted by 18,000+ Kenyans</span>
+    <!-- ====== MASTHEAD ====== -->
+    <header class="masthead">
+        <div class="masthead-inner">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+            </a>
+            <div class="masthead-right">
+                <span class="masthead-note">New to RockWin?</span>
+                <a href="signup.html" class="masthead-link">Open an account</a>
             </div>
         </div>
+    </header>
 
-        <!-- Alert -->
-        <div id="alertBox" class="alert-box"></div>
+    <!-- ====== FORM ====== -->
+    <main class="login-main">
+        <div class="login-card">
 
-        <!-- Login Form -->
-        <form id="loginForm" novalidate>
+            <div class="card-head">
+                <h1 class="card-title">Sign in</h1>
+                <p class="card-sub">Welcome back. Enter your details to continue.</p>
+            </div>
 
-            <div class="form-group">
-                <label for="phoneNumber">Phone Number</label>
-                <div class="phone-group">
-                    <span class="prefix">+254</span>
-                    <input type="tel" id="phoneNumber" placeholder="712 345 678" required pattern="[0-9]{9}" autocomplete="tel" />
+            <div id="alertBox" class="alert-box"></div>
+
+            <form id="loginForm" novalidate>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label for="phoneNumber">Mobile phone number</label>
+                    <div class="phone-group">
+                        <span class="phone-prefix">+254</span>
+                        <input type="tel" id="phoneNumber" placeholder="712 345 678" required pattern="[0-9]{9}" autocomplete="tel" />
+                    </div>
+                    <div class="error-message" id="phoneError">Please enter a valid 9-digit phone number.</div>
                 </div>
-                <div class="error-message" id="phoneError">Please enter a valid 9-digit phone number.</div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="password" placeholder="Your password" required autocomplete="current-password" />
+                        <button type="button" class="password-toggle" data-target="password" aria-label="Show password" aria-pressed="false">
+                            <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError">Please enter your password.</div>
+                </div>
+
+                <div class="forgot-link">
+                    <a href="forgot-password.html">Forgot password?</a>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit">
+                    <div id="btnSpinner" class="spinner"></div>
+                    <span id="btnText">Sign in</span>
+                </button>
+
+            </form>
+
+            <div class="trust-footer">
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                    CMA licensed
+                </span>
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M3 21h18"/>
+                        <path d="M5 21V7l8-4v18"/>
+                        <path d="M19 21V11l-6-4"/>
+                    </svg>
+                    Trustee-held at I&amp;M
+                </span>
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    Audited by Deloitte
+                </span>
             </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
-                <div class="error-message" id="passwordError">Please enter your password.</div>
-            </div>
-
-            <div class="forgot-link">
-                <a href="forgot-password.html">Forgot password?</a>
-            </div>
-
-            <button type="submit" id="submitBtn" class="btn-submit">
-                <div id="btnSpinner" class="spinner"></div>
-                <span id="btnText">Sign In</span>
-            </button>
-
-        </form>
-
-        <!-- Trust Footer -->
-        <div class="trust-footer">
-            <span>
-                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="M9 12l2 2 4-4"/>
-                </svg>
-                CMA Licensed
-            </span>
-            <span>
-                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 21h18"/>
-                    <path d="M5 21V7l8-4v18"/>
-                    <path d="M19 21V11l-6-4"/>
-                </svg>
-                I&M Trustee
-            </span>
-            <span>
-                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-                Deloitte Audited
-            </span>
         </div>
-
-        <div class="card-footer-link">
-            Don't have an account? <a href="signup.html">Start investing here</a>
-        </div>
-
-    </div>
+    </main>
 
     <script src="login.js"></script>
 

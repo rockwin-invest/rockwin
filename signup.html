@@ -3,283 +3,219 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Open Your Investment Account · RockWin Investment</title>
+    <title>Open an account · RockWin Investment</title>
+    <meta name="description" content="Open a RockWin Investment money market fund account in about three minutes. Deposits from KES 1,000. Interest credited daily." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="signup.css" />
-
-    <style>
-        /* ---------- NEXT OF KIN SECTION ---------- */
-        .section-divider {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin: 1.6rem 0 1.2rem;
-        }
-
-        .section-divider .line {
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .section-divider .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        /* ---------- MINIMUM INVESTMENT NOTE ---------- */
-        .min-investment-note {
-            background: rgba(0, 109, 50, 0.08);
-            border: 1px solid rgba(0, 209, 102, 0.15);
-            border-radius: var(--radius-default);
-            padding: 0.7rem 1rem;
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .min-investment-note .icon {
-            width: 18px;
-            height: 18px;
-            color: var(--primary-container);
-            flex-shrink: 0;
-        }
-
-        .min-investment-note strong {
-            color: var(--primary-container);
-            font-weight: 600;
-        }
-
-        /* ---------- YIELD BADGE ---------- */
-        .yield-badge-signup {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, rgba(0, 109, 50, 0.12), rgba(0, 209, 102, 0.08));
-            border: 1px solid rgba(0, 209, 102, 0.2);
-            border-radius: var(--radius-full);
-            padding: 0.35rem 1rem;
-            margin-bottom: 0.6rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--primary-container);
-        }
-
-        .yield-badge-signup .pulse {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--primary-container);
-            animation: pulseSmall 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseSmall {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.75); }
-        }
-    </style>
 </head>
 <body>
 
-    <div class="signup-card">
-
-        <!-- Header -->
-        <div class="card-header">
-            <div class="brand">RockWin<span> Investment</span></div>
-            <div class="yield-badge-signup">
-                <span class="pulse"></span>
-                Current Yield: 14.2% p.a.
-            </div>
-            <p class="sub">Open your investment account in <span class="highlight">under 3 minutes</span></p>
-            <div class="rating">
-                <span class="stars">★★★★★</span>
-                <span>4.9 · Trusted by 18,000+ Kenyans</span>
+    <!-- ====== MASTHEAD ====== -->
+    <header class="masthead">
+        <div class="masthead-inner">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+            </a>
+            <div class="masthead-right">
+                <span class="masthead-note">Already have an account?</span>
+                <a href="login.html" class="masthead-link">Sign in</a>
             </div>
         </div>
+    </header>
 
-        <!-- Alert -->
-        <div id="alertBox" class="alert-box"></div>
+    <!-- ====== FORM ====== -->
+    <main class="signup-main">
+        <div class="signup-card">
 
-        <!-- Minimum investment note -->
-        <div class="min-investment-note">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 16v-4"/>
-                <path d="M12 8h.01"/>
-            </svg>
-            <span>Start investing from just <strong>KES 1,000</strong>. No lock‑in period.</span>
-        </div>
-
-        <!-- Form -->
-        <form id="signupForm" novalidate>
-
-            <!-- Full Name -->
-            <div class="form-group">
-                <label for="fullName">Full Legal Name <span class="required">*</span></label>
-                <input type="text" id="fullName" placeholder="e.g. Johnathan Doe" required autocomplete="name" />
-                <div class="error-message" id="fullNameError">Please enter your full legal name as it appears on your ID.</div>
+            <div class="card-head">
+                <h1 class="card-title">Open an account</h1>
+                <p class="card-sub">About three minutes. All fields marked <span class="req">*</span> are required.</p>
             </div>
 
-            <!-- ID + DOB Row -->
-            <div class="form-row">
+            <div id="alertBox" class="alert-box"></div>
+
+            <form id="signupForm" novalidate>
+
+                <!-- Full Name -->
                 <div class="form-group">
-                    <label for="idNumber">National ID / Passport <span class="required">*</span></label>
-                    <input type="text" id="idNumber" placeholder="e.g. 38920192" required inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="off" />
-                    <div class="error-message" id="idError">Please enter a valid ID or passport number (digits only).</div>
+                    <label for="fullName">Full legal name <span class="req">*</span></label>
+                    <input type="text" id="fullName" placeholder="As it appears on your ID" required autocomplete="name" />
+                    <div class="error-message" id="fullNameError">Please enter your full legal name as it appears on your ID.</div>
                 </div>
+
+                <!-- ID + DOB -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="idNumber">National ID / Passport <span class="req">*</span></label>
+                        <input type="text" id="idNumber" placeholder="38920192" required inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="off" />
+                        <div class="error-message" id="idError">Digits only, 5–10 characters.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of birth <span class="req">*</span></label>
+                        <input type="date" id="dob" required />
+                        <div class="error-message" id="dobError">You must be at least 18 years old.</div>
+                    </div>
+                </div>
+
+                <!-- Phone -->
                 <div class="form-group">
-                    <label for="dob">Date of Birth <span class="required">*</span></label>
-                    <input type="date" id="dob" required />
-                    <div class="error-message" id="dobError">You must be at least 18 years old to open an account.</div>
-                </div>
-            </div>
-
-            <!-- Phone -->
-            <div class="form-group">
-                <label for="phoneNumber">Mobile Phone Number <span class="required">*</span></label>
-                <div class="phone-group">
-                    <span class="prefix">+254</span>
-                    <input type="tel" id="phoneNumber" placeholder="712 345 678" required pattern="[0-9]{9}" autocomplete="tel" />
-                </div>
-                <div class="error-message" id="phoneError">Please enter a valid 9-digit phone number (e.g. 712345678).</div>
-            </div>
-
-            <!-- Email -->
-            <div class="form-group">
-                <label for="email">Email Address <span class="required">*</span></label>
-                <input type="email" id="email" placeholder="e.g. john@example.com" required autocomplete="email" />
-                <div class="error-message" id="emailError">Please enter a valid email address. We'll send statements and updates here.</div>
-            </div>
-
-            <!-- ============ NEXT OF KIN ============ -->
-            <div class="section-divider">
-                <div class="line"></div>
-                <div class="label">Next of Kin (CMA Requirement)</div>
-                <div class="line"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="nokName">Next of Kin Full Name <span class="required">*</span></label>
-                <input type="text" id="nokName" placeholder="e.g. Jane Doe" required autocomplete="off" />
-                <div class="error-message" id="nokNameError">Please enter your next of kin's full name.</div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nokPhone">Next of Kin Phone <span class="required">*</span></label>
+                    <label for="phoneNumber">Mobile phone number <span class="req">*</span></label>
                     <div class="phone-group">
-                        <span class="prefix">+254</span>
-                        <input type="tel" id="nokPhone" placeholder="712 345 678" required pattern="[0-9]{9}" />
+                        <span class="phone-prefix">+254</span>
+                        <input type="tel" id="phoneNumber" placeholder="712 345 678" required pattern="[0-9]{9}" autocomplete="tel" />
                     </div>
-                    <div class="error-message" id="nokPhoneError">Please enter a valid 9-digit phone number.</div>
+                    <div class="error-message" id="phoneError">Please enter a valid 9-digit phone number.</div>
+                    <div class="field-hint">This is the M-PESA number you'll use for deposits.</div>
                 </div>
+
+                <!-- Email -->
                 <div class="form-group">
-                    <label for="nokRelationship">Relationship <span class="required">*</span></label>
-                    <select id="nokRelationship" required style="width:100%; padding:0.75rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius-default); color:var(--text-primary); font-size:1rem; font-family:var(--font-body); outline:none;">
-                        <option value="">Select...</option>
-                        <option value="Spouse">Spouse</option>
-                        <option value="Parent">Parent</option>
-                        <option value="Sibling">Sibling</option>
-                        <option value="Child">Child</option>
-                        <option value="Relative">Relative</option>
-                        <option value="Friend">Friend</option>
-                    </select>
-                    <div class="error-message" id="nokRelationshipError">Please select your relationship.</div>
+                    <label for="email">Email address <span class="req">*</span></label>
+                    <input type="email" id="email" placeholder="you@example.com" required autocomplete="email" />
+                    <div class="error-message" id="emailError">Please enter a valid email address.</div>
+                    <div class="field-hint">Statements and tax certificates will be sent here.</div>
                 </div>
-            </div>
 
-            <!-- ============ SECURITY ============ -->
-            <div class="section-divider">
-                <div class="line"></div>
-                <div class="label">Account Security</div>
-                <div class="line"></div>
-            </div>
+                <!-- ============ NEXT OF KIN ============ -->
+                <div class="section-divider">
+                    <span class="divider-label">Next of kin</span>
+                    <span class="divider-note">Required by CMA</span>
+                </div>
 
-            <!-- Password -->
-            <div class="form-group">
-                <label for="password">Create Password <span class="required">*</span></label>
-                <input type="password" id="password" placeholder="••••••••" required autocomplete="new-password" />
-                <div class="strength-wrapper">
-                    <div class="strength-track">
-                        <div id="strengthFill" class="strength-fill" style="width:0%;"></div>
+                <div class="form-group">
+                    <label for="nokName">Full name <span class="req">*</span></label>
+                    <input type="text" id="nokName" placeholder="Their full legal name" required autocomplete="off" />
+                    <div class="error-message" id="nokNameError">Please enter your next of kin's full name.</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nokPhone">Phone number <span class="req">*</span></label>
+                        <div class="phone-group">
+                            <span class="phone-prefix">+254</span>
+                            <input type="tel" id="nokPhone" placeholder="712 345 678" required pattern="[0-9]{9}" />
+                        </div>
+                        <div class="error-message" id="nokPhoneError">Please enter a valid 9-digit phone number.</div>
                     </div>
-                    <span id="strengthLabel" class="strength-label">Weak</span>
+                    <div class="form-group">
+                        <label for="nokRelationship">Relationship <span class="req">*</span></label>
+                        <select id="nokRelationship" required>
+                            <option value="">Select…</option>
+                            <option value="Spouse">Spouse</option>
+                            <option value="Parent">Parent</option>
+                            <option value="Sibling">Sibling</option>
+                            <option value="Child">Child</option>
+                            <option value="Relative">Relative</option>
+                            <option value="Friend">Friend</option>
+                        </select>
+                        <div class="error-message" id="nokRelationshipError">Please select a relationship.</div>
+                    </div>
                 </div>
-                <div class="error-message" id="passwordError">Password must be at least 6 characters with a mix of letters, numbers, and symbols.</div>
+
+                <!-- ============ SECURITY ============ -->
+                <div class="section-divider">
+                    <span class="divider-label">Account security</span>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Create a password <span class="req">*</span></label>
+                    <div class="password-wrap">
+                        <input type="password" id="password" placeholder="At least 8 characters" required autocomplete="new-password" />
+                        <button type="button" class="password-toggle" data-target="password" aria-label="Show password" aria-pressed="false">
+                            <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="strength-wrapper">
+                        <div class="strength-track">
+                            <div id="strengthFill" class="strength-fill" style="width:0%;"></div>
+                        </div>
+                        <span id="strengthLabel" class="strength-label">Weak</span>
+                    </div>
+                    <div class="error-message" id="passwordError">Password must be at least 6 characters.</div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm password <span class="req">*</span></label>
+                    <div class="password-wrap">
+                        <input type="password" id="confirmPassword" placeholder="Re-enter your password" required autocomplete="new-password" />
+                        <button type="button" class="password-toggle" data-target="confirmPassword" aria-label="Show password" aria-pressed="false">
+                            <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="password-match" id="passwordMatch"></div>
+                </div>
+
+                <!-- Terms -->
+                <div class="terms-group">
+                    <input type="checkbox" id="terms" required />
+                    <label for="terms">
+                        I confirm the information above is accurate. I have read and agree to the
+                        <a href="#">Information Memorandum</a>, <a href="#">Trust Deed</a>, <a href="#">Terms of Service</a> &amp; <a href="#">Privacy Policy</a>.
+                    </label>
+                </div>
+
+                <div class="terms-group">
+                    <input type="checkbox" id="kraConsent" checked />
+                    <label for="kraConsent">
+                        I consent to RockWin Investment deducting <strong>15% withholding tax</strong> on interest earned, as required by KRA.
+                    </label>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit">
+                    <div id="btnSpinner" class="spinner"></div>
+                    <span id="btnText">Create account</span>
+                </button>
+
+            </form>
+
+            <div class="trust-footer">
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                    CMA licensed
+                </span>
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M3 21h18"/>
+                        <path d="M5 21V7l8-4v18"/>
+                        <path d="M19 21V11l-6-4"/>
+                    </svg>
+                    Trustee-held at I&amp;M
+                </span>
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    Audited by Deloitte
+                </span>
             </div>
 
-            <!-- Confirm Password -->
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
-                <input type="password" id="confirmPassword" placeholder="••••••••" required autocomplete="new-password" />
-                <div class="password-match" id="passwordMatch"></div>
-            </div>
-
-            <!-- Terms -->
-            <div class="terms-group">
-                <input type="checkbox" id="terms" required />
-                <label for="terms">
-                    I confirm that all information provided is accurate. I have read and agree to the
-                    <a href="#">Information Memorandum</a>, <a href="#">Trust Deed</a>, <a href="#">Terms of Service</a> &amp; <a href="#">Privacy Policy</a>.
-                </label>
-            </div>
-
-            <!-- KRA Consent (optional but good practice) -->
-            <div class="terms-group" style="margin-top:-0.3rem;">
-                <input type="checkbox" id="kraConsent" checked />
-                <label for="kraConsent">
-                    I consent to RockWin Investment deducting <strong>15% withholding tax</strong> on interest earned as required by KRA.
-                </label>
-            </div>
-
-            <button type="submit" id="submitBtn" class="btn-submit">
-                <div id="btnSpinner" class="spinner"></div>
-                <span id="btnText">Create Your Investment Account</span>
-            </button>
-
-        </form>
-
-        <!-- Trust Footer -->
-        <div class="trust-footer">
-            <span>
-                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="M9 12l2 2 4-4"/>
-                </svg>
-                CMA Licensed
-            </span>
-            <span>
-                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 21h18"/>
-                    <path d="M5 21V7l8-4v18"/>
-                    <path d="M19 21V11l-6-4"/>
-                </svg>
-                I&M Trustee
-            </span>
-            <span>
-                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-                Deloitte Audited
-            </span>
         </div>
-
-        <div class="card-footer-link">
-            Already have an account? <a href="login.html">Sign in here</a>
-        </div>
-
-    </div>
+    </main>
 
     <script src="signup.js"></script>
 

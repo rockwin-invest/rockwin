@@ -34,6 +34,33 @@
         return (num || 0).toLocaleString('en-KE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // ============================================================
+    // TX ICONS — inline SVG, category-matched
+    // ============================================================
+    function txIcon(category) {
+        if (category === 'interest') {
+            return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                '<polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/>' +
+                '</svg>';
+        }
+        if (category === 'deposit') {
+            return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                '<path d="M12 5v14"/><polyline points="19 12 12 19 5 12"/>' +
+                '</svg>';
+        }
+        if (category === 'redemption') {
+            return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                '<path d="M12 19V5"/><polyline points="5 12 12 5 19 12"/>' +
+                '</svg>';
+        }
+        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<circle cx="12" cy="12" r="4"/>' +
+            '</svg>';
+    }
+
+    // ============================================================
+    // RENDER USER DATA
+    // ============================================================
     function renderUser(user) {
         userData = user;
         const firstName = user.fullName ? user.fullName.split(' ')[0] : 'Investor';
@@ -41,17 +68,12 @@
             ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
             : 'U';
 
-        // Update greeting
-        const greetingEl = document.querySelector('.greeting');
-        if (greetingEl) {
-            greetingEl.childNodes[0].nodeValue = '👋 Good Morning, ';
-            const nameSpan = greetingEl.querySelector('span:not(.last-login)');
-            if (nameSpan) nameSpan.textContent = firstName;
-        }
+        // Header — greeting word + name
+        const nameEl = $('userFirstName');
+        if (nameEl) nameEl.textContent = firstName;
 
-        // Avatar
-        const avatar = $('userAvatar');
-        if (avatar) avatar.textContent = initials;
+        const avatarEl = $('userAvatar');
+        if (avatarEl) avatarEl.textContent = initials;
 
         // Portfolio value
         const portfolioEl = $('balanceFigure');
@@ -59,9 +81,7 @@
 
         // Units
         const unitsEl = $('unitsDisplay');
-        if (unitsEl) {
-            unitsEl.textContent = (user.unitsHeld || 0).toFixed(4) + ' units';
-        }
+        if (unitsEl) unitsEl.textContent = (user.unitsHeld || 0).toFixed(4) + ' units';
 
         // Yield
         const yieldEl = $('yieldDisplay');
@@ -71,9 +91,9 @@
         const rewardEl = $('rewardMessage');
         if (rewardEl) {
             if ((user.portfolioValue || 0) === 0) {
-                rewardEl.textContent = 'Welcome! Start investing from KES 100';
+                rewardEl.textContent = 'Welcome — start investing from KES 100.';
             } else {
-                rewardEl.textContent = 'Interest accrues daily · ' + (user.annualYield || 14.2).toFixed(2) + '% p.a.';
+                rewardEl.textContent = 'Interest accrues daily at ' + (user.annualYield || 14.2).toFixed(2) + '% p.a.';
             }
         }
 
@@ -89,21 +109,20 @@
                 }
             }
         }
-
-        // Update account number in deposit modal
-        const depositAcc = $('depositAccountDisplay');
-        if (depositAcc) depositAcc.textContent = user.accountNumber;
     }
 
+    // ============================================================
+    // RENDER TRANSACTIONS
+    // ============================================================
     function renderTransactions(transactions) {
         const container = $('transactionList');
         if (!container) return;
 
         if (!transactions || transactions.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:2rem 0;color:var(--text-muted);">' +
-                '<div style="font-size:2rem;margin-bottom:0.5rem;">📭</div>' +
+            container.innerHTML =
+                '<div class="empty-state">' +
                 '<p>No transactions yet.</p>' +
-                '<p style="font-size:0.8rem;">Your activity will appear here once you start investing.</p>' +
+                '<p style="font-size:0.82rem;margin-top:0.35rem;">Your activity will appear here once you start investing.</p>' +
                 '</div>';
             return;
         }
@@ -122,12 +141,9 @@
             const items = entry[1];
             html += '<div class="transaction-group"><div class="group-date">' + date + '</div>';
             items.forEach(t => {
-                const icon = t.category === 'interest' ? '📈' :
-                             t.category === 'deposit' ? '💰' :
-                             t.category === 'redemption' ? '💳' : '💼';
                 const amountClass = t.type === 'credit' ? 'positive' : 'negative';
                 html += '<div class="transaction-row">' +
-                    '<div class="icon-wrap">' + icon + '</div>' +
+                    '<div class="icon-wrap">' + txIcon(t.category) + '</div>' +
                     '<div class="details">' +
                     '<div class="name">' + t.description + '</div>' +
                     '<div class="meta">' + (t.reference || 'Transaction') + '</div>' +
@@ -141,6 +157,9 @@
         container.innerHTML = html;
     }
 
+    // ============================================================
+    // RENDER STATS
+    // ============================================================
     function renderStats(stats) {
         const todayEl = document.querySelector('.stats-today');
         const monthEl = document.querySelector('.stats-month');
@@ -153,15 +172,29 @@
         if (yieldEl) yieldEl.textContent = (stats.currentYield || 14.2).toFixed(2) + '% p.a.';
     }
 
+    // ============================================================
+    // TOAST
+    // ============================================================
     function showToast(message, type) {
         type = type || 'success';
         const container = $('toastContainer');
         if (!container) return;
         const toast = document.createElement('div');
         toast.className = 'toast ' + (type === 'error' ? 'error' : type === 'info' ? 'info' : '');
-        const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-        toast.innerHTML = '<span class="toast-icon">' + icon + '</span><span class="toast-msg">' + message + '</span>';
+        const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+
+        const iconEl = document.createElement('span');
+        iconEl.className = 'toast-icon';
+        iconEl.textContent = icon;
+
+        const msgEl = document.createElement('span');
+        msgEl.className = 'toast-msg';
+        msgEl.textContent = message;
+
+        toast.appendChild(iconEl);
+        toast.appendChild(msgEl);
         container.appendChild(toast);
+
         setTimeout(() => {
             toast.style.opacity = '0';
             setTimeout(() => toast.remove(), 300);
@@ -169,6 +202,9 @@
     }
     window.showToast = showToast;
 
+    // ============================================================
+    // LOGOUT / SUPPORT
+    // ============================================================
     function handleLogout() {
         if (confirm('Are you sure you want to sign out?')) {
             localStorage.removeItem('token');
@@ -217,45 +253,75 @@
     });
 
     // ============================================================
-    // DEPOSIT HANDLER — real STK Push flow
+    // NOTIFICATION DRAWER
+    // ============================================================
+    function openNotifDrawer() {
+        const overlay = $('notifOverlay');
+        const drawer = $('notifDrawer');
+        if (overlay) overlay.classList.add('open');
+        if (drawer) drawer.classList.add('open');
+    }
+    function closeNotifDrawer() {
+        const overlay = $('notifOverlay');
+        const drawer = $('notifDrawer');
+        if (overlay) overlay.classList.remove('open');
+        if (drawer) drawer.classList.remove('open');
+    }
+    window.openNotifDrawer = openNotifDrawer;
+    window.closeNotifDrawer = closeNotifDrawer;
+
+    const notifBtn = $('notifBtn');
+    if (notifBtn) {
+        notifBtn.addEventListener('click', function() {
+            const badge = $('notifBadge');
+            if (badge) { badge.textContent = '0'; badge.style.display = 'none'; }
+            openNotifDrawer();
+        });
+    }
+
+    // ============================================================
+    // FAB
+    // ============================================================
+    const fabBtn = $('fabBtn');
+    const fabMenu = $('fabMenu');
+    if (fabBtn && fabMenu) {
+        fabBtn.addEventListener('click', function() {
+            fabMenu.classList.toggle('open');
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#fabBtn') && !e.target.closest('#fabMenu')) {
+                fabMenu.classList.remove('open');
+            }
+        });
+    }
+
+    // ============================================================
+    // DEPOSIT HANDLER
     // ============================================================
     window.handleDeposit = async function(e) {
         e.preventDefault();
 
-        const method = $('depositMethod').value;
         const amount = parseFloat($('depositAmount').value);
         const phoneInput = $('depositPhone') ? $('depositPhone').value.trim() : '';
-
-        if (!method) {
-            showToast('Please select a payment method.', 'error');
-            return;
-        }
 
         if (!amount || amount < 100) {
             showToast('Minimum deposit is KES 100.', 'error');
             return;
         }
 
-        if (method !== 'mpesa') {
-            showToast('Only M-Pesa is available right now. Bank and card coming soon.', 'info');
-            return;
-        }
-
-        // Use user's phone if no input field
         let phone = phoneInput;
         if (!phone && userData && userData.phoneNumber) {
             phone = userData.phoneNumber;
         }
         if (!phone) {
-            showToast('Please enter your M-Pesa phone number.', 'error');
+            showToast('Please enter your M-PESA phone number.', 'error');
             return;
         }
 
-        // Show loading state
         const submitBtn = e.target.querySelector('.btn-modal-primary');
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending prompt...';
+        submitBtn.textContent = 'Sending prompt…';
 
         try {
             const result = await apiFetch('/api/payments/deposit', {
@@ -263,30 +329,21 @@
                 body: JSON.stringify({ amount, phoneNumber: phone })
             });
 
-            // Show "waiting for PIN" state
-            submitBtn.textContent = 'Waiting for your PIN...';
-
-            // Replace modal content with waiting state
-            const modalBody = e.target.parentElement;
             const waitingHtml =
-                '<div style="text-align:center;padding:1.5rem 0;">' +
-                '<div style="font-size:3rem;margin-bottom:0.8rem;">📱</div>' +
-                '<h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.5rem;">Check your phone</h3>' +
-                '<p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;">' +
-                'We sent an M-Pesa prompt to <strong style="color:var(--text-primary);">' + result.phoneNumber + '</strong>. ' +
-                'Enter your PIN to complete the deposit of <strong style="color:var(--accent-green);">KES ' + formatKES(result.amount) + '</strong>.' +
+                '<div style="text-align:center;padding:1.25rem 0;">' +
+                '<h3 style="font-family:var(--font-display);font-size:1.15rem;font-weight:500;margin-bottom:0.75rem;letter-spacing:-0.012em;">Check your phone</h3>' +
+                '<p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;max-width:32ch;margin:0 auto;">' +
+                'We sent an M-PESA prompt to <strong style="color:var(--text-primary);">' + result.phoneNumber + '</strong>. ' +
+                'Enter your PIN to deposit <strong style="color:var(--accent-green);">KES ' + formatKES(result.amount) + '</strong>.' +
                 '</p>' +
-                '<div id="depositStatusBox" style="margin-top:1.5rem;padding:0.8rem 1rem;background:rgba(255,255,255,0.03);border-radius:var(--radius-default);font-size:0.85rem;color:var(--text-muted);">' +
-                '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-right:0.4rem;animation:pulse-load 1.5s ease-in-out infinite;"></span>' +
-                'Waiting for confirmation...' +
+                '<div id="depositStatusBox" style="margin-top:1.5rem;padding:0.85rem 1rem;background:var(--forest-soft);border:1px solid rgba(27,67,50,0.12);border-radius:6px;font-size:0.85rem;color:var(--text-secondary);">' +
+                '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--forest);margin-right:0.5rem;animation:pulse-load 1.5s ease-in-out infinite;"></span>' +
+                'Waiting for confirmation…' +
                 '</div>' +
-                '<p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;">Ref: ' + result.reference + '</p>' +
+                '<p style="font-size:0.72rem;color:var(--text-muted);margin-top:1rem;">Ref: ' + result.reference + '</p>' +
                 '</div>';
 
-            const formEl = e.target;
-            formEl.innerHTML = waitingHtml;
-
-            // Start polling
+            e.target.innerHTML = waitingHtml;
             startDepositPolling(result.paymentId);
         } catch (err) {
             showToast(err.message || 'Failed to initiate deposit.', 'error');
@@ -299,7 +356,7 @@
         if (depositPoller) clearInterval(depositPoller);
 
         let attempts = 0;
-        const maxAttempts = 40; // 40 * 3s = 120s
+        const maxAttempts = 40;
 
         depositPoller = setInterval(async function() {
             attempts++;
@@ -312,14 +369,14 @@
                     depositPoller = null;
 
                     if (box) {
-                        box.style.background = 'rgba(46, 204, 113, 0.15)';
-                        box.style.color = 'var(--accent-green)';
-                        box.innerHTML = '✅ Payment received! ' + status.unitsCredited.toFixed(4) + ' units added.';
+                        box.style.background = 'var(--forest-soft)';
+                        box.style.color = 'var(--forest)';
+                        box.style.borderColor = 'rgba(27,67,50,0.2)';
+                        box.textContent = 'Payment received. ' + status.unitsCredited.toFixed(4) + ' units added.';
                     }
 
-                    showToast('Deposit successful! KES ' + formatKES(status.amount) + ' added.', 'success');
+                    showToast('Deposit confirmed — KES ' + formatKES(status.amount) + ' added.', 'success');
 
-                    // Reload dashboard data
                     setTimeout(async function() {
                         closeModal('depositModal');
                         await loadDashboard();
@@ -328,9 +385,10 @@
                     clearInterval(depositPoller);
                     depositPoller = null;
                     if (box) {
-                        box.style.background = 'rgba(248, 113, 113, 0.15)';
+                        box.style.background = 'var(--error-bg)';
                         box.style.color = 'var(--error)';
-                        box.innerHTML = '❌ ' + (status.failureReason || 'Payment failed.');
+                        box.style.borderColor = 'rgba(138,58,46,0.2)';
+                        box.textContent = status.failureReason || 'Payment failed.';
                     }
                     showToast(status.failureReason || 'Payment failed.', 'error');
                 }
@@ -339,9 +397,10 @@
                     clearInterval(depositPoller);
                     depositPoller = null;
                     if (box) {
-                        box.style.background = 'rgba(251, 191, 36, 0.15)';
+                        box.style.background = 'rgba(138,106,46,0.06)';
                         box.style.color = 'var(--warning)';
-                        box.innerHTML = '⏱️ No response from your phone. Please try again.';
+                        box.style.borderColor = 'rgba(138,106,46,0.2)';
+                        box.textContent = 'No response from your phone. Please try again.';
                     }
                 }
             } catch (err) {
@@ -355,15 +414,11 @@
     // ============================================================
     window.handleWithdraw = function(e) {
         e.preventDefault();
-        showToast('Withdrawals coming soon!', 'info');
+        showToast('Redemptions are coming soon.', 'info');
     };
 
     window.downloadStatement = function() {
-        showToast('Statement download coming soon!', 'info');
-    };
-
-    window.handleAction = function(action) {
-        console.log('Action:', action);
+        showToast('Statement download is coming soon.', 'info');
     };
 
     // ============================================================
@@ -386,15 +441,18 @@
         }
     }
 
+    // ============================================================
+    // INIT
+    // ============================================================
     document.addEventListener('DOMContentLoaded', async function() {
         const now = new Date();
         const hour = now.getHours();
-        let greeting = 'Good Morning';
-        if (hour >= 12 && hour < 17) greeting = 'Good Afternoon';
-        else if (hour >= 17) greeting = 'Good Evening';
+        let greeting = 'Good morning';
+        if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
+        else if (hour >= 17) greeting = 'Good evening';
 
-        const greetingEl = document.querySelector('.greeting');
-        if (greetingEl) greetingEl.childNodes[0].nodeValue = '👋 ' + greeting + ', ';
+        const greetingTextEl = $('greetingText');
+        if (greetingTextEl) greetingTextEl.textContent = greeting;
 
         const mins = now.getMinutes().toString().padStart(2, '0');
         const ampm = hour >= 12 ? 'PM' : 'AM';
