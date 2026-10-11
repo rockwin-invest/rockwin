@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fund Factsheet · RockWin Investment</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="index.css" />
+
+    <style>
+        .page-hero {
+            padding: 8rem 1.5rem 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.8rem;
+        }
+
+        .page-hero .badge-row {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.2rem;
+        }
+
+        .page-hero .pill {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.35rem 0.9rem;
+            border-radius: var(--radius-full);
+            background: rgba(0, 109, 50, 0.12);
+            color: var(--primary-container);
+            border: 1px solid rgba(0, 209, 102, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .page-hero p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .content-section {
+            padding: 2rem 1.5rem 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-default);
+            padding: 1.5rem 1.2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0, 209, 102, 0.2);
+        }
+
+        .metric-card .label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .metric-card .value {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .metric-card .value.green { color: var(--accent-green); }
+        .metric-card .value.blue { color: #60a5fa; }
+
+        .metric-card .sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .factsheet-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-default);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .factsheet-block h2 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.01em;
+        }
+
+        .factsheet-block h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.6rem;
+            color: var(--text-primary);
+        }
+
+        .factsheet-block p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .info-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .info-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .info-table td {
+            padding: 0.7rem 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .info-table td:first-child {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 600;
+            width: 45%;
+        }
+
+        .info-table td:last-child {
+            color: var(--text-primary);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .info-table td .value-green {
+            color: var(--accent-green);
+            font-family: var(--font-display);
+            font-weight: 700;
+        }
+
+        .download-cta {
+            background: linear-gradient(135deg, rgba(0, 109, 50, 0.12), rgba(0, 209, 102, 0.06));
+            border: 1px solid rgba(0, 209, 102, 0.2);
+            border-radius: var(--radius-default);
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .download-cta h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .download-cta p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .download-cta button {
+            padding: 0.85rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-container));
+            border: none;
+            border-radius: var(--radius-default);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 109, 50, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-cta button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 109, 50, 0.3);
+        }
+
+        .disclaimer {
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: var(--radius-default);
+            padding: 1.2rem 1.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-top: 2rem;
+        }
+
+        .disclaimer strong {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="glass-nav" id="glassNav" role="navigation">
+        <div class="brand">RockWin<span> Investment</span></div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#calculator">Calculator</a>
+            <a href="index.html#features">Features</a>
+            <a href="fund-factsheet.html">Factsheet</a>
+            <a href="login.html">Sign In</a>
+            <button class="btn-nav-primary" onclick="window.location.href='signup.html'">Start Investing</button>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <div class="badge-row">
+            <span class="pill">CMA Licensed</span>
+            <span class="pill">I&M Trustee</span>
+            <span class="pill">Deloitte Audited</span>
+        </div>
+        <h1>Fund Factsheet</h1>
+        <p>Complete transparency on our money market fund — performance, fees, and portfolio composition. Updated monthly.</p>
+    </section>
+
+    <section class="content-section">
+
+        <div class="key-metrics">
+            <div class="metric-card">
+                <div class="label">Effective Annual Yield</div>
+                <div class="value green">14.20%</div>
+                <div class="sub">Net of fees</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Assets Under Management</div>
+                <div class="value blue">KES 2.4B</div>
+                <div class="sub">As of latest month-end</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">NAV Per Unit</div>
+                <div class="value">KES 194.20</div>
+                <div class="sub">Daily valuation</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Active Investors</div>
+                <div class="value">18,247</div>
+                <div class="sub">Across Kenya</div>
+            </div>
+        </div>
+
+        <div class="factsheet-block">
+            <h2>Fund Overview</h2>
+            <p>
+                RockWin Money Market Fund is an open-ended unit trust scheme regulated by the Capital Markets Authority (CMA) of Kenya. 
+                The fund invests in short-term, high-quality money market instruments including treasury bills, fixed deposits, 
+                and commercial paper issued by reputable institutions.
+            </p>
+            <p>
+                The fund's objective is to provide investors with a secure, liquid investment that delivers competitive returns 
+                while preserving capital. Units are priced daily and interest accrues every day, giving investors full transparency on 
+                their earnings.
+            </p>
+
+            <h3>Key Fund Details</h3>
+            <table class="info-table">
+                <tr>
+                    <td>Fund Manager</td>
+                    <td>RockWin Investment Ltd</td>
+                </tr>
+                <tr>
+                    <td>Fund Type</td>
+                    <td>Open-ended Money Market Fund</td>
+                </tr>
+                <tr>
+                    <td>Trustee & Custodian</td>
+                    <td>I&M Bank Kenya</td>
+                </tr>
+                <tr>
+                    <td>Independent Auditor</td>
+                    <td>Deloitte & Touche</td>
+                </tr>
+                <tr>
+                    <td>Regulator</td>
+                    <td>Capital Markets Authority (Kenya)</td>
+                </tr>
+                <tr>
+                    <td>Minimum Investment</td>
+                    <td>KES 1,000</td>
+                </tr>
+                <tr>
+                    <td>Minimum Redemption</td>
+                    <td>KES 1,000</td>
+                </tr>
+                <tr>
+                    <td>Lock-in Period</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>Redemption Timeline</td>
+                    <td>24 hours (M-PESA) / 2-3 business days (Bank)</td>
+                </tr>
+                <tr>
+                    <td>Valuation Frequency</td>
+                    <td>Daily</td>
+                </tr>
+                <tr>
+                    <td>Interest Accrual</td>
+                    <td>Daily · Compounded Monthly</td>
+                </tr>
+                <tr>
+                    <td>Withholding Tax</td>
+                    <td>15% on interest earned (KRA)</td>
+                </tr>
+            </table>
+
+            <h3>Fee Structure</h3>
+            <table class="info-table">
+                <tr>
+                    <td>Management Fee</td>
+                    <td>1.20% p.a.</td>
+                </tr>
+                <tr>
+                    <td>Trustee Fee</td>
+                    <td>0.15% p.a.</td>
+                </tr>
+                <tr>
+                    <td>Custodian Fee</td>
+                    <td>0.10% p.a.</td>
+                </tr>
+                <tr>
+                    <td>Initial Charge</td>
+                    <td>Nil</td>
+                </tr>
+                <tr>
+                    <td>Exit / Redemption Fee</td>
+                    <td>Nil</td>
+                </tr>
+                <tr>
+                    <td>Switching Fee</td>
+                    <td>Nil</td>
+                </tr>
+                <tr>
+                    <td>Total Expense Ratio</td>
+                    <td><span class="value-green">1.45% p.a.</span></td>
+                </tr>
+            </table>
+
+            <h3>Portfolio Composition</h3>
+            <p>
+                The fund maintains a diversified portfolio with weighted average maturity under 365 days, ensuring high liquidity 
+                and stability while maximising returns.
+            </p>
+            <table class="info-table">
+                <tr>
+                    <td>Treasury Bills (91-day & 182-day)</td>
+                    <td>~52%</td>
+                </tr>
+                <tr>
+                    <td>Fixed Deposits (Commercial Banks)</td>
+                    <td>~28%</td>
+                </tr>
+                <tr>
+                    <td>Commercial Paper (A-rated institutions)</td>
+                    <td>~12%</td>
+                </tr>
+                <tr>
+                    <td>Call Deposits & Cash</td>
+                    <td>~8%</td>
+                </tr>
+                <tr>
+                    <td>Weighted Average Maturity</td>
+                    <td>~180 days</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="download-cta">
+            <h3>📄 Download the Full Factsheet</h3>
+            <p>Get the complete PDF with historical performance, charts, and detailed portfolio analysis.</p>
+            <button onclick="downloadFactsheet()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4v16h16"/>
+                    <polyline points="20 10 12 18 8 14"/>
+                </svg>
+                Download PDF Factsheet
+            </button>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Important Notice:</strong> RockWin Money Market Fund is regulated by the Capital Markets Authority of Kenya. 
+            Past performance is not indicative of future returns. The value of units may go up or down. Investors should read the 
+            Information Memorandum and Trust Deed before investing. Interest earned is subject to a 15% withholding tax as required by KRA. 
+            The fund does not guarantee returns and is not insured by any deposit protection scheme.
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="padding-top:1.5rem;">
+                <span>&copy; 2026 RockWin Investment. All rights reserved. · CMA Licensed · I&M Trustee · Deloitte Audited</span>
+                <div class="socials">
+                    <a href="terms.html">Terms</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="about.html">About</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function downloadFactsheet() {
+            // Placeholder — in production, this would download the actual PDF from /assets
+            alert('📄 Full factsheet PDF will be available shortly. Please contact support for the latest version.');
+            // Alternatively:
+            // window.open('/assets/RockWin-MMF-Factsheet.pdf', '_blank');
+        }
+    </script>
+
+</body>
+</html>

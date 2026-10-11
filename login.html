@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In · RockWin Investment</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+    <div class="login-card">
+
+        <!-- Header -->
+        <div class="card-header">
+            <div class="brand">RockWin<span> Investment</span></div>
+            <p class="sub">Welcome back — <span class="highlight">sign in to your portfolio</span></p>
+            <div class="rating">
+                <span class="stars">★★★★★</span>
+                <span>4.9 · Trusted by 18,000+ Kenyans</span>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        <div id="alertBox" class="alert-box"></div>
+
+        <!-- Login Form -->
+        <form id="loginForm" novalidate>
+
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <div class="phone-group">
+                    <span class="prefix">+254</span>
+                    <input type="tel" id="phoneNumber" placeholder="712 345 678" required pattern="[0-9]{9}" autocomplete="tel" />
+                </div>
+                <div class="error-message" id="phoneError">Please enter a valid 9-digit phone number.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
+                <div class="error-message" id="passwordError">Please enter your password.</div>
+            </div>
+
+            <div class="forgot-link">
+                <a href="forgot-password.html">Forgot password?</a>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-submit">
+                <div id="btnSpinner" class="spinner"></div>
+                <span id="btnText">Sign In</span>
+            </button>
+
+        </form>
+
+        <!-- Trust Footer -->
+        <div class="trust-footer">
+            <span>
+                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+                CMA Licensed
+            </span>
+            <span>
+                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18"/>
+                    <path d="M5 21V7l8-4v18"/>
+                    <path d="M19 21V11l-6-4"/>
+                </svg>
+                I&M Trustee
+            </span>
+            <span>
+                <svg class="icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Deloitte Audited
+            </span>
+        </div>
+
+        <div class="card-footer-link">
+            Don't have an account? <a href="signup.html">Start investing here</a>
+        </div>
+
+    </div>
+
+    <script src="login.js"></script>
+
+</body>
+</html>

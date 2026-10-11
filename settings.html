@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Settings · RockWin Investment</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="dashboard.css" />
+
+    <style>
+        /* ============================================================
+           TOGGLE SWITCH — Proper implementation
+           ============================================================ */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--primary), var(--primary-container));
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+
+        /* ============================================================
+           SETTINGS SPECIFIC STYLES
+           ============================================================ */
+        .settings-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            gap: 1rem;
+        }
+
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+
+        .settings-row .info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .settings-row .info .name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .settings-row .info .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+            line-height: 1.5;
+        }
+
+        .settings-row .control {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .settings-row .control .status-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            min-width: 2rem;
+            text-align: right;
+        }
+
+        .settings-row .control .status-label.on {
+            color: var(--accent-green);
+        }
+
+        /* Compliance badge */
+        .compliance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.6rem;
+            border-radius: var(--radius-full);
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--accent-green);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            margin-left: 0.5rem;
+        }
+
+        /* KRA note */
+        .kra-note {
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: var(--radius-default);
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .kra-note .icon {
+            width: 18px;
+            height: 18px;
+            color: #fbbf24;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .kra-note strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Fix for existing card-item padding */
+        .settings-section .card-item {
+            padding: 0.9rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== SIDEBAR ====== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">RockWin<span> Investment</span></div>
+        <nav>
+            <a href="dashboard.html">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Portfolio
+            </a>
+            <a href="goals.html">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="6"/>
+                    <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Goals
+            </a>
+            <a href="profile.html">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Profile
+            </a>
+            <a href="settings.html" class="active">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="handleLogout()">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- ====== MAIN CONTENT ====== -->
+    <main class="main-content">
+
+        <!-- ====== TOP HEADER ====== -->
+        <header class="top-header">
+            <div class="greeting">
+                👋 Good Morning, <span id="userFirstName">Simon</span>
+                <span class="last-login">Last login: Today, <span id="lastLoginTime">5:48 PM</span></span>
+            </div>
+            <div class="actions">
+                <button class="btn-icon" id="searchBtn" aria-label="Search or quick actions">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </button>
+                <button class="btn-icon" id="notifBtn" aria-label="Notifications">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                    </svg>
+                    <span class="badge" id="notifBadge">0</span>
+                </button>
+                <div class="avatar" id="userAvatar">SI</div>
+            </div>
+        </header>
+
+        <!-- ====== SETTINGS CONTENT ====== -->
+        <div class="dashboard-grid">
+
+            <!-- ====== LEFT COLUMN ====== -->
+            <div class="left-col">
+
+                <!-- Page Title -->
+                <h1 style="font-family:var(--font-display); font-size:1.8rem; font-weight:700; margin-bottom:1.5rem;">Settings</h1>
+
+                <!-- Security Settings -->
+                <div class="transactions-section settings-section">
+                    <div class="header">
+                        <h3>🔐 Security</h3>
+                    </div>
+                    <div>
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Two-Factor Authentication</div>
+                                <div class="meta">Add an extra layer of security to your account</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label" id="2fa-status">Off</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="2fa-toggle" onchange="handleToggle('2fa', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Biometric Login</div>
+                                <div class="meta">Use fingerprint or face recognition on supported devices</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label" id="bio-status">Off</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="bio-toggle" onchange="handleToggle('bio', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Change Password</div>
+                                <div class="meta">Update your account password regularly</div>
+                            </div>
+                            <div class="control">
+                                <button class="btn-action" onclick="window.location.href='profile.html'" style="padding:0.4rem 1rem;">Go to Profile</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Preferences (MMF-specific) -->
+                <div class="transactions-section settings-section">
+                    <div class="header">
+                        <h3>🔔 Notifications</h3>
+                    </div>
+                    <div>
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">SMS Alerts</div>
+                                <div class="meta">Receive investment and redemption confirmations via SMS</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label on" id="sms-status">On</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="sms-toggle" checked onchange="handleToggle('sms', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Daily Interest Credit Alerts</div>
+                                <div class="meta">Get notified when daily interest is credited to your portfolio</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label" id="interest-status">Off</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="interest-toggle" onchange="handleToggle('interest', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Goal Milestone Alerts</div>
+                                <div class="meta">Celebrate when you hit 25%, 50%, 75%, or 100% of a goal</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label on" id="goal-status">On</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="goal-toggle" checked onchange="handleToggle('goal', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Monthly Statement via Email</div>
+                                <div class="meta">Receive a PDF investment statement every month</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label" id="email-status">Off</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="email-toggle" onchange="handleToggle('email', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Marketing Communications</div>
+                                <div class="meta">Receive offers, product updates, and fund news</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label" id="marketing-status">Off</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="marketing-toggle" onchange="handleToggle('marketing', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Investment Preferences (MMF-specific) -->
+                <div class="transactions-section settings-section">
+                    <div class="header">
+                        <h3>💰 Investment Preferences</h3>
+                    </div>
+                    <div>
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Auto-Invest Master Switch</div>
+                                <div class="meta">Automatically invest a fixed amount every month across your goals</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label on" id="autoinvest-status">On</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoinvest-toggle" checked onchange="handleToggle('autoinvest', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">Reinvest Interest Automatically</div>
+                                <div class="meta">Compound your earnings by automatically reinvesting interest</div>
+                                <span class="compliance-badge">✓ Recommended</span>
+                            </div>
+                            <div class="control">
+                                <span class="status-label on" id="reinvest-status">On</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="reinvest-toggle" checked onchange="handleToggle('reinvest', this.checked)" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KRA Tax Compliance -->
+                <div class="transactions-section settings-section">
+                    <div class="header">
+                        <h3>⚖️ Tax & Compliance</h3>
+                    </div>
+                    <div>
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name">KRA Withholding Tax Consent</div>
+                                <div class="meta">You consent to a 15% withholding tax on interest earned, as required by KRA</div>
+                            </div>
+                            <div class="control">
+                                <span class="status-label on" id="kra-status">On</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="kra-toggle" checked disabled />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="kra-note">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                            <span>Withholding tax consent is <strong>mandatory</strong> for CMA compliance and cannot be disabled. Tax is deducted at source and remitted directly to KRA.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="transactions-section settings-section" style="border:1px solid rgba(248,113,113,0.2);">
+                    <div class="header">
+                        <h3 style="color:var(--error);">⚠️ Danger Zone</h3>
+                    </div>
+                    <div>
+                        <div class="settings-row">
+                            <div class="info">
+                                <div class="name" style="color:var(--error);">Close Investment Account</div>
+                                <div class="meta">Permanently close your portfolio and withdraw all units. This cannot be undone.</div>
+                            </div>
+                            <div class="control">
+                                <button class="btn-action danger" onclick="handleCloseAccount()" style="padding:0.4rem 1rem;">
+                                    Close Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ====== RIGHT COLUMN ====== -->
+            <div class="right-col">
+
+                <!-- Preferences -->
+                <div class="right-card">
+                    <div class="card-title">Preferences</div>
+                    <div class="card-item">
+                        <span class="label">Language</span>
+                        <span class="value" style="color:var(--text-primary);">English (UK)</span>
+                    </div>
+                    <div class="card-item">
+                        <span class="label">Currency</span>
+                        <span class="value" style="color:var(--text-primary);">Kenyan Shilling (KES)</span>
+                    </div>
+                    <div class="card-item">
+                        <span class="label">Theme</span>
+                        <span class="value" style="color:var(--text-primary);">Dark</span>
+                    </div>
+                    <div class="card-item">
+                        <span class="label">Timezone</span>
+                        <span class="value" style="color:var(--text-primary);">EAT (UTC+3)</span>
+                    </div>
+                </div>
+
+                <!-- Compliance Info -->
+                <div class="right-card">
+                    <div class="card-title">🛡️ Compliance & Trust</div>
+                    <div class="card-item">
+                        <span class="label">Regulated by</span>
+                        <span class="value green">CMA Kenya</span>
+                    </div>
+                    <div class="card-item">
+                        <span class="label">Trustee</span>
+                        <span class="value" style="color:var(--text-primary);">I&M Bank</span>
+                    </div>
+                    <div class="card-item">
+                        <span class="label">Auditor</span>
+                        <span class="value" style="color:var(--text-primary);">Deloitte</span>
+                    </div>
+                    <div class="card-item">
+                        <span class="label">CMA License</span>
+                        <span class="value" style="color:var(--primary-container);">Active</span>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="right-card">
+                    <div class="card-title">Quick Links</div>
+                    <div class="card-item" style="cursor:pointer;" onclick="showToast('📄 Downloading security report...', 'info')">
+                        <span class="label">📄 Security Report</span>
+                        <span class="value blue">→</span>
+                    </div>
+                    <div class="card-item" style="cursor:pointer;" onclick="showToast('📋 Fund factsheet opening...', 'info')">
+                        <span class="label">📋 Fund Factsheet</span>
+                        <span class="value blue">→</span>
+                    </div>
+                    <div class="card-item" style="cursor:pointer;" onclick="showToast('📜 Information Memorandum...', 'info')">
+                        <span class="label">📜 Information Memorandum</span>
+                        <span class="value blue">→</span>
+                    </div>
+                    <div class="card-item" style="cursor:pointer;" onclick="showToast('🔒 Privacy settings opening...', 'info')">
+                        <span class="label">🔒 Privacy Settings</span>
+                        <span class="value blue">→</span>
+                    </div>
+                    <div class="card-item" style="cursor:pointer;" onclick="contactWhatsApp()">
+                        <span class="label">💬 Contact Support</span>
+                        <span class="value blue">→</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ====== HELP FOOTER ====== -->
+        <div class="help-footer">
+            <span>Need help?</span>
+            <a href="#" onclick="contactWhatsApp()">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                Chat
+            </a>
+            <a href="tel:+254700123456" onclick="showToast('📞 Calling support...')">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+                Call
+            </a>
+            <a href="mailto:support@rockwin.co.ke" onclick="showToast('📧 Opening email...')">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                Email
+            </a>
+        </div>
+
+    </main>
+
+    <!-- ====== TOAST CONTAINER ====== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ====== JAVASCRIPT ====== -->
+    <script>
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'error' : type === 'info' ? 'info' : ''}`;
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-msg">${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-12px) scale(0.96)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+        window.showToast = showToast;
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+        }
+        window.handleLogout = handleLogout;
+
+        function contactWhatsApp() {
+            const phone = '+254700123456';
+            const message = 'Hello RockWin Investment Support, I need assistance with:';
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+        window.contactWhatsApp = contactWhatsApp;
+
+        // ============================================================
+        // TOGGLE HANDLER
+        // ============================================================
+        function handleToggle(key, enabled) {
+            const statusMap = {
+                '2fa': '2fa-status',
+                'bio': 'bio-status',
+                'sms': 'sms-status',
+                'interest': 'interest-status',
+                'goal': 'goal-status',
+                'email': 'email-status',
+                'marketing': 'marketing-status',
+                'autoinvest': 'autoinvest-status',
+                'reinvest': 'reinvest-status'
+            };
+
+            const labelMap = {
+                '2fa': 'Two-Factor Authentication',
+                'bio': 'Biometric Login',
+                'sms': 'SMS Alerts',
+                'interest': 'Daily Interest Credit Alerts',
+                'goal': 'Goal Milestone Alerts',
+                'email': 'Monthly Statement via Email',
+                'marketing': 'Marketing Communications',
+                'autoinvest': 'Auto-Invest Master Switch',
+                'reinvest': 'Reinvest Interest Automatically'
+            };
+
+            const statusEl = document.getElementById(statusMap[key]);
+            if (statusEl) {
+                statusEl.textContent = enabled ? 'On' : 'Off';
+                statusEl.classList.toggle('on', enabled);
+            }
+
+            showToast(`${labelMap[key]} ${enabled ? 'enabled' : 'disabled'}`, 'success');
+        }
+        window.handleToggle = handleToggle;
+
+        // ============================================================
+        // CLOSE ACCOUNT
+        // ============================================================
+        function handleCloseAccount() {
+            const confirmText = prompt(
+                'To confirm account closure, please type "CLOSE" below:\n\n' +
+                '⚠️ All units will be redeemed to your registered M-PESA or bank account within 3 business days.'
+            );
+
+            if (confirmText === 'CLOSE') {
+                showToast('⚠️ Account closure request submitted. Our team will contact you within 24 hours.', 'error');
+            } else if (confirmText !== null) {
+                showToast('❌ Account closure cancelled — confirmation text did not match.', 'info');
+            }
+        }
+        window.handleCloseAccount = handleCloseAccount;
+
+        // ============================================================
+        // NOTIFICATIONS
+        // ============================================================
+        document.getElementById('notifBtn')?.addEventListener('click', function() {
+            const badge = document.getElementById('notifBadge');
+            if (badge) {
+                badge.textContent = '0';
+                badge.style.display = 'none';
+            }
+            showToast('📬 No new notifications', 'info');
+        });
+
+        // ============================================================
+        // SET LAST LOGIN TIME
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const hour12 = hours % 12 || 12;
+            const timeEl = document.getElementById('lastLoginTime');
+            if (timeEl) timeEl.textContent = `${hour12}:${minutes} ${ampm}`;
+        });
+
+        console.log('✅ RockWin Investment Settings loaded.');
+    </script>
+
+</body>
+</html>
