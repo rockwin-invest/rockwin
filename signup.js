@@ -1,296 +1,259 @@
- (function() {
-            'use strict';
+(function() {
+    'use strict';
 
-            // ---------- DOM REFS ----------
-            const form = document.getElementById('signupForm');
-            const alertBox = document.getElementById('alertBox');
-            const submitBtn = document.getElementById('submitBtn');
-            const btnSpinner = document.getElementById('btnSpinner');
-            const btnText = document.getElementById('btnText');
+    // ---------- CONFIG ----------
+    const API_BASE = 'https://rockwin.onrender.com';
 
-            const fullName = document.getElementById('fullName');
-            const idNumber = document.getElementById('idNumber');
-            const dob = document.getElementById('dob');
-            const phoneNumber = document.getElementById('phoneNumber');
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirmPassword');
-            const terms = document.getElementById('terms');
+    // ---------- DOM REFS ----------
+    const form = document.getElementById('signupForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const btnText = document.getElementById('btnText');
 
-            const strengthFill = document.getElementById('strengthFill');
-            const strengthLabel = document.getElementById('strengthLabel');
-            const passwordMatch = document.getElementById('passwordMatch');
+    const fullName = document.getElementById('fullName');
+    const idNumber = document.getElementById('idNumber');
+    const dob = document.getElementById('dob');
+    const phoneNumber = document.getElementById('phoneNumber');
+    const emailInput = document.getElementById('email');
+    const nokName = document.getElementById('nokName');
+    const nokPhone = document.getElementById('nokPhone');
+    const nokRelationship = document.getElementById('nokRelationship');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const terms = document.getElementById('terms');
 
-            // ---------- PASSWORD STRENGTH ----------
-            function checkPasswordStrength(pw) {
-                let score = 0;
-                if (pw.length >= 6) score++;
-                if (/[A-Z]/.test(pw)) score++;
-                if (/[0-9]/.test(pw)) score++;
-                if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const strengthFill = document.getElementById('strengthFill');
+    const strengthLabel = document.getElementById('strengthLabel');
+    const passwordMatch = document.getElementById('passwordMatch');
 
-                const widthMap = ['0%', '25%', '50%', '75%', '100%'];
-                const labelMap = ['Too Short', 'Weak', 'Medium', 'Good', 'Strong'];
-                const colorMap = ['#f87171', '#f87171', '#fbbf24', '#60a5fa', '#2ecc71'];
+    // ---------- PASSWORD STRENGTH ----------
+    function checkPasswordStrength(pw) {
+        let score = 0;
+        if (pw.length >= 6) score++;
+        if (/[A-Z]/.test(pw)) score++;
+        if (/[0-9]/.test(pw)) score++;
+        if (/[^A-Za-z0-9]/.test(pw)) score++;
 
-                const index = Math.min(score, 4);
-                strengthFill.style.width = widthMap[index];
-                strengthFill.style.background = colorMap[index];
-                strengthLabel.textContent = labelMap[index];
-                return score;
-            }
+        const widthMap = ['0%', '25%', '50%', '75%', '100%'];
+        const labelMap = ['Too Short', 'Weak', 'Medium', 'Good', 'Strong'];
+        const colorMap = ['#f87171', '#f87171', '#fbbf24', '#60a5fa', '#2ecc71'];
 
-            password.addEventListener('input', function() {
-                checkPasswordStrength(this.value);
-                validatePasswordMatch();
-                validateField(this, 'passwordError');
-            });
+        const index = Math.min(score, 4);
+        strengthFill.style.width = widthMap[index];
+        strengthFill.style.background = colorMap[index];
+        strengthLabel.textContent = labelMap[index];
+        return score;
+    }
 
-            // ---------- CONFIRM PASSWORD MATCH ----------
-            function validatePasswordMatch() {
-                const pw = password.value;
-                const confirm = confirmPassword.value;
+    password.addEventListener('input', function() {
+        checkPasswordStrength(this.value);
+        validatePasswordMatch();
+    });
 
-                if (confirm.length === 0) {
-                    passwordMatch.innerHTML = '';
-                    passwordMatch.className = 'password-match';
-                    return;
-                }
+    // ---------- CONFIRM PASSWORD MATCH ----------
+    function validatePasswordMatch() {
+        const pw = password.value;
+        const confirm = confirmPassword.value;
 
-                if (pw === confirm) {
-                    passwordMatch.innerHTML = `
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                            <polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
-                        Passwords match
-                    `;
-                    passwordMatch.className = 'password-match match';
-                } else {
-                    passwordMatch.innerHTML = `
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"/>
-                            <line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                        Passwords do not match
-                    `;
-                    passwordMatch.className = 'password-match no-match';
-                }
-            }
+        if (confirm.length === 0) {
+            passwordMatch.innerHTML = '';
+            passwordMatch.className = 'password-match';
+            return;
+        }
 
-            confirmPassword.addEventListener('input', validatePasswordMatch);
+        if (pw === confirm) {
+            passwordMatch.innerHTML = '✓ Passwords match';
+            passwordMatch.className = 'password-match match';
+        } else {
+            passwordMatch.innerHTML = '✗ Passwords do not match';
+            passwordMatch.className = 'password-match no-match';
+        }
+    }
 
-            // ---------- FIELD VALIDATION ----------
-            function validateField(input, errorId) {
-                const error = document.getElementById(errorId);
-                if (!error) return;
+    confirmPassword.addEventListener('input', validatePasswordMatch);
 
-                if (input.value.trim().length === 0) {
-                    input.classList.add('error');
-                    error.classList.add('visible');
-                    return false;
-                }
-
-                input.classList.remove('error');
-                error.classList.remove('visible');
-                return true;
-            }
-
-            // ---------- REAL-TIME VALIDATION ----------
-            fullName.addEventListener('blur', function() {
-                validateField(this, 'fullNameError');
-            });
-
-            idNumber.addEventListener('input', function() {
-                this.value = this.value.replace(/\D/g, '').slice(0, 10);
-                validateField(this, 'idError');
-            });
-
-            idNumber.addEventListener('blur', function() {
-                if (this.value.length < 5) {
-                    this.classList.add('error');
-                    document.getElementById('idError').classList.add('visible');
-                }
-            });
-
-            phoneNumber.addEventListener('input', function() {
-                this.value = this.value.replace(/\D/g, '').slice(0, 9);
-                validateField(this, 'phoneError');
-            });
-
-            phoneNumber.addEventListener('blur', function() {
-                if (this.value.length !== 9) {
-                    this.classList.add('error');
-                    document.getElementById('phoneError').classList.add('visible');
-                }
-            });
-
-            dob.addEventListener('blur', function() {
-                const dobError = document.getElementById('dobError');
-                if (!this.value) {
-                    this.classList.add('error');
-                    dobError.classList.add('visible');
-                    return;
-                }
-
-                const birthDate = new Date(this.value);
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const monthDiff = today.getMonth() - birthDate.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-
-                if (age < 18) {
-                    this.classList.add('error');
-                    dobError.classList.add('visible');
-                } else {
-                    this.classList.remove('error');
-                    dobError.classList.remove('visible');
-                }
-            });
-
-            // ---------- FORM SUBMISSION ----------
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                // Reset alert
+    // ---------- SHOW ALERT ----------
+    function showAlert(message, type) {
+        alertBox.className = 'alert-box';
+        alertBox.classList.add(type);
+        alertBox.textContent = message;
+        if (type === 'success') {
+            clearTimeout(window.alertTimeout);
+            window.alertTimeout = setTimeout(() => {
                 alertBox.className = 'alert-box';
+            }, 7000);
+        }
+    }
 
-                // Gather data
-                const name = fullName.value.trim();
-                const id = idNumber.value.trim();
-                const birthDate = dob.value;
-                const phoneRaw = phoneNumber.value.trim();
-                const phone = '+254' + phoneRaw.replace(/\s/g, '');
-                const pass = password.value;
-                const confirm = confirmPassword.value;
-                const termsChecked = terms.checked;
+    // ---------- FORM SUBMISSION ----------
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-                // ---- Validate all fields ----
-                let hasError = false;
+        alertBox.className = 'alert-box';
 
-                if (!name || name.length < 2) {
-                    validateField(fullName, 'fullNameError');
-                    hasError = true;
-                }
+        // Gather data
+        const name = fullName.value.trim();
+        const id = idNumber.value.trim();
+        const birthDate = dob.value;
+        const phoneRaw = phoneNumber.value.trim().replace(/\s/g, '');
+        const phone = '+254' + phoneRaw;
+        const email = emailInput.value.trim();
+        const nokNameVal = nokName.value.trim();
+        const nokPhoneRaw = nokPhone.value.trim().replace(/\s/g, '');
+        const nokPhoneVal = '+254' + nokPhoneRaw;
+        const nokRelVal = nokRelationship.value;
+        const pass = password.value;
+        const confirm = confirmPassword.value;
+        const termsChecked = terms.checked;
 
-                if (!id || id.length < 5) {
-                    document.getElementById('idError').classList.add('visible');
-                    idNumber.classList.add('error');
-                    hasError = true;
-                }
+        // ---- Validation ----
+        let hasError = false;
 
-                if (!birthDate) {
-                    document.getElementById('dobError').classList.add('visible');
-                    dob.classList.add('error');
-                    hasError = true;
-                } else {
-                    const birth = new Date(birthDate);
-                    const today = new Date();
-                    let age = today.getFullYear() - birth.getFullYear();
-                    const monthDiff = today.getMonth() - birth.getMonth();
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) age--;
-                    if (age < 18) {
-                        document.getElementById('dobError').classList.add('visible');
-                        dob.classList.add('error');
-                        hasError = true;
-                    }
-                }
+        if (!name || name.length < 2) {
+            showAlert('Please enter your full legal name.', 'error');
+            hasError = true;
+        }
 
-                if (!phoneRaw || phoneRaw.length !== 9) {
-                    document.getElementById('phoneError').classList.add('visible');
-                    phoneNumber.classList.add('error');
-                    hasError = true;
-                }
+        if (!id || id.length < 5) {
+            showAlert('Please enter a valid National ID (at least 5 digits).', 'error');
+            hasError = true;
+        }
 
-                if (pass.length < 6) {
-                    document.getElementById('passwordError').classList.add('visible');
-                    password.classList.add('error');
-                    hasError = true;
-                }
-
-                if (pass !== confirm) {
-                    passwordMatch.className = 'password-match no-match';
-                    passwordMatch.innerHTML = `
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"/>
-                            <line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                        Passwords do not match
-                    `;
-                    hasError = true;
-                }
-
-                if (!termsChecked) {
-                    showAlert('You must agree to the Terms of Service to proceed.', 'error');
-                    return;
-                }
-
-                if (hasError) {
-                    showAlert('Please fix the highlighted fields before continuing.', 'error');
-                    return;
-                }
-
-                // ---- UI: loading ----
-                submitBtn.disabled = true;
-                btnSpinner.style.display = 'block';
-                btnText.textContent = 'Creating Account...';
-
-                const payload = {
-                    fullName: name,
-                    idNumber: id,
-                    dateOfBirth: birthDate,
-                    phoneNumber: phone,
-                    password: pass
-                };
-
-                try {
-                  const response = await fetch('https://rockwin.onrender.com/api/auth/signup', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-});
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        showAlert(`✅ Account created! Acc No: ${data.accountNumber}. Check your phone for SMS verification.`, 'success');
-                        form.reset();
-                        strengthFill.style.width = '0%';
-                        strengthFill.style.background = '#f87171';
-                        strengthLabel.textContent = 'Weak';
-                        passwordMatch.innerHTML = '';
-                        passwordMatch.className = 'password-match';
-                        submitBtn.disabled = false;
-                        btnSpinner.style.display = 'none';
-                        btnText.textContent = 'Create Your Account';
-                    } else {
-                        throw new Error(data.error || 'Registration failed. Please try again.');
-                    }
-                } catch (err) {
-                    showAlert(err.message || 'Unable to connect to server. Check your network.', 'error');
-                    submitBtn.disabled = false;
-                    btnSpinner.style.display = 'none';
-                    btnText.textContent = 'Create Your Account';
-                }
-            });
-
-            // ---------- ALERT HELPER ----------
-            function showAlert(message, type) {
-                alertBox.className = 'alert-box';
-                alertBox.classList.add(type);
-                alertBox.textContent = message;
-                if (type === 'success') {
-                    clearTimeout(window.alertTimeout);
-                    window.alertTimeout = setTimeout(() => {
-                        alertBox.className = 'alert-box';
-                    }, 7000);
-                }
+        if (!birthDate) {
+            showAlert('Please enter your date of birth.', 'error');
+            hasError = true;
+        } else {
+            const birth = new Date(birthDate);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) age--;
+            if (age < 18) {
+                showAlert('You must be at least 18 years old.', 'error');
+                hasError = true;
             }
+        }
 
-            // ---------- PHONE TRIM ----------
-            phoneNumber.addEventListener('blur', function() {
-                this.value = this.value.replace(/\s/g, '');
+        if (!phoneRaw || phoneRaw.length !== 9) {
+            showAlert('Please enter a valid 9-digit phone number.', 'error');
+            hasError = true;
+        }
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showAlert('Please enter a valid email address.', 'error');
+            hasError = true;
+        }
+
+        if (!nokNameVal || nokNameVal.length < 2) {
+            showAlert('Please enter your Next of Kin full name.', 'error');
+            hasError = true;
+        }
+
+        if (!nokPhoneRaw || nokPhoneRaw.length !== 9) {
+            showAlert('Please enter a valid 9-digit Next of Kin phone number (e.g. 704005726).', 'error');
+            hasError = true;
+        }
+
+        if (!nokRelVal) {
+            showAlert('Please select your relationship to Next of Kin.', 'error');
+            hasError = true;
+        }
+
+        if (pass.length < 6) {
+            showAlert('Password must be at least 6 characters.', 'error');
+            hasError = true;
+        }
+
+        if (pass !== confirm) {
+            showAlert('Passwords do not match.', 'error');
+            hasError = true;
+        }
+
+        if (!termsChecked) {
+            showAlert('You must agree to the Terms of Service to proceed.', 'error');
+            return;
+        }
+
+        if (hasError) {
+            return;
+        }
+
+        // ---- Loading ----
+        submitBtn.disabled = true;
+        btnSpinner.style.display = 'block';
+        btnText.textContent = 'Creating Account...';
+
+        // ---- Payload with ALL fields ----
+        const payload = {
+            fullName: name,
+            phoneNumber: phone,
+            email: email,
+            idNumber: id,
+            dateOfBirth: birthDate,
+            password: pass,
+            nextOfKin: {
+                name: nokNameVal,
+                phone: nokPhoneVal,
+                relationship: nokRelVal
+            }
+        };
+
+        try {
+            const response = await fetch(API_BASE + '/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
-        })();
+            const data = await response.json();
+
+            if (response.ok) {
+                showAlert('✅ Account created! Acc No: ' + data.accountNumber + '. Check your email for confirmation.', 'success');
+                form.reset();
+                strengthFill.style.width = '0%';
+                strengthFill.style.background = '#f87171';
+                strengthLabel.textContent = 'Weak';
+                passwordMatch.innerHTML = '';
+                passwordMatch.className = 'password-match';
+                submitBtn.disabled = false;
+                btnSpinner.style.display = 'none';
+                btnText.textContent = 'Create Your Account';
+            } else {
+                showAlert(data.error || 'Registration failed. Please try again.', 'error');
+                submitBtn.disabled = false;
+                btnSpinner.style.display = 'none';
+                btnText.textContent = 'Create Your Account';
+            }
+        } catch (err) {
+            showAlert('Unable to connect to server. Check your network.', 'error');
+            submitBtn.disabled = false;
+            btnSpinner.style.display = 'none';
+            btnText.textContent = 'Create Your Account';
+        }
+    });
+
+    // ---------- PHONE TRIM ON BLUR ----------
+    phoneNumber.addEventListener('blur', function() {
+        this.value = this.value.replace(/\s/g, '');
+    });
+
+    nokPhone.addEventListener('blur', function() {
+        this.value = this.value.replace(/\s/g, '');
+    });
+
+    // ---------- ID NUMBER: only digits ----------
+    idNumber.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+
+    // ---------- PHONE NUMBERS: only digits, max 9 ----------
+    phoneNumber.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').slice(0, 9);
+    });
+
+    nokPhone.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').slice(0, 9);
+    });
+
+})();
