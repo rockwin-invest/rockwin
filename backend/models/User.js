@@ -30,7 +30,8 @@ const UserSchema = new mongoose.Schema({
     risk: { type: String, enum: ['low', 'medium', 'high'], default: 'low' },
 
     smsEnabled: { type: Boolean, default: true },
-    interestAlertsEnabled: { type: Boolean, default: false },
+    interestAlertsEnabled: { type: Boolean, default: true },
+    loginAlertsEnabled: { type: Boolean, default: true },
     emailStatementsEnabled: { type: Boolean, default: false },
     autoInvestEnabled: { type: Boolean, default: true },
     reinvestInterest: { type: Boolean, default: true },

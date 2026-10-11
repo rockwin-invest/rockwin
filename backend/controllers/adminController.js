@@ -101,26 +101,29 @@ exports.updatePortfolio = async (req, res) => {
             targetUserId: user._id, ipAddress: req.ip
         });
 
+        // Send specific email based on adjustment type
         if (sendEmail !== false && user.email) {
             try {
-                await emailService.sendEmail(
-                    user.email,
-                    'RockWin Investment — Portfolio Updated',
-                    '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
-                    '<h1 style="color: #006d32; font-size: 24px;">Portfolio Update</h1>' +
-                    '<p style="color: #4a5a72; font-size: 15px;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
-                    '<p style="color: #4a5a72; font-size: 15px;">Your RockWin Investment portfolio has been updated.</p>' +
-                    '<div style="background: #e8f5ee; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">' +
-                    '<div style="color: #4a5a72; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">New Portfolio Value</div>' +
-                    '<div style="color: #006d32; font-size: 32px; font-weight: 700;">KES ' + user.portfolioValue.toFixed(2) + '</div>' +
-                    '<div style="color: #4a5a72; font-size: 13px;">Account: <strong>' + user.accountNumber + '</strong></div>' +
-                    '</div>' +
-                    '<a href="https://rockwin-invest.github.io/rockwin/dashboard.html" style="display: inline-block; background: #006d32; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">View Portfolio</a>' +
-                    '<hr style="border: none; border-top: 1px solid #e8ecf0; margin: 32px 0;">' +
-                    '<p style="color: #8a9bb0; font-size: 12px;">RockWin Investment · CMA Licensed · I&M Trustee · Deloitte Audited</p>' +
-                    '</div>'
-                );
-            } catch (e) { console.warn('Portfolio email failed:', e.message); }
+                if (adjustmentType === 'credit') {
+                    await emailService.sendDepositConfirmationEmail(user, adjustmentAmount, user.portfolioValue);
+                } else if (adjustmentType === 'debit') {
+                    await emailService.sendWithdrawalConfirmationEmail(user, adjustmentAmount, user.portfolioValue);
+                } else if (adjustmentType === 'interest') {
+                    await emailService.sendInterestCreditEmail(user, adjustmentAmount, user.portfolioValue);
+                } else {
+                    await emailService.sendEmail(
+                        user.email,
+                        'RockWin Investment — Portfolio Adjusted',
+                        '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
+                        '<h1 style="color: #006d32; font-size: 24px;">Portfolio Adjusted</h1>' +
+                        '<p style="color: #4a5a72; font-size: 15px;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+                        '<p style="color: #4a5a72; font-size: 15px;">Your portfolio has been adjusted to <strong>KES ' + user.portfolioValue.toFixed(2) + '</strong>.</p>' +
+                        '</div>'
+                    );
+                }
+            } catch (e) {
+                console.warn('Portfolio email failed:', e.message);
+            }
         }
 
         res.json({

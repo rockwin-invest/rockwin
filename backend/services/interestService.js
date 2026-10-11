@@ -49,7 +49,8 @@ exports.accrueForUser = async (user, navPerUnit, annualYield) => {
         accrualDate: new Date()
     });
 
-    if (user.interestAlertsEnabled && user.email) {
+    // Send interest email — default ON (user can disable in settings)
+    if (user.interestAlertsEnabled !== false && user.email) {
         try {
             await emailService.sendInterestCreditEmail(user, netInterest, user.portfolioValue);
         } catch (e) {
