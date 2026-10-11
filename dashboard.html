@@ -451,17 +451,19 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="depositAmount">Amount (KES)</label>
-                    <input type="number" id="depositAmount" placeholder="0.00" min="1000" step="100" required />
-                    <div class="input-hint">Minimum investment: KES 1,000</div>
-                </div>
+    <label for="depositAmount">Amount (KES)</label>
+    <input type="number" id="depositAmount" placeholder="0.00" min="100" step="100" required />
+    <div class="input-hint">Minimum investment: KES 100</div>
+</div>
+<div class="form-group">
+    <label for="depositPhone">M-Pesa Phone Number</label>
+    <input type="tel" id="depositPhone" placeholder="+254712345678" required />
+    <div class="input-hint">The number that will receive the M-Pesa prompt.</div>
+</div>
                 <div class="form-group" id="mpesaDetails" style="display:none;">
                     <label>M-PESA Instructions</label>
                     <div style="background:rgba(255,255,255,0.03); padding:0.8rem 1rem; border-radius:var(--radius-default); font-size:0.85rem; color:var(--text-secondary);">
-                        <p><strong>Paybill:</strong> 247247</p>
-                        <p><strong>Account:</strong> <span id="depositAccountDisplay">RW-—</span></p>
-                        <p style="font-size:0.7rem; color:var(--text-muted); margin-top:0.3rem;">Units credited at today's NAV after confirmation.</p>
-                    </div>
+                      <p style="font-size:0.75rem; color:var(--text-muted);">When you click "Confirm Investment", an M-Pesa prompt will pop up on your phone. Enter your PIN to complete the deposit. Your portfolio updates automatically.</p>  </div>
                 </div>
                 <button type="submit" class="btn-modal-primary">Confirm Investment</button>
                 <button type="button" class="btn-modal-secondary" onclick="closeModal('depositModal')">Cancel</button>

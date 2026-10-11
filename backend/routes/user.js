@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 const { auth } = require('../middleware/auth');
 
 router.get('/profile', auth, userController.getProfile);
@@ -9,6 +10,7 @@ router.get('/stats', auth, userController.getStats);
 router.get('/interest-history', auth, userController.getInterestHistory);
 router.put('/sms-preference', auth, userController.updateSmsPreference);
 router.put('/profile', auth, userController.updateProfile);
+router.post('/change-password', auth, authController.changePassword);
 
 // Goals
 router.get('/goals', auth, userController.getGoals);

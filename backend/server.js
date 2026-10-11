@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 const fundRoutes = require('./routes/fund');
+const paymentRoutes = require('./routes/payment');
 
 const { startCronJobs } = require('./utils/cron');
 
@@ -33,14 +34,21 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/fund', fundRoutes);
+app.use('/api/payments', paymentRoutes);
 
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', service: 'RockWin Investment', timestamp: new Date().toISOString() });
+    res.json({
+        status: 'OK',
+        service: 'RockWin Investment',
+        gateway: process.env.PAYMENT_GATEWAY || 'mock',
+        timestamp: new Date().toISOString()
+    });
 });
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         console.log('✅ Connected to MongoDB');
+        console.log('💳 Payment gateway: ' + (process.env.PAYMENT_GATEWAY || 'mock'));
         startCronJobs();
     })
     .catch(err => console.error('❌ MongoDB connection error:', err));
@@ -57,7 +65,6 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log('🚀 RockWin Investment server running on port ' + PORT);
-    console.log('📍 http://localhost:' + PORT);
 });
 
 module.exports = app;

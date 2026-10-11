@@ -3,17 +3,14 @@
 
     const API_BASE = 'https://rockwin.onrender.com';
     let userData = null;
+    let depositPoller = null;
 
-    function getToken() {
-        return localStorage.getItem('token');
-    }
+    function getToken() { return localStorage.getItem('token'); }
 
-    async function apiFetch(endpoint, options = {}) {
+    async function apiFetch(endpoint, options) {
+        options = options || {};
         const token = getToken();
-        if (!token) {
-            window.location.href = 'login.html';
-            throw new Error('Not authenticated');
-        }
+        if (!token) { window.location.href = 'login.html'; throw new Error('Not authenticated'); }
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
@@ -39,13 +36,12 @@
 
     function renderUser(user) {
         userData = user;
-
         const firstName = user.fullName ? user.fullName.split(' ')[0] : 'Investor';
         const initials = user.fullName
             ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
             : 'U';
 
-        // Greeting
+        // Update greeting
         const greetingEl = document.querySelector('.greeting');
         if (greetingEl) {
             greetingEl.childNodes[0].nodeValue = '👋 Good Morning, ';
@@ -61,19 +57,23 @@
         const portfolioEl = $('balanceFigure');
         if (portfolioEl) portfolioEl.textContent = formatKES(user.portfolioValue || 0);
 
-        // Units + yield badge
+        // Units
         const unitsEl = $('unitsDisplay');
         if (unitsEl) {
-            unitsEl.textContent = (user.unitsHeld || 0).toFixed(1) + ' units';
+            unitsEl.textContent = (user.unitsHeld || 0).toFixed(4) + ' units';
         }
+
+        // Yield
+        const yieldEl = $('yieldDisplay');
+        if (yieldEl) yieldEl.textContent = (user.annualYield || 14.2).toFixed(2) + '% p.a.';
 
         // Reward message
         const rewardEl = $('rewardMessage');
         if (rewardEl) {
             if ((user.portfolioValue || 0) === 0) {
-                rewardEl.textContent = '💰 Welcome! Start investing from KES 1,000';
+                rewardEl.textContent = 'Welcome! Start investing from KES 100';
             } else {
-                rewardEl.textContent = 'Interest accrues daily · 14.2% p.a.';
+                rewardEl.textContent = 'Interest accrues daily · ' + (user.annualYield || 14.2).toFixed(2) + '% p.a.';
             }
         }
 
@@ -90,13 +90,9 @@
             }
         }
 
-        // Status badge if exists
-        const statusBadge = $('userStatusBadge');
-        if (statusBadge && user.status) {
-            const map = { active: 'Active', suspended: 'Suspended', pending: 'Pending KYC' };
-            const statusText = $('userStatusText');
-            if (statusText) statusText.textContent = map[user.status] || user.status;
-        }
+        // Update account number in deposit modal
+        const depositAcc = $('depositAccountDisplay');
+        if (depositAcc) depositAcc.textContent = user.accountNumber;
     }
 
     function renderTransactions(transactions) {
@@ -121,7 +117,9 @@
         });
 
         let html = '';
-        Object.entries(groups).forEach(([date, items]) => {
+        Object.entries(groups).forEach(function(entry) {
+            const date = entry[0];
+            const items = entry[1];
             html += '<div class="transaction-group"><div class="group-date">' + date + '</div>';
             items.forEach(t => {
                 const icon = t.category === 'interest' ? '📈' :
@@ -185,9 +183,210 @@
     }
     window.contactWhatsApp = contactWhatsApp;
 
-    // ---------- INIT ----------
+    // ============================================================
+    // MODAL CONTROLS
+    // ============================================================
+    function openModal(id) {
+        const modal = $(id);
+        if (modal) { modal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    }
+    function closeModal(id) {
+        const modal = $(id);
+        if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
+        if (depositPoller) { clearInterval(depositPoller); depositPoller = null; }
+    }
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('open');
+                document.body.style.overflow = '';
+                if (depositPoller) { clearInterval(depositPoller); depositPoller = null; }
+            }
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+            document.body.style.overflow = '';
+            if (depositPoller) { clearInterval(depositPoller); depositPoller = null; }
+        }
+    });
+
+    // ============================================================
+    // DEPOSIT HANDLER — real STK Push flow
+    // ============================================================
+    window.handleDeposit = async function(e) {
+        e.preventDefault();
+
+        const method = $('depositMethod').value;
+        const amount = parseFloat($('depositAmount').value);
+        const phoneInput = $('depositPhone') ? $('depositPhone').value.trim() : '';
+
+        if (!method) {
+            showToast('Please select a payment method.', 'error');
+            return;
+        }
+
+        if (!amount || amount < 100) {
+            showToast('Minimum deposit is KES 100.', 'error');
+            return;
+        }
+
+        if (method !== 'mpesa') {
+            showToast('Only M-Pesa is available right now. Bank and card coming soon.', 'info');
+            return;
+        }
+
+        // Use user's phone if no input field
+        let phone = phoneInput;
+        if (!phone && userData && userData.phoneNumber) {
+            phone = userData.phoneNumber;
+        }
+        if (!phone) {
+            showToast('Please enter your M-Pesa phone number.', 'error');
+            return;
+        }
+
+        // Show loading state
+        const submitBtn = e.target.querySelector('.btn-modal-primary');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending prompt...';
+
+        try {
+            const result = await apiFetch('/api/payments/deposit', {
+                method: 'POST',
+                body: JSON.stringify({ amount, phoneNumber: phone })
+            });
+
+            // Show "waiting for PIN" state
+            submitBtn.textContent = 'Waiting for your PIN...';
+
+            // Replace modal content with waiting state
+            const modalBody = e.target.parentElement;
+            const waitingHtml =
+                '<div style="text-align:center;padding:1.5rem 0;">' +
+                '<div style="font-size:3rem;margin-bottom:0.8rem;">📱</div>' +
+                '<h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.5rem;">Check your phone</h3>' +
+                '<p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;">' +
+                'We sent an M-Pesa prompt to <strong style="color:var(--text-primary);">' + result.phoneNumber + '</strong>. ' +
+                'Enter your PIN to complete the deposit of <strong style="color:var(--accent-green);">KES ' + formatKES(result.amount) + '</strong>.' +
+                '</p>' +
+                '<div id="depositStatusBox" style="margin-top:1.5rem;padding:0.8rem 1rem;background:rgba(255,255,255,0.03);border-radius:var(--radius-default);font-size:0.85rem;color:var(--text-muted);">' +
+                '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-right:0.4rem;animation:pulse-load 1.5s ease-in-out infinite;"></span>' +
+                'Waiting for confirmation...' +
+                '</div>' +
+                '<p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;">Ref: ' + result.reference + '</p>' +
+                '</div>';
+
+            const formEl = e.target;
+            formEl.innerHTML = waitingHtml;
+
+            // Start polling
+            startDepositPolling(result.paymentId);
+        } catch (err) {
+            showToast(err.message || 'Failed to initiate deposit.', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    };
+
+    function startDepositPolling(paymentId) {
+        if (depositPoller) clearInterval(depositPoller);
+
+        let attempts = 0;
+        const maxAttempts = 40; // 40 * 3s = 120s
+
+        depositPoller = setInterval(async function() {
+            attempts++;
+            try {
+                const status = await apiFetch('/api/payments/status/' + paymentId);
+                const box = $('depositStatusBox');
+
+                if (status.status === 'completed') {
+                    clearInterval(depositPoller);
+                    depositPoller = null;
+
+                    if (box) {
+                        box.style.background = 'rgba(46, 204, 113, 0.15)';
+                        box.style.color = 'var(--accent-green)';
+                        box.innerHTML = '✅ Payment received! ' + status.unitsCredited.toFixed(4) + ' units added.';
+                    }
+
+                    showToast('Deposit successful! KES ' + formatKES(status.amount) + ' added.', 'success');
+
+                    // Reload dashboard data
+                    setTimeout(async function() {
+                        closeModal('depositModal');
+                        await loadDashboard();
+                    }, 2000);
+                } else if (status.status === 'failed' || status.status === 'cancelled' || status.status === 'timeout') {
+                    clearInterval(depositPoller);
+                    depositPoller = null;
+                    if (box) {
+                        box.style.background = 'rgba(248, 113, 113, 0.15)';
+                        box.style.color = 'var(--error)';
+                        box.innerHTML = '❌ ' + (status.failureReason || 'Payment failed.');
+                    }
+                    showToast(status.failureReason || 'Payment failed.', 'error');
+                }
+
+                if (attempts >= maxAttempts) {
+                    clearInterval(depositPoller);
+                    depositPoller = null;
+                    if (box) {
+                        box.style.background = 'rgba(251, 191, 36, 0.15)';
+                        box.style.color = 'var(--warning)';
+                        box.innerHTML = '⏱️ No response from your phone. Please try again.';
+                    }
+                }
+            } catch (err) {
+                console.warn('Poll error:', err.message);
+            }
+        }, 3000);
+    }
+
+    // ============================================================
+    // OTHER HANDLERS
+    // ============================================================
+    window.handleWithdraw = function(e) {
+        e.preventDefault();
+        showToast('Withdrawals coming soon!', 'info');
+    };
+
+    window.downloadStatement = function() {
+        showToast('Statement download coming soon!', 'info');
+    };
+
+    window.handleAction = function(action) {
+        console.log('Action:', action);
+    };
+
+    // ============================================================
+    // LOAD DASHBOARD
+    // ============================================================
+    async function loadDashboard() {
+        try {
+            const results = await Promise.all([
+                apiFetch('/api/user/profile'),
+                apiFetch('/api/user/ledger').catch(function() { return []; }),
+                apiFetch('/api/user/stats').catch(function() { return {}; })
+            ]);
+
+            renderUser(results[0]);
+            renderTransactions(results[1]);
+            renderStats(results[2]);
+        } catch (err) {
+            console.error('Dashboard load error:', err);
+            showToast('Failed to load dashboard.', 'error');
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
-        // Update greeting time
         const now = new Date();
         const hour = now.getHours();
         let greeting = 'Good Morning';
@@ -195,32 +394,14 @@
         else if (hour >= 17) greeting = 'Good Evening';
 
         const greetingEl = document.querySelector('.greeting');
-        if (greetingEl) {
-            greetingEl.childNodes[0].nodeValue = '👋 ' + greeting + ', ';
-        }
+        if (greetingEl) greetingEl.childNodes[0].nodeValue = '👋 ' + greeting + ', ';
 
-        // Load data
-        try {
-            const [profile, ledger, stats] = await Promise.all([
-                apiFetch('/api/user/profile'),
-                apiFetch('/api/user/ledger').catch(() => []),
-                apiFetch('/api/user/stats').catch(() => ({ interestToday: 0, interestThisMonth: 0, interestYTD: 0, currentYield: 14.2 }))
-            ]);
+        const mins = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const h12 = hour % 12 || 12;
+        if ($('lastLoginTime')) $('lastLoginTime').textContent = h12 + ':' + mins + ' ' + ampm;
 
-            renderUser(profile);
-            renderTransactions(ledger);
-            renderStats(stats);
-
-            // Welcome toast
-            setTimeout(() => {
-                const name = profile.fullName ? profile.fullName.split(' ')[0] : 'Investor';
-                showToast('👋 Welcome back, ' + name + '!', 'success');
-            }, 500);
-
-        } catch (err) {
-            console.error('Dashboard load error:', err);
-            showToast('Failed to load dashboard data. Please refresh.', 'error');
-        }
+        await loadDashboard();
     });
 
 })();
