@@ -202,6 +202,56 @@ exports.resetPassword = async (req, res) => {
     }
 };
 
+exports.changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Current and new password are required.' });
+        }
+        if (newPassword.length < 8) {
+            return res.status(400).json({ error: 'New password must be at least 8 characters.' });
+        }
+        if (!/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+            return res.status(400).json({ error: 'New password must include an uppercase letter and a number.' });
+        }
+        if (currentPassword === newPassword) {
+            return res.status(400).json({ error: 'New password must differ from current password.' });
+        }
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: 'User not found.' });
+
+        const isMatch = await user.comparePassword(currentPassword);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Current password is incorrect.' });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        try {
+            await emailService.sendEmail(
+                user.email,
+                'RockWin Investment — Password Changed',
+                '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
+                '<h1 style="color: #006d32; font-size: 24px;">Password Changed</h1>' +
+                '<p style="color: #4a5a72; font-size: 15px;">Hi ' + (user.fullName || 'Investor').split(' ')[0] + ',</p>' +
+                '<p style="color: #4a5a72; font-size: 15px;">Your RockWin Investment password was changed from your account settings.</p>' +
+                '<p style="color: #4a5a72; font-size: 15px;">If you didn\'t do this, contact support@rockwin.co.ke immediately.</p>' +
+                '</div>'
+            );
+        } catch (e) {
+            console.warn('Password change email failed:', e.message);
+        }
+
+        res.json({ message: 'Password updated successfully.' });
+    } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ error: 'Server error.' });
+    }
+};
+
 exports.logout = (req, res) => {
     res.json({ message: 'Logged out successfully.' });
 };

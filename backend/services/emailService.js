@@ -1,7 +1,21 @@
 const { Resend } = require('resend');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+
+// Lazy Resend client — instantiated only when actually sending.
+// Prevents module-load crashes if RESEND_API_KEY is missing at startup.
+let resendClient = null;
+function getResendClient() {
+    if (resendClient) return resendClient;
+    const key = process.env.RESEND_API_KEY;
+    if (!key || key === '123') return null;
+    resendClient = new Resend(key);
+    return resendClient;
+}
+
+function firstName(user) {
+    return (user.fullName || 'Investor').split(' ')[0];
+}
 
 function wrapEmail(title, bodyHtml) {
     return '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
@@ -28,12 +42,13 @@ function ctaButton(text, url) {
 // Base send function
 exports.sendEmail = async (to, subject, html) => {
     try {
-        if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === '123') {
+        const client = getResendClient();
+        if (!client) {
             console.log('📧 [DEV] Email to ' + to + ': ' + subject);
             return { success: true, dev: true };
         }
 
-        const { data, error } = await resend.emails.send({
+        const { data, error } = await client.emails.send({
             from: 'RockWin Investment <' + FROM + '>',
             to: [to],
             subject: subject,
@@ -55,7 +70,7 @@ exports.sendEmail = async (to, subject, html) => {
 
 // Welcome email (signup)
 exports.sendWelcomeEmail = async (user) => {
-    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + firstName(user) + ',</p>' +
         '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Your investment account has been created successfully.</p>' +
         detailsBox([
             { label: 'Account Number', value: user.accountNumber },
@@ -72,7 +87,7 @@ exports.sendWelcomeEmail = async (user) => {
 // Login notification
 exports.sendLoginNotificationEmail = async (user, meta) => {
     const when = new Date().toLocaleString('en-KE', { dateStyle: 'medium', timeStyle: 'short' });
-    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + firstName(user) + ',</p>' +
         '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">We noticed a new sign-in to your RockWin Investment account.</p>' +
         detailsBox([
             { label: 'Time', value: when },
@@ -87,7 +102,7 @@ exports.sendLoginNotificationEmail = async (user, meta) => {
 
 // Deposit confirmation
 exports.sendDepositConfirmationEmail = async (user, amount, newValue) => {
-    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + firstName(user) + ',</p>' +
         '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Great news — your deposit has been confirmed and invested.</p>' +
         '<div style="background: #e8f5ee; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">' +
         '<div style="color: #4a5a72; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Deposit Confirmed</div>' +
@@ -101,7 +116,7 @@ exports.sendDepositConfirmationEmail = async (user, amount, newValue) => {
 
 // Withdrawal confirmation
 exports.sendWithdrawalConfirmationEmail = async (user, amount, newValue) => {
-    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + firstName(user) + ',</p>' +
         '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Your redemption request has been processed.</p>' +
         '<div style="background: #fff4e6; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">' +
         '<div style="color: #4a5a72; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Withdrawal Processed</div>' +
@@ -116,7 +131,7 @@ exports.sendWithdrawalConfirmationEmail = async (user, amount, newValue) => {
 
 // Interest credit
 exports.sendInterestCreditEmail = async (user, interestAmount, newPortfolioValue) => {
-    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + firstName(user) + ',</p>' +
         '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Daily interest has been credited to your portfolio.</p>' +
         '<div style="background: #e8f5ee; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">' +
         '<div style="color: #4a5a72; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Interest Earned</div>' +
@@ -130,7 +145,7 @@ exports.sendInterestCreditEmail = async (user, interestAmount, newPortfolioValue
 
 // Admin broadcast
 exports.sendBroadcastEmail = async (user, subject, message) => {
-    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+    const body = '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Hi ' + firstName(user) + ',</p>' +
         '<div style="color: #4a5a72; font-size: 15px; line-height: 1.6; white-space: pre-line;">' + message + '</div>';
 
     return exports.sendEmail(user.email, subject, wrapEmail(subject, body));
