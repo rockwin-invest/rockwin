@@ -18,393 +18,92 @@
     <style>
         /* ---------- MODAL STYLES ---------- */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            animation: modalFadeIn 0.3s ease;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 999; display: none; align-items: center; justify-content: center;
+            padding: 1.5rem; animation: modalFadeIn 0.3s ease;
         }
-
-        .modal-overlay.open {
-            display: flex;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.96) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        .modal-overlay.open { display: flex; }
+        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
         .modal-box {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-default);
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 2rem 2rem 1.8rem;
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-default); max-width: 500px; width: 100%;
+            max-height: 90vh; overflow-y: auto; padding: 2rem 2rem 1.8rem;
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
             animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .modal-box.wide { max-width: 600px; }
+        @keyframes modalSlideUp { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        .modal-box.wide {
-            max-width: 600px;
-        }
+        .modal-box .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+        .modal-box .modal-header h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--text-primary); }
+        .modal-box .modal-header .modal-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.1rem; }
+        .modal-box .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.2rem 0.4rem; transition: color 0.2s; line-height: 1; }
+        .modal-box .modal-close:hover { color: var(--text-primary); }
 
-        @keyframes modalSlideUp {
-            from { opacity: 0; transform: translateY(20px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .modal-box .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .modal-box .modal-header h3 {
-            font-family: var(--font-display);
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .modal-box .modal-header .modal-sub {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 0.1rem;
-        }
-
-        .modal-box .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.2rem 0.4rem;
-            transition: color 0.2s;
-            line-height: 1;
-        }
-
-        .modal-box .modal-close:hover {
-            color: var(--text-primary);
-        }
-
-        .modal-box .form-group {
-            margin-bottom: 1.1rem;
-        }
-
-        .modal-box .form-group label {
-            display: block;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-        }
-
+        .modal-box .form-group { margin-bottom: 1.1rem; }
+        .modal-box .form-group label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.25rem; }
         .modal-box .form-group input,
         .modal-box .form-group select,
-        .modal-box .form-group textarea {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-default);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-family: var(--font-body);
-            transition: all 0.25s ease;
-            outline: none;
-            resize: vertical;
-        }
-
+        .modal-box .form-group textarea { width: 100%; padding: 0.7rem 1rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: var(--radius-default); color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-body); transition: all 0.25s ease; outline: none; resize: vertical; }
         .modal-box .form-group input:focus,
         .modal-box .form-group select:focus,
-        .modal-box .form-group textarea:focus {
-            border-color: var(--primary-container);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 0 3px rgba(0, 109, 50, 0.12);
-        }
+        .modal-box .form-group textarea:focus { border-color: var(--primary-container); background: rgba(255, 255, 255, 0.07); box-shadow: 0 0 0 3px rgba(0, 109, 50, 0.12); }
+        .modal-box .form-group .input-hint { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.15rem; }
 
-        .modal-box .form-group input::placeholder,
-        .modal-box .form-group textarea::placeholder {
-            color: var(--text-muted);
-        }
-
-        .modal-box .form-group .input-hint {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-top: 0.15rem;
-        }
-
-        .modal-box .btn-modal-primary {
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
-            border: none;
-            border-radius: var(--radius-default);
-            color: var(--on-primary);
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 109, 50, 0.2);
-            margin-top: 0.3rem;
-        }
-
-        .modal-box .btn-modal-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 109, 50, 0.3);
-        }
-
-        .modal-box .btn-modal-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .modal-box .btn-modal-danger {
-            width: 100%;
-            padding: 0.8rem;
-            background: var(--error);
-            border: none;
-            border-radius: var(--radius-default);
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(248, 113, 113, 0.2);
-            margin-top: 0.3rem;
-        }
-
-        .modal-box .btn-modal-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(248, 113, 113, 0.3);
-        }
-
-        .modal-box .btn-modal-secondary {
-            width: 100%;
-            padding: 0.8rem;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-default);
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: 500;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            margin-top: 0.3rem;
-        }
-
-        .modal-box .btn-modal-secondary:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(255, 255, 255, 0.12);
-        }
-
-        .modal-box .modal-confirm-text {
-            text-align: center;
-            padding: 1rem 0;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .modal-box .modal-confirm-text .highlight {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .modal-box .modal-actions-row {
-            display: flex;
-            gap: 0.8rem;
-        }
-
+        .modal-box .btn-modal-primary { width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%); border: none; border-radius: var(--radius-default); color: var(--on-primary); font-size: 1rem; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 109, 50, 0.2); margin-top: 0.3rem; }
+        .modal-box .btn-modal-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0, 109, 50, 0.3); }
+        .modal-box .btn-modal-secondary { width: 100%; padding: 0.8rem; background: transparent; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: var(--radius-default); color: var(--text-secondary); font-size: 1rem; font-weight: 500; font-family: var(--font-body); cursor: pointer; transition: all 0.25s ease; margin-top: 0.3rem; }
+        .modal-box .btn-modal-secondary:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.12); }
+        .modal-box .modal-confirm-text { text-align: center; padding: 1rem 0; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
+        .modal-box .modal-confirm-text .highlight { color: var(--text-primary); font-weight: 600; }
+        .modal-box .modal-actions-row { display: flex; gap: 0.8rem; }
         .modal-box .modal-actions-row .btn-modal-primary,
-        .modal-box .modal-actions-row .btn-modal-danger,
-        .modal-box .modal-actions-row .btn-modal-secondary {
-            flex: 1;
-            margin-top: 0;
-        }
+        .modal-box .modal-actions-row .btn-modal-secondary { flex: 1; margin-top: 0; }
 
-        /* Tax info box */
-        .tax-info {
-            background: rgba(251, 191, 36, 0.08);
-            border: 1px solid rgba(251, 191, 36, 0.15);
-            border-radius: var(--radius-default);
-            padding: 0.8rem 1rem;
-            margin: 0.5rem 0 1rem;
-            text-align: center;
-        }
+        .tax-info { background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.15); border-radius: var(--radius-default); padding: 0.8rem 1rem; margin: 0.5rem 0 1rem; text-align: center; }
+        .tax-info .tax-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+        .tax-info .tax-detail { font-size: 0.75rem; color: var(--text-secondary); }
+        .tax-info .net-amount { font-size: 0.85rem; color: var(--accent-green); font-weight: 600; }
 
-        .tax-info .tax-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--text-muted);
-        }
+        .transaction-list-modal { max-height: 400px; overflow-y: auto; }
+        .transaction-list-modal .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03); font-size: 0.85rem; }
+        .transaction-list-modal .tx-item:last-child { border-bottom: none; }
+        .transaction-list-modal .tx-item .tx-name { font-weight: 500; color: var(--text-primary); }
+        .transaction-list-modal .tx-item .tx-meta { font-size: 0.7rem; color: var(--text-muted); }
+        .transaction-list-modal .tx-item .tx-amount.positive { color: var(--accent-green); }
+        .transaction-list-modal .tx-item .tx-amount.negative { color: var(--error); }
 
-        .tax-info .tax-detail {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
+        .goal-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: var(--radius-default); padding: 1rem; margin-bottom: 0.8rem; }
+        .goal-item .goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .goal-item .goal-name { font-weight: 600; color: var(--text-primary); font-size: 0.9rem; }
+        .goal-item .goal-amount { font-size: 0.75rem; color: var(--text-secondary); }
+        .goal-item .goal-track { height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; margin-bottom: 0.4rem; }
+        .goal-item .goal-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-container)); border-radius: 3px; }
+        .goal-item .goal-percentage { font-size: 0.7rem; color: var(--accent-green); font-weight: 600; }
 
-        .tax-info .net-amount {
-            font-size: 0.85rem;
-            color: var(--accent-green);
-            font-weight: 600;
-        }
-
-        /* Transaction list modal */
-        .transaction-list-modal {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .transaction-list-modal .tx-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            font-size: 0.85rem;
-        }
-
-        .transaction-list-modal .tx-item:last-child {
-            border-bottom: none;
-        }
-
-        .transaction-list-modal .tx-item .tx-left .tx-name {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .transaction-list-modal .tx-item .tx-left .tx-meta {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .transaction-list-modal .tx-item .tx-amount.positive {
-            color: var(--accent-green);
-        }
-
-        .transaction-list-modal .tx-item .tx-amount.negative {
-            color: var(--error);
-        }
-
-        /* Goal progress bar in modal */
-        .goal-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius-default);
-            padding: 1rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .goal-item .goal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .goal-item .goal-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-
-        .goal-item .goal-amount {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .goal-item .goal-track {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 0.4rem;
-        }
-
-        .goal-item .goal-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-container));
-            border-radius: 3px;
-        }
-
-        .goal-item .goal-percentage {
-            font-size: 0.7rem;
-            color: var(--accent-green);
-            font-weight: 600;
-        }
-
-        /* Responsive modals */
         @media (max-width: 500px) {
-            .modal-box {
-                padding: 1.5rem 1.2rem;
-                margin: 0.5rem;
-            }
+            .modal-box { padding: 1.5rem 1.2rem; margin: 0.5rem; }
             .modal-box .modal-header h3 { font-size: 1rem; }
             .modal-box .form-group input,
             .modal-box .form-group select,
-            .modal-box .form-group textarea {
-                font-size: 0.85rem;
-                padding: 0.6rem 0.8rem;
-            }
-            .modal-box .btn-modal-primary,
-            .modal-box .btn-modal-danger,
-            .modal-box .btn-modal-secondary {
-                font-size: 0.9rem;
-                padding: 0.7rem;
-            }
-            .modal-box .modal-actions-row {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            .modal-box.wide {
-                max-width: 100%;
-                margin: 0.5rem;
-            }
+            .modal-box .form-group textarea { font-size: 0.85rem; padding: 0.6rem 0.8rem; }
+            .modal-box .btn-modal-primary, .modal-box .btn-modal-secondary { font-size: 0.9rem; padding: 0.7rem; }
+            .modal-box .modal-actions-row { flex-direction: column; gap: 0.5rem; }
+            .modal-box.wide { max-width: 100%; margin: 0.5rem; }
         }
 
-        /* Unit badge styling */
         .unit-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.6);
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            font-size: 0.7rem; color: rgba(255, 255, 255, 0.6);
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-full);
-            padding: 0.2rem 0.7rem;
+            border-radius: var(--radius-full); padding: 0.2rem 0.7rem;
             margin-top: 0.4rem;
         }
-
-        .unit-badge .dot-green {
-            width: 6px;
-            height: 6px;
-            background: var(--accent-green);
-            border-radius: 50%;
-        }
+        .unit-badge .dot-green { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
     </style>
 </head>
 <body>
@@ -421,16 +120,13 @@
             </a>
             <a href="goals.html">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <circle cx="12" cy="12" r="6"/>
-                    <circle cx="12" cy="12" r="2"/>
+                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
                 </svg>
                 Goals
             </a>
             <a href="profile.html">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
                 </svg>
                 Profile
             </a>
@@ -460,14 +156,13 @@
         <!-- ====== TOP HEADER ====== -->
         <header class="top-header">
             <div class="greeting">
-                👋 Good Morning, <span id="userFirstName">Charles</span>
-                <span class="last-login">Last login: Today, <span id="lastLoginTime">8:31 AM</span></span>
+                👋 Good Morning, <span id="userFirstName">...</span>
+                <span class="last-login">Last login: Today, <span id="lastLoginTime">--:--</span></span>
             </div>
             <div class="actions">
                 <button class="btn-icon" id="searchBtn" aria-label="Search or quick actions">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="M21 21l-4.35-4.35"/>
+                        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
                     </svg>
                 </button>
                 <button class="btn-icon" id="notifBtn" aria-label="Notifications">
@@ -475,9 +170,9 @@
                         <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                         <path d="M13.73 21a2 2 0 01-3.46 0"/>
                     </svg>
-                    <span class="badge" id="notifBadge">3</span>
+                    <span class="badge" id="notifBadge" style="display:none;">0</span>
                 </button>
-                <div class="avatar" id="userAvatar">CK</div>
+                <div class="avatar" id="userAvatar">..</div>
             </div>
         </header>
 
@@ -491,34 +186,33 @@
                 <div class="balance-hero">
                     <div class="label">Portfolio Value</div>
                     <div class="amount" id="primaryBalance">
-                        <span class="currency">KES</span> <span id="balanceFigure">482,450.50</span>
+                        <span class="currency">KES</span> <span id="balanceFigure">0.00</span>
                     </div>
                     <div class="unit-badge">
                         <span class="dot-green"></span>
-                        <span id="unitsDisplay">2,483.5 units</span>
+                        <span id="unitsDisplay">0.0 units</span>
                         <span style="opacity:0.4;">·</span>
-                        <span style="color:var(--primary-container); font-weight:600;">14.2% p.a.</span>
+                        <span id="yieldDisplay" style="color:var(--primary-container); font-weight:600;">14.2% p.a.</span>
                     </div>
                     <div class="actions-row" style="margin-top:0.6rem;">
                         <button class="btn-hide" id="hideBalanceBtn">👁️ Hide</button>
                     </div>
                     <div class="reward-badge">
                         <span class="dot"></span>
-                        <span id="rewardMessage">Interest credited today · KES 1,842</span>
+                        <span id="rewardMessage">Welcome to RockWin Investment</span>
                     </div>
                 </div>
 
                 <!-- Contextual Message -->
                 <div class="context-message" id="contextMessage">
                     <span class="icon">💡</span>
-                    <span class="text"><strong>You've earned KES 24,450</strong> in interest this year. Keep growing!</span>
+                    <span class="text"><strong>Get started</strong> — make your first investment to begin earning interest.</span>
                 </div>
 
                 <!-- Primary Action: Invest -->
                 <button class="primary-action" onclick="openModal('depositModal')">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 5v14"/>
-                        <path d="M5 12h14"/>
+                        <path d="M12 5v14"/><path d="M5 12h14"/>
                     </svg>
                     Invest Now
                 </button>
@@ -527,31 +221,25 @@
                 <div class="quick-actions">
                     <button class="quick-action" onclick="openModal('depositModal')">
                         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14"/>
-                            <path d="M5 12h14"/>
+                            <path d="M12 5v14"/><path d="M5 12h14"/>
                         </svg>
                         <span class="label">Invest</span>
                     </button>
                     <button class="quick-action" onclick="openModal('withdrawModal')">
                         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 19V5"/>
-                            <path d="M19 12l-7-7-7 7"/>
+                            <path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/>
                         </svg>
                         <span class="label">Redeem</span>
                     </button>
                     <button class="quick-action" onclick="openModal('goalsModal')">
                         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <circle cx="12" cy="12" r="6"/>
-                            <circle cx="12" cy="12" r="2"/>
+                            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
                         </svg>
                         <span class="label">Goals</span>
                     </button>
                     <button class="quick-action" onclick="openModal('moreModal')">
                         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="5" r="1.5"/>
-                            <circle cx="12" cy="12" r="1.5"/>
-                            <circle cx="12" cy="19" r="1.5"/>
+                            <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
                         </svg>
                         <span class="label">More</span>
                     </button>
@@ -564,7 +252,7 @@
                         <a href="#" onclick="openModal('allTransactionsModal')">View All →</a>
                     </div>
                     <div id="transactionList">
-                        <!-- Rendered by JavaScript -->
+                        <!-- Rendered by dashboard.js -->
                     </div>
                 </section>
 
@@ -590,7 +278,7 @@
                     </div>
                     <div class="card-item">
                         <span class="label">Current yield</span>
-                        <span class="value green stats-yield">14.2% p.a.</span>
+                        <span class="value green stats-yield">Loading...</span>
                     </div>
                 </div>
 
@@ -601,7 +289,7 @@
                         <span class="label">📄 Download Statement</span>
                         <span class="value blue">→</span>
                     </div>
-                    <div class="card-item" style="cursor:pointer;" onclick="openModal('goalsModal')">
+                    <div class="card-item" style="cursor:pointer;" onclick="window.location.href='goals.html'">
                         <span class="label">🎯 Investment Goals</span>
                         <span class="value blue">→</span>
                     </div>
@@ -628,13 +316,13 @@
                 </svg>
                 Chat
             </a>
-            <a href="tel:+254700123456" onclick="showToast('📞 Calling support...')">
+            <a href="tel:+254700123456">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
                 </svg>
                 Call
             </a>
-            <a href="mailto:support@rockwin.co.ke?subject=RockWin%20Investment%20Support%20Request&body=Hello%20Support%20Team%2C%0A%0AI%20need%20assistance%20with%3A%0A%0A1.%20%0A2.%20%0A%0AThank%20you." onclick="showToast('📧 Opening email...')">
+            <a href="mailto:support@rockwin.co.ke">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                     <polyline points="22,6 12,13 2,6"/>
@@ -645,79 +333,49 @@
 
     </main>
 
-    <!-- ====== FAB (Mobile) ====== -->
+    <!-- ====== FAB ====== -->
     <button class="fab" id="fabBtn" aria-label="Quick actions">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
     </button>
 
     <div class="fab-menu" id="fabMenu">
         <div class="fab-item" onclick="openModal('depositModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14"/>
-                <path d="M5 12h14"/>
-            </svg>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
             Invest
         </div>
         <div class="fab-item" onclick="openModal('withdrawModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 19V5"/>
-                <path d="M19 12l-7-7-7 7"/>
-            </svg>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/></svg>
             Redeem
         </div>
-        <div class="fab-item" onclick="openModal('goalsModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <circle cx="12" cy="12" r="6"/>
-                <circle cx="12" cy="12" r="2"/>
-            </svg>
+        <div class="fab-item" onclick="window.location.href='goals.html'">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
             Goals
         </div>
         <div class="fab-item" onclick="downloadStatement()">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 4v16h16"/>
-                <polyline points="20 10 12 18 8 14"/>
-            </svg>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16"/><polyline points="20 10 12 18 8 14"/></svg>
             Statement
-        </div>
-        <div class="fab-item" onclick="openModal('moreModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7"/>
-                <rect x="14" y="3" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/>
-            </svg>
-            More
         </div>
     </div>
 
-    <!-- ====== BOTTOM NAV (Mobile) ====== -->
+    <!-- ====== BOTTOM NAV ====== -->
     <nav class="bottom-nav" id="bottomNav">
-        <button class="nav-item active" onclick="showToast('Portfolio')">
+        <button class="nav-item active" onclick="window.location.href='dashboard.html'">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
             <span>Portfolio</span>
         </button>
         <button class="nav-item" onclick="openModal('depositModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14"/>
-                <path d="M5 12h14"/>
-            </svg>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
             <span>Invest</span>
         </button>
-        <button class="nav-item" onclick="openModal('goalsModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <circle cx="12" cy="12" r="6"/>
-                <circle cx="12" cy="12" r="2"/>
-            </svg>
+        <button class="nav-item" onclick="window.location.href='goals.html'">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
             <span>Goals</span>
         </button>
-        <button class="nav-item" onclick="showToast('📬 No new notifications')">
+        <button class="nav-item" onclick="openNotifDrawer()">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 01-3.46 0"/>
@@ -726,8 +384,7 @@
         </button>
         <button class="nav-item" onclick="window.location.href='profile.html'">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
             <span>Profile</span>
         </button>
@@ -739,52 +396,33 @@
         <div class="handle"></div>
         <div class="search-input-wrap">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
             </svg>
             <input type="text" id="actionSearchInput" placeholder="Search or quick action..." autofocus />
         </div>
         <div class="action-grid">
             <div class="item" onclick="handleAction('Invest'); openModal('depositModal')">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 5v14"/>
-                    <path d="M5 12h14"/>
-                </svg>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
                 Invest
             </div>
             <div class="item" onclick="handleAction('Redeem'); openModal('withdrawModal')">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 19V5"/>
-                    <path d="M19 12l-7-7-7 7"/>
-                </svg>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M19 12l-7-7-7 7"/></svg>
                 Redeem
             </div>
             <div class="item" onclick="handleAction('View Statement'); downloadStatement()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4v16h16"/>
-                    <polyline points="20 10 12 18 8 14"/>
-                </svg>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16"/><polyline points="20 10 12 18 8 14"/></svg>
                 Statement
             </div>
-            <div class="item" onclick="handleAction('Goals'); openModal('goalsModal')">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <circle cx="12" cy="12" r="6"/>
-                    <circle cx="12" cy="12" r="2"/>
-                </svg>
+            <div class="item" onclick="handleAction('Goals'); window.location.href='goals.html'">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                 Goals
             </div>
             <div class="item" onclick="handleAction('Contact Support'); contactWhatsApp()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                </svg>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 Support
             </div>
             <div class="item" onclick="handleAction('Settings'); window.location.href='settings.html'">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
                 Settings
             </div>
         </div>
@@ -792,9 +430,7 @@
 
     <!-- ====== MODALS ====== -->
 
-    <!-- ========================================= -->
-    <!-- 1. INVEST / DEPOSIT MODAL -->
-    <!-- ========================================= -->
+    <!-- 1. INVEST MODAL -->
     <div class="modal-overlay" id="depositModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -823,8 +459,8 @@
                     <label>M-PESA Instructions</label>
                     <div style="background:rgba(255,255,255,0.03); padding:0.8rem 1rem; border-radius:var(--radius-default); font-size:0.85rem; color:var(--text-secondary);">
                         <p><strong>Paybill:</strong> 247247</p>
-                        <p><strong>Account:</strong> <span id="depositAccountDisplay">RW-654231</span></p>
-                        <p style="font-size:0.7rem; color:var(--text-muted); margin-top:0.3rem;">Units will be credited at today's NAV per unit after confirmation.</p>
+                        <p><strong>Account:</strong> <span id="depositAccountDisplay">RW-—</span></p>
+                        <p style="font-size:0.7rem; color:var(--text-muted); margin-top:0.3rem;">Units credited at today's NAV after confirmation.</p>
                     </div>
                 </div>
                 <button type="submit" class="btn-modal-primary">Confirm Investment</button>
@@ -833,9 +469,7 @@
         </div>
     </div>
 
-    <!-- ========================================= -->
-    <!-- 2. REDEEM / WITHDRAW MODAL -->
-    <!-- ========================================= -->
+    <!-- 2. REDEEM MODAL -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -856,12 +490,12 @@
                 </div>
                 <div class="form-group">
                     <label for="withdrawAccount">Account Number / Phone</label>
-                    <input type="text" id="withdrawAccount" placeholder="e.g. +254712345678 or Bank account" required />
+                    <input type="text" id="withdrawAccount" placeholder="e.g. +254712345678" required />
                 </div>
                 <div class="form-group">
                     <label for="withdrawAmount">Amount (KES)</label>
                     <input type="number" id="withdrawAmount" placeholder="0.00" min="1000" step="0.01" required />
-                    <div class="input-hint">Minimum redemption: KES 1,000. No lock-in, no penalties.</div>
+                    <div class="input-hint">Minimum redemption: KES 1,000.</div>
                 </div>
                 <button type="submit" class="btn-modal-primary">Confirm Redemption</button>
                 <button type="button" class="btn-modal-secondary" onclick="closeModal('withdrawModal')">Cancel</button>
@@ -869,9 +503,7 @@
         </div>
     </div>
 
-    <!-- ========================================= -->
     <!-- 3. GOALS MODAL -->
-    <!-- ========================================= -->
     <div class="modal-overlay" id="goalsModal">
         <div class="modal-box wide">
             <div class="modal-header">
@@ -881,46 +513,15 @@
                 </div>
                 <button class="modal-close" onclick="closeModal('goalsModal')">✕</button>
             </div>
-            <div>
-                <div class="goal-item">
-                    <div class="goal-header">
-                        <div>
-                            <div class="goal-name">🚨 Emergency Fund</div>
-                            <div class="goal-amount">KES 120,000 / KES 200,000</div>
-                        </div>
-                        <div class="goal-percentage">60%</div>
-                    </div>
-                    <div class="goal-track"><div class="goal-fill" style="width:60%;"></div></div>
-                </div>
-                <div class="goal-item">
-                    <div class="goal-header">
-                        <div>
-                            <div class="goal-name">🎓 School Fees</div>
-                            <div class="goal-amount">KES 84,000 / KES 100,000</div>
-                        </div>
-                        <div class="goal-percentage">84%</div>
-                    </div>
-                    <div class="goal-track"><div class="goal-fill" style="width:84%;"></div></div>
-                </div>
-                <div class="goal-item">
-                    <div class="goal-header">
-                        <div>
-                            <div class="goal-name">🏠 House Deposit</div>
-                            <div class="goal-amount">KES 250,000 / KES 1,000,000</div>
-                        </div>
-                        <div class="goal-percentage">25%</div>
-                    </div>
-                    <div class="goal-track"><div class="goal-fill" style="width:25%;"></div></div>
-                </div>
+            <div id="goalsModalList">
+                <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">Loading goals...</div>
             </div>
-            <button class="btn-modal-primary" onclick="showToast('➕ New goal creation form coming soon!')" style="margin-top:1rem;">Create New Goal</button>
+            <button class="btn-modal-primary" onclick="window.location.href='goals.html'" style="margin-top:1rem;">Manage Goals</button>
             <button class="btn-modal-secondary" onclick="closeModal('goalsModal')">Close</button>
         </div>
     </div>
 
-    <!-- ========================================= -->
     <!-- 4. ALL TRANSACTIONS MODAL -->
-    <!-- ========================================= -->
     <div class="modal-overlay" id="allTransactionsModal">
         <div class="modal-box wide">
             <div class="modal-header">
@@ -931,42 +532,13 @@
                 <button class="modal-close" onclick="closeModal('allTransactionsModal')">✕</button>
             </div>
             <div class="transaction-list-modal" id="allTransactionList">
-                <!-- Populated by JavaScript -->
+                <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">Loading...</div>
             </div>
             <button class="btn-modal-secondary" onclick="closeModal('allTransactionsModal')">Close</button>
         </div>
     </div>
 
-    <!-- ========================================= -->
-    <!-- 5. SETTINGS QUICK ACCESS MODAL -->
-    <!-- ========================================= -->
-    <div class="modal-overlay" id="settingsModal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <div>
-                    <h3>⚙️ Settings</h3>
-                    <div class="modal-sub">Manage your preferences</div>
-                </div>
-                <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:0.6rem; padding:0.5rem 0;">
-                <button class="btn-modal-primary" onclick="window.location.href='profile.html'" style="margin:0;">
-                    👤 Edit Profile
-                </button>
-                <button class="btn-modal-primary" onclick="window.location.href='settings.html'" style="margin:0; background:linear-gradient(135deg, var(--admin-accent), #7c3aed);">
-                    🔐 Security Settings
-                </button>
-                <button class="btn-modal-primary" onclick="showToast('📱 Mobile app coming soon...')" style="margin:0; background:linear-gradient(135deg, #2563eb, #1d4ed8);">
-                    📱 Get Mobile App
-                </button>
-                <button class="btn-modal-secondary" onclick="closeModal('settingsModal')" style="margin-top:0.3rem;">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================= -->
-    <!-- 6. MORE OPTIONS MODAL -->
-    <!-- ========================================= -->
+    <!-- 5. MORE OPTIONS MODAL -->
     <div class="modal-overlay" id="moreModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -980,10 +552,10 @@
                 <button class="btn-modal-primary" onclick="downloadStatement()" style="margin:0; background:linear-gradient(135deg, #2563eb, #1d4ed8);">
                     📄 Download Statement
                 </button>
-                <button class="btn-modal-primary" onclick="openModal('goalsModal'); closeModal('moreModal');" style="margin:0; background:linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                <button class="btn-modal-primary" onclick="window.location.href='goals.html'" style="margin:0; background:linear-gradient(135deg, #8b5cf6, #7c3aed);">
                     🎯 Investment Goals
                 </button>
-                <button class="btn-modal-primary" onclick="window.open('https://www.cma.or.ke', '_blank')" style="margin:0; background:linear-gradient(135deg, #e67e22, #d35400);">
+                <button class="btn-modal-primary" onclick="window.open('fund-factsheet.html', '_blank')" style="margin:0; background:linear-gradient(135deg, #e67e22, #d35400);">
                     📊 View Fund Factsheet
                 </button>
                 <button class="btn-modal-primary" onclick="contactWhatsApp()" style="margin:0; background:linear-gradient(135deg, #25D366, #128C7E);">
@@ -997,459 +569,26 @@
         </div>
     </div>
 
+    <!-- ====== NOTIFICATION DRAWER ====== -->
+    <div class="notif-overlay" id="notifOverlay" onclick="closeNotifDrawer()"></div>
+    <div class="notif-drawer" id="notifDrawer">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+            <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;">🔔 Notifications</h3>
+            <button onclick="closeNotifDrawer()" style="background:none;border:none;color:var(--text-secondary);font-size:1.4rem;cursor:pointer;">✕</button>
+        </div>
+        <div id="notifList">
+            <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">
+                <div style="font-size:2rem;margin-bottom:0.5rem;">📭</div>
+                <p>No new notifications</p>
+            </div>
+        </div>
+    </div>
+
     <!-- ====== TOAST CONTAINER ====== -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- ====== JAVASCRIPT ====== -->
-    <script>
-        // ====== MOCK USER DATA (MMF) ======
-        const mockUser = {
-            fullName: 'Charles Karanja',
-            accountNumber: 'RW-654231',
-            portfolioValue: 482450.50,
-            units: 2483.5,
-            yield: 14.2,
-            interestToday: 1842,
-            interestMonth: 5680,
-            interestYTD: 24450
-        };
-
-        // ====== MOCK TRANSACTIONS ======
-        const mockTransactions = [
-            { description: 'Daily Interest Credit', amount: 1842, type: 'credit', date: '2026-08-03T09:34:00', reference: 'Daily accrual' },
-            { description: 'M-PESA Deposit', amount: 50000, type: 'credit', date: '2026-08-03T08:15:00', reference: 'M-PESA · Paybill 247247' },
-            { description: 'Redemption to M-PESA', amount: 20000, type: 'debit', date: '2026-08-02T16:45:00', reference: 'M-PESA · +254712345678' },
-            { description: 'Daily Interest Credit', amount: 1815, type: 'credit', date: '2026-08-02T09:34:00', reference: 'Daily accrual' },
-            { description: 'Bank Transfer Deposit', amount: 100000, type: 'credit', date: '2026-08-01T14:20:00', reference: 'I&M Bank · Standing order' },
-            { description: 'Daily Interest Credit', amount: 1789, type: 'credit', date: '2026-08-01T09:34:00', reference: 'Daily accrual' },
-            { description: 'Redemption to Bank', amount: 75000, type: 'debit', date: '2026-07-31T11:00:00', reference: 'I&M Bank' },
-            { description: 'Daily Interest Credit', amount: 1760, type: 'credit', date: '2026-07-31T09:34:00', reference: 'Daily accrual' },
-        ];
-
-        // ====== MODAL CONTROLS ======
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.add('open');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        }
-
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('open');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal-overlay.open').forEach(modal => {
-                    modal.classList.remove('open');
-                    document.body.style.overflow = '';
-                });
-            }
-        });
-
-        // ====== TOAST SYSTEM ======
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast ${type === 'error' ? 'error' : type === 'info' ? 'info' : ''}`;
-            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-            toast.innerHTML = `
-                <span class="toast-icon">${icon}</span>
-                <span class="toast-msg">${message}</span>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-12px) scale(0.96)';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-        window.showToast = showToast;
-
-        // ====== HANDLE LOGOUT ======
-        function handleLogout() {
-            if (confirm('Are you sure you want to sign out?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            }
-        }
-        window.handleLogout = handleLogout;
-
-        function handleAction(action) {
-            console.log('Action selected:', action);
-        }
-        window.handleAction = handleAction;
-
-        // ====== CONTACT WHATSAPP ======
-        function contactWhatsApp() {
-            const phone = '+254700123456';
-            const message = 'Hello RockWin Investment Support, I need assistance with:';
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-        }
-        window.contactWhatsApp = contactWhatsApp;
-
-        // ====== SHOW WITHHOLDING TAX POPUP (for redemption interest) ======
-        function showTaxPopup(amount, action, callback) {
-            const taxRate = 0.15;
-            const taxAmount = amount * taxRate;
-            const netAmount = amount - taxAmount;
-
-            const modalHtml = `
-                <div class="modal-overlay" id="taxPopup" style="display:flex; align-items:center; justify-content:center;">
-                    <div class="modal-box">
-                        <div class="modal-header">
-                            <div>
-                                <h3>💰 Withholding Tax on Interest</h3>
-                                <div class="modal-sub">${action} confirmation</div>
-                            </div>
-                            <button class="modal-close" onclick="closeModal('taxPopup')">✕</button>
-                        </div>
-                        <div class="modal-confirm-text">
-                            <p style="font-size:0.85rem; color:var(--text-secondary);">
-                                A <span class="highlight">15% withholding tax</span> applies to interest earned as required by KRA.
-                            </p>
-                        </div>
-                        <div class="tax-info">
-                            <div class="tax-label">Tax Calculation</div>
-                            <div style="display:flex; justify-content:space-between; padding:0.3rem 0; font-size:0.85rem;">
-                                <span>Redemption Amount</span>
-                                <span>KES ${amount.toLocaleString('en-KE', {minimumFractionDigits:2})}</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; padding:0.3rem 0; font-size:0.85rem; color:var(--warning);">
-                                <span>Estimated Tax (15%)</span>
-                                <span>- KES ${taxAmount.toLocaleString('en-KE', {minimumFractionDigits:2})}</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; padding:0.5rem 0; font-size:1.1rem; font-weight:700; border-top:1px solid rgba(255,255,255,0.04);">
-                                <span>Net to Receive</span>
-                                <span class="net-amount">KES ${netAmount.toLocaleString('en-KE', {minimumFractionDigits:2})}</span>
-                            </div>
-                            <div class="tax-detail" style="margin-top:0.3rem;">
-                                ⚠️ Tax is withheld on interest earned and remitted to KRA
-                            </div>
-                        </div>
-                        <div class="modal-actions-row">
-                            <button class="btn-modal-primary" onclick="confirmTaxAction('${action}', ${netAmount}, '${callback}')">
-                                Confirm ${action}
-                            </button>
-                            <button class="btn-modal-secondary" onclick="closeModal('taxPopup')">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            const existing = document.getElementById('taxPopup');
-            if (existing) existing.remove();
-
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            window._taxCallback = callback;
-        }
-
-        function confirmTaxAction(action, netAmount, callbackName) {
-            closeModal('taxPopup');
-            if (callbackName === 'withdraw') {
-                completeWithdrawal(netAmount);
-            }
-            const popup = document.getElementById('taxPopup');
-            if (popup) popup.remove();
-        }
-
-        // ====== INVEST / DEPOSIT HANDLER ======
-        function handleDeposit(e) {
-            e.preventDefault();
-            const method = document.getElementById('depositMethod').value;
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-
-            if (!method || !amount || amount < 1000) {
-                showToast('⚠️ Minimum investment is KES 1,000.', 'error');
-                return;
-            }
-
-            mockTransactions.unshift({
-                description: `Deposit via ${method === 'mpesa' ? 'M-PESA' : method === 'bank' ? 'Bank Transfer' : 'Standing Order'}`,
-                amount: amount,
-                type: 'credit',
-                date: new Date().toISOString(),
-                reference: method === 'mpesa' ? 'M-PESA · Paybill 247247' : 'Bank Transfer'
-            });
-
-            const balanceEl = document.getElementById('balanceFigure');
-            const currentBalance = parseFloat(balanceEl.textContent.replace(/,/g, ''));
-            const newBalance = currentBalance + amount;
-            balanceEl.textContent = newBalance.toLocaleString('en-KE', { minimumFractionDigits: 2 });
-
-            // Add units
-            const unitsEl = document.getElementById('unitsDisplay');
-            const newUnits = mockUser.units + (amount / 194.2);
-            mockUser.units = newUnits;
-            if (unitsEl) unitsEl.textContent = newUnits.toFixed(1) + ' units';
-
-            renderTransactions();
-            closeModal('depositModal');
-            document.getElementById('depositForm').reset();
-            document.getElementById('mpesaDetails').style.display = 'none';
-            showToast(`✅ KES ${amount.toLocaleString()} invested successfully!`, 'success');
-        }
-
-        document.getElementById('depositMethod')?.addEventListener('change', function() {
-            const mpesaDetails = document.getElementById('mpesaDetails');
-            if (this.value === 'mpesa') {
-                mpesaDetails.style.display = 'block';
-            } else {
-                mpesaDetails.style.display = 'none';
-            }
-        });
-
-        // ====== REDEEM / WITHDRAW HANDLER ======
-        function handleWithdraw(e) {
-            e.preventDefault();
-            const destination = document.getElementById('withdrawDestination').value;
-            const account = document.getElementById('withdrawAccount').value;
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-
-            if (!destination || !account || !amount || amount < 1000) {
-                showToast('⚠️ Minimum redemption is KES 1,000.', 'error');
-                return;
-            }
-
-            showTaxPopup(amount, 'Redemption', 'withdraw');
-            window._withdrawDetails = { destination, account };
-        }
-
-        function completeWithdrawal(netAmount) {
-            const details = window._withdrawDetails;
-            if (!details) return;
-
-            mockTransactions.unshift({
-                description: `Redemption to ${details.destination === 'mpesa' ? 'M-PESA' : 'Bank'}`,
-                amount: netAmount,
-                type: 'debit',
-                date: new Date().toISOString(),
-                reference: details.account
-            });
-
-            const balanceEl = document.getElementById('balanceFigure');
-            const currentBalance = parseFloat(balanceEl.textContent.replace(/,/g, ''));
-            const newBalance = currentBalance - netAmount;
-            balanceEl.textContent = newBalance.toLocaleString('en-KE', { minimumFractionDigits: 2 });
-
-            // Reduce units
-            const unitsEl = document.getElementById('unitsDisplay');
-            const newUnits = mockUser.units - (netAmount / 194.2);
-            mockUser.units = Math.max(0, newUnits);
-            if (unitsEl) unitsEl.textContent = mockUser.units.toFixed(1) + ' units';
-
-            renderTransactions();
-            closeModal('withdrawModal');
-            document.getElementById('withdrawForm').reset();
-            showToast(`✅ KES ${netAmount.toLocaleString()} redeemed successfully!`, 'success');
-        }
-
-        // ====== RENDER TRANSACTIONS ======
-        function renderTransactions() {
-            const container = document.getElementById('transactionList');
-            if (!container) return;
-
-            const recent = mockTransactions.slice(0, 5);
-
-            if (recent.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-ledger" style="text-align:center;padding:2rem 0;">
-                        <span class="icon" style="font-size:2rem;display:block;margin-bottom:0.5rem;">📭</span>
-                        <p style="color:var(--text-muted);">No activity yet.</p>
-                        <p style="font-size:0.8rem; color:var(--text-muted);">Your investments will appear here.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            let html = '';
-            const groups = {};
-            recent.forEach(t => {
-                const date = new Date(t.date).toLocaleDateString('en-KE', { weekday: 'long', month: 'short', day: 'numeric' });
-                if (!groups[date]) groups[date] = [];
-                groups[date].push(t);
-            });
-
-            for (const [date, items] of Object.entries(groups)) {
-                html += `<div class="transaction-group"><div class="group-date">${date}</div>`;
-                items.forEach(t => {
-                    const icon = t.description.includes('Interest') ? '📈' : (t.type === 'credit' ? '💰' : '💳');
-                    const amountClass = t.type === 'credit' ? 'positive' : 'negative';
-                    const amountSign = t.type === 'credit' ? '+ ' : '- ';
-                    html += `
-                        <div class="transaction-row">
-                            <div class="icon-wrap">${icon}</div>
-                            <div class="details">
-                                <div class="name">${t.description}</div>
-                                <div class="meta">
-                                    ${t.reference || 'Transaction'}
-                                    <span class="separator">·</span>
-                                    ${new Date(t.date).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}
-                                </div>
-                            </div>
-                            <div class="amount ${amountClass}">${amountSign}KES ${t.amount.toFixed(2)}</div>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            }
-            container.innerHTML = html;
-            renderAllTransactions();
-        }
-
-        function renderAllTransactions() {
-            const container = document.getElementById('allTransactionList');
-            if (!container) return;
-
-            if (mockTransactions.length === 0) {
-                container.innerHTML = `<div style="text-align:center;padding:2rem 0; color:var(--text-muted);"><p>No transactions found.</p></div>`;
-                return;
-            }
-
-            let html = '';
-            mockTransactions.forEach(t => {
-                const icon = t.description.includes('Interest') ? '📈' : (t.type === 'credit' ? '💰' : '💳');
-                const amountClass = t.type === 'credit' ? 'positive' : 'negative';
-                const amountSign = t.type === 'credit' ? '+ ' : '- ';
-                html += `
-                    <div class="tx-item">
-                        <div class="tx-left">
-                            <div class="tx-name">${icon} ${t.description}</div>
-                            <div class="tx-meta">${t.reference || 'Transaction'} · ${new Date(t.date).toLocaleString('en-KE')}</div>
-                        </div>
-                        <div class="tx-amount ${amountClass}">${amountSign}KES ${t.amount.toFixed(2)}</div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        // ====== PDF STATEMENT ======
-        function downloadStatement() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Header
-            doc.setFontSize(22);
-            doc.setTextColor(0, 109, 50);
-            doc.text('RockWin Investment', 20, 30);
-
-            doc.setFontSize(12);
-            doc.setTextColor(100);
-            doc.text('Investment Statement', 20, 40);
-            doc.text(`Generated: ${new Date().toLocaleString('en-KE')}`, 20, 47);
-
-            // Account details
-            doc.setFontSize(10);
-            doc.setTextColor(50);
-            doc.text(`Investor: ${mockUser.fullName}`, 20, 58);
-            doc.text(`Account Number: ${mockUser.accountNumber}`, 20, 65);
-            doc.text(`Portfolio Value: KES ${mockUser.portfolioValue.toLocaleString('en-KE', {minimumFractionDigits:2})}`, 20, 72);
-            doc.text(`Units Held: ${mockUser.units.toFixed(1)} | Current Yield: 14.2% p.a.`, 20, 78);
-            doc.text(`Regulated by CMA | Trustee: I&M Bank | Auditor: Deloitte`, 20, 84);
-
-            // Transactions table
-            doc.autoTable({
-                startY: 92,
-                head: [['Date', 'Description', 'Reference', 'Amount (KES)']],
-                body: mockTransactions.map(t => {
-                    const sign = t.type === 'credit' ? '+' : '-';
-                    return [
-                        new Date(t.date).toLocaleDateString('en-KE'),
-                        t.description,
-                        t.reference || '-',
-                        `${sign} ${t.amount.toFixed(2)}`
-                    ];
-                }),
-                theme: 'striped',
-                headStyles: { fillColor: [0, 109, 50] },
-                styles: { textColor: [255, 255, 255], fontSize: 8 },
-                alternateRowStyles: { fillColor: [240, 240, 240] },
-                didParseCell: function(data) {
-                    if (data.section === 'body' && data.column.index === 3) {
-                        const val = data.cell.raw;
-                        if (val.startsWith('+')) data.cell.styles.textColor = [0, 128, 0];
-                        else if (val.startsWith('-')) data.cell.styles.textColor = [255, 0, 0];
-                    }
-                }
-            });
-
-            // Footer
-            const pageCount = doc.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                doc.setFontSize(8);
-                doc.setTextColor(150);
-                doc.text(`Page ${i} of ${pageCount}`, 20, doc.internal.pageSize.height - 10);
-                doc.text('RockWin Investment · CMA Licensed · I&M Trustee · Deloitte Audited', 20, doc.internal.pageSize.height - 5);
-            }
-
-            doc.save(`RockWin_Statement_${mockUser.accountNumber}_${new Date().toISOString().slice(0,10)}.pdf`);
-            showToast('📄 Statement downloaded successfully!', 'success');
-        }
-        window.downloadStatement = downloadStatement;
-
-        // ====== NOTIFICATIONS ======
-        document.getElementById('notifBtn')?.addEventListener('click', function() {
-            const badge = document.getElementById('notifBadge');
-            if (badge) {
-                badge.textContent = '0';
-                badge.style.display = 'none';
-            }
-            showToast('📬 No new notifications', 'info');
-        });
-
-        // ====== STATS RENDER ======
-        function renderStats() {
-            const todayEl = document.querySelector('.stats-today');
-            const monthEl = document.querySelector('.stats-month');
-            const ytdEl = document.querySelector('.stats-ytd');
-            const yieldEl = document.querySelector('.stats-yield');
-
-            if (todayEl) todayEl.textContent = 'KES ' + mockUser.interestToday.toLocaleString('en-KE');
-            if (monthEl) monthEl.textContent = 'KES ' + mockUser.interestMonth.toLocaleString('en-KE');
-            if (ytdEl) ytdEl.textContent = 'KES ' + mockUser.interestYTD.toLocaleString('en-KE');
-            if (yieldEl) yieldEl.textContent = mockUser.yield + '% p.a.';
-        }
-
-        // ====== INIT ======
-        document.addEventListener('DOMContentLoaded', function() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            const hour12 = hours % 12 || 12;
-            const timeEl = document.getElementById('lastLoginTime');
-            if (timeEl) timeEl.textContent = `${hour12}:${minutes} ${ampm}`;
-
-            renderTransactions();
-            renderStats();
-
-            const balanceEl = document.getElementById('balanceFigure');
-            if (balanceEl) {
-                balanceEl.textContent = mockUser.portfolioValue.toLocaleString('en-KE', { minimumFractionDigits: 2 });
-            }
-        });
-
-        console.log('✅ RockWin Investment Portfolio loaded.');
-    </script>
+    <!-- ====== EXTERNAL JAVASCRIPT (NO INLINE!) ====== -->
+    <script src="dashboard.js"></script>
 
 </body>
 </html>
