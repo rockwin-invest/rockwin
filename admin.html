@@ -3,597 +3,447 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Console · RockWin Investment</title>
+    <title>Admin · RockWin Investment</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="admin.css" />
-
-    <style>
-        /* ============================================================
-           YIELD RATE WIDGET (Admin only)
-           ============================================================ */
-        .yield-widget {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(0, 209, 102, 0.05));
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: var(--radius-default);
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-
-        .yield-widget .left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .yield-widget .yield-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--admin-accent);
-            flex-shrink: 0;
-        }
-
-        .yield-widget .yield-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .yield-widget .yield-info .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .yield-widget .yield-info .rate {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.1;
-        }
-
-        .yield-widget .yield-info .rate .pct {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .yield-widget .yield-info .sub {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .yield-widget .actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .yield-widget .actions button {
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-default);
-            font-size: 0.75rem;
-            font-weight: 600;
-            font-family: var(--font-body);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .yield-widget .actions .btn-set-yield {
-            background: linear-gradient(135deg, var(--admin-accent), #7c3aed);
-            border: none;
-            color: #fff;
-        }
-
-        .yield-widget .actions .btn-set-yield:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-        }
-
-        .yield-widget .actions .btn-run-accrual {
-            background: rgba(46, 204, 113, 0.1);
-            border: 1px solid rgba(46, 204, 113, 0.2);
-            color: var(--accent-green);
-        }
-
-        .yield-widget .actions .btn-run-accrual:hover {
-            background: rgba(46, 204, 113, 0.2);
-        }
-
-        /* Yield rate modal */
-        .yield-input-wrap {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .yield-input-wrap input {
-            padding-right: 3.5rem !important;
-        }
-
-        .yield-input-wrap .suffix {
-            position: absolute;
-            right: 1rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.9rem;
-            pointer-events: none;
-        }
-
-        /* Yield preview box */
-        .yield-preview-box {
-            background: rgba(0, 109, 50, 0.08);
-            border: 1px solid rgba(0, 209, 102, 0.15);
-            border-radius: var(--radius-default);
-            padding: 0.8rem 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .yield-preview-box .row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            padding: 0.2rem 0;
-        }
-
-        .yield-preview-box .row .label {
-            color: var(--text-secondary);
-        }
-
-        .yield-preview-box .row .value {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .yield-preview-box .row.highlight .value {
-            color: var(--accent-green);
-        }
-
-        /* Stat card add-on: yield badge */
-        .stat-card .stat-yield-badge {
-            display: inline-block;
-            font-size: 0.55rem;
-            font-weight: 600;
-            padding: 0.1rem 0.5rem;
-            border-radius: var(--radius-full);
-            background: rgba(0, 209, 102, 0.1);
-            color: var(--accent-green);
-            margin-top: 0.2rem;
-        }
-    </style>
 </head>
 <body>
 
-    <!-- ====== ADMIN NAVIGATION ====== -->
-    <nav class="admin-nav">
-        <div class="brand">RockWin<span> Investment</span> · Admin</div>
-        <div class="nav-actions">
-            <select class="role-selector" id="roleSelector">
-                <option value="super_admin">👑 Super Admin</option>
-                <option value="operations">⚙️ Operations</option>
-                <option value="auditor">📊 Auditor</option>
-                <option value="support">💬 Support</option>
-                <option value="compliance">⚖️ Compliance</option>
-            </select>
-            <span class="badge-admin">🔐 Secure Console</span>
-            <button class="btn-nav-logout" onclick="handleLogout()">Exit</button>
-        </div>
-    </nav>
+    <!-- ====== ADMIN HEADER (dark) ====== -->
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <a href="index.html" class="admin-brand" aria-label="RockWin Investment">
+                <span class="admin-brand-mark">R</span>
+                <span class="admin-brand-text">RockWin<span class="admin-brand-sub"> Investment · Admin</span></span>
+            </a>
 
-    <!-- ====== YIELD RATE WIDGET ====== -->
-    <div class="yield-widget">
-        <div class="left">
-            <div class="yield-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                    <polyline points="17 6 23 6 23 12"/>
-                </svg>
+            <div class="admin-header-actions">
+                <select class="role-selector" id="roleSelector" aria-label="Active role">
+                    <option value="super_admin">Super admin</option>
+                    <option value="operations">Operations</option>
+                    <option value="auditor">Auditor</option>
+                    <option value="support">Support</option>
+                    <option value="compliance">Compliance</option>
+                </select>
+                <span class="admin-badge">Secure console</span>
+                <button class="admin-exit" onclick="handleLogout()" type="button">Exit</button>
             </div>
+        </div>
+    </header>
+
+    <main class="admin-main">
+
+        <!-- ====== YIELD WIDGET ====== -->
+        <section class="yield-card">
             <div class="yield-info">
-                <div class="label">Current Effective Yield</div>
-                <div class="rate">14.20<span class="pct">% p.a.</span></div>
-                <div class="sub">Last updated: Today, 6:00 AM · Next accrual: Tomorrow, 6:00 AM</div>
+                <span class="yield-label">Current effective yield</span>
+                <span class="yield-rate" id="currentYieldDisplay">
+                    14.20<span class="yield-pct">% p.a.</span>
+                </span>
+                <span class="yield-sub">Next automated accrual: 06:00 EAT tomorrow</span>
             </div>
-        </div>
-        <div class="actions">
-            <button class="btn-set-yield" onclick="openModal('yieldModal')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 20h9"/>
-                    <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                </svg>
-                Set Yield Rate
-            </button>
-            <button class="btn-run-accrual" onclick="runInterestAccrual()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                </svg>
-                Run Accrual Now
-            </button>
-        </div>
-    </div>
+            <div class="yield-actions">
+                <button class="btn btn-primary" onclick="openModal('yieldModal')" type="button">
+                    Set yield rate
+                </button>
+                <button class="btn btn-outline" onclick="runInterestAccrual()" type="button">
+                    Run accrual now
+                </button>
+            </div>
+        </section>
 
-    <!-- ====== STATS GRID ====== -->
-    <div class="stats-grid" id="statsGrid">
-        <div class="stat-card">
-            <div class="stat-value accent" id="totalInvestors">0</div>
-            <div class="stat-label">Total Investors</div>
-            <div class="stat-trend up">↑ +12 this week</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value accent" id="totalAUM">KES 0</div>
-            <div class="stat-label">Total AUM</div>
-            <div class="stat-trend up">↑ +8.2%</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value green" id="activeInvestors">0</div>
-            <div class="stat-label">Active Investors</div>
-            <div class="stat-trend up">↑ +5 today</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value red" id="suspendedAccounts">0</div>
-            <div class="stat-label">Suspended</div>
-            <div class="stat-trend">—</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value green" id="todayDeposits">0</div>
-            <div class="stat-label">Today's Investments</div>
-            <div class="stat-trend up">↑ KES 1.2M</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value red" id="todayRedemptions">0</div>
-            <div class="stat-label">Today's Redemptions</div>
-            <div class="stat-trend down">↓ KES 450K</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value yellow" id="pendingKyc">0</div>
-            <div class="stat-label">Pending KYC</div>
-            <div class="stat-trend">⚠️ 3 flagged</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value green" id="interestAccruedToday">KES 0</div>
-            <div class="stat-label">Interest Accrued Today</div>
-            <div class="stat-yield-badge">14.2% p.a.</div>
-        </div>
-    </div>
+        <!-- ====== STATS GRID ====== -->
+        <section class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <span class="stat-value" id="totalInvestors">—</span>
+                <span class="stat-label">Total investors</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="totalAUM">—</span>
+                <span class="stat-label">Total AUM</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value stat-value-green" id="activeInvestors">—</span>
+                <span class="stat-label">Active</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value stat-value-muted" id="suspendedAccounts">—</span>
+                <span class="stat-label">Suspended</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value stat-value-green" id="todayDeposits">—</span>
+                <span class="stat-label">Today's deposits</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value stat-value-error" id="todayRedemptions">—</span>
+                <span class="stat-label">Today's redemptions</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value stat-value-warning" id="pendingKyc">—</span>
+                <span class="stat-label">Pending KYC</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value stat-value-green" id="interestAccruedToday">—</span>
+                <span class="stat-label">Interest accrued today</span>
+            </div>
+        </section>
 
-    <!-- ====== QUICK ACTIONS ====== -->
-    <div class="quick-actions-bar">
-        <button class="btn-quick primary" onclick="showToast('New investor registration form would open.')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 12H4"/>
-                <path d="M12 4v16"/>
-            </svg>
-            New Investor
-        </button>
-        <button class="btn-quick" onclick="openModal('yieldModal')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                <polyline points="17 6 23 6 23 12"/>
-            </svg>
-            Set Yield Rate
-        </button>
-        <button class="btn-quick" onclick="showToast('Broadcast SMS panel would open.')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-            </svg>
-            Broadcast SMS
-        </button>
-        <button class="btn-quick" onclick="runInterestAccrual()">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            Run Accrual
-        </button>
-        <button class="btn-quick" onclick="showToast('CSV export would start.')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 4v16h16"/>
-                <polyline points="20 10 12 18 8 14"/>
-            </svg>
-            Export CSV
-        </button>
-        <button class="btn-quick" onclick="showToast('CMA monthly report generating...')">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-            </svg>
-            CMA Report
-        </button>
-    </div>
+        <!-- ====== WITHDRAWALS PANEL ====== -->
+        <section class="panel" id="withdrawalsCard">
+            <header class="panel-head">
+                <div>
+                    <h2 class="panel-title">Withdrawal requests</h2>
+                    <p class="panel-sub">
+                        Pending: <span id="pendingWithdrawalsCount" class="count-pending">0</span>
+                        · Approved, awaiting payout: <span id="approvedWithdrawalsCount" class="count-approved">0</span>
+                    </p>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="loadWithdrawals()" type="button">Refresh</button>
+            </header>
 
-    <!-- ====== TOOLBAR ====== -->
-    <div class="toolbar">
-        <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input type="text" id="searchInput" placeholder="Search investors by name, phone, ID, or account number..." oninput="filterTable()" />
-        </div>
-        <div class="filter-group">
-            <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
-            <button class="filter-btn" data-filter="active" onclick="setFilter('active', this)">Active</button>
-            <button class="filter-btn" data-filter="suspended" onclick="setFilter('suspended', this)">Suspended</button>
-            <button class="filter-btn" data-filter="pending" onclick="setFilter('pending', this)">Pending KYC</button>
-            <button class="filter-btn" data-filter="high_risk" onclick="setFilter('high_risk', this)">⚠️ High Risk</button>
-        </div>
-    </div>
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Requested</th>
+                            <th>Investor</th>
+                            <th>Amount</th>
+                            <th>Send to</th>
+                            <th>Reference</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalsBody">
+                        <tr><td colspan="7" class="empty-cell">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <!-- ====== INVESTOR TABLE ====== -->
-    <div class="table-container">
-        <div class="table-scroll">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Investor</th>
-                        <th>Phone</th>
-                        <th>Account</th>
-                        <th>Portfolio Value</th>
-                        <th>Units Held</th>
-                        <th>Status</th>
-                        <th>Risk</th>
-                        <th>Last Login</th>
-                        <th style="text-align:center;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="userTableBody">
-                    <!-- Dynamically populated -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <!-- ====== QUICK ACTIONS ====== -->
+        <section class="actions-bar">
+            <button class="btn btn-outline" onclick="openBroadcastModal()" type="button">Broadcast email</button>
+            <button class="btn btn-outline" onclick="openModal('yieldModal')" type="button">Set yield rate</button>
+            <button class="btn btn-outline" onclick="runInterestAccrual()" type="button">Run accrual</button>
+            <button class="btn btn-outline" onclick="exportCSV()" type="button">Export CSV</button>
+        </section>
 
-    <!-- ====== AUDIT LOG ====== -->
-    <div class="audit-section">
-        <div class="audit-header" onclick="toggleAudit()">
-            <h4>📋 Recent Admin Actions</h4>
-            <span class="toggle-icon" id="auditToggleIcon">▼</span>
-        </div>
-        <div class="audit-body" id="auditBody">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Admin</th>
-                        <th>Action</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody id="auditTableBody">
-                    <!-- Populated from JS -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <!-- ====== INVESTORS PANEL ====== -->
+        <section class="panel">
+            <header class="panel-head">
+                <div>
+                    <h2 class="panel-title">Investors</h2>
+                    <p class="panel-sub">Search, filter, and manage every account on the platform.</p>
+                </div>
+            </header>
 
-    <!-- ====== DRAWER (with Tabs) ====== -->
+            <div class="toolbar">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search by name, phone, ID, or account number"
+                    oninput="filterTable()"
+                    autocomplete="off"
+                />
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)" type="button">All</button>
+                    <button class="filter-btn" data-filter="active" onclick="setFilter('active', this)" type="button">Active</button>
+                    <button class="filter-btn" data-filter="suspended" onclick="setFilter('suspended', this)" type="button">Suspended</button>
+                    <button class="filter-btn" data-filter="pending" onclick="setFilter('pending', this)" type="button">Pending KYC</button>
+                    <button class="filter-btn" data-filter="high_risk" onclick="setFilter('high_risk', this)" type="button">High risk</button>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Investor</th>
+                            <th>Phone</th>
+                            <th>Portfolio value</th>
+                            <th>Units held</th>
+                            <th>Status</th>
+                            <th>Risk</th>
+                            <th>Last login</th>
+                            <th class="align-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <tr><td colspan="8" class="empty-cell">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ====== AUDIT LOG ====== -->
+        <section class="panel">
+            <header class="panel-head clickable" onclick="toggleAudit()">
+                <div>
+                    <h2 class="panel-title">Recent admin activity</h2>
+                    <p class="panel-sub">Every action taken in this console, logged.</p>
+                </div>
+                <span class="audit-toggle" id="auditToggleIcon">Show</span>
+            </header>
+            <div class="audit-body" id="auditBody">
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Admin</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                            <tr><td colspan="4" class="empty-cell">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====== DRAWER ====== -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-    <div class="drawer" id="drawer">
-        <div class="drawer-header">
-            <div class="user-title" id="drawerUserName">
-                Investor Name
+    <aside class="drawer" id="drawer" aria-label="Investor detail">
+        <header class="drawer-header">
+            <div class="drawer-title">
+                <span id="drawerUserName">Investor</span>
                 <small id="drawerUserAcc">RW-000000</small>
             </div>
-            <button class="drawer-close" onclick="closeDrawer()">✕</button>
-        </div>
+            <button class="drawer-close" onclick="closeDrawer()" aria-label="Close" type="button">✕</button>
+        </header>
 
-        <!-- Tabs -->
-        <div class="drawer-tabs">
-            <button class="tab-btn active" data-tab="profile" onclick="switchTab('profile')">Profile</button>
-            <button class="tab-btn" data-tab="portfolio" onclick="switchTab('portfolio')">Portfolio</button>
-            <button class="tab-btn" data-tab="transactions" onclick="switchTab('transactions')">Activity</button>
-            <button class="tab-btn" data-tab="activity" onclick="switchTab('activity')">Audit</button>
-        </div>
+        <nav class="drawer-tabs" role="tablist">
+            <button class="tab-btn active" data-tab="profile" onclick="switchTab('profile')" type="button">Profile</button>
+            <button class="tab-btn" data-tab="portfolio" onclick="switchTab('portfolio')" type="button">Portfolio</button>
+            <button class="tab-btn" data-tab="transactions" onclick="switchTab('transactions')" type="button">Activity</button>
+            <button class="tab-btn" data-tab="audit" onclick="switchTab('audit')" type="button">Audit</button>
+        </nav>
 
         <div class="drawer-body">
-
             <input type="hidden" id="drawerUserId" />
 
-            <!-- ====== TAB: Profile ====== -->
+            <!-- Profile tab -->
             <div class="tab-pane active" id="tab-profile">
                 <div class="form-group">
-                    <label>Full Legal Name</label>
+                    <label for="drawerFullName">Full legal name</label>
                     <input type="text" id="drawerFullName" placeholder="Full name" />
                 </div>
                 <div class="form-group">
-                    <label>Phone Number</label>
+                    <label for="drawerPhone">Phone number</label>
                     <input type="text" id="drawerPhone" placeholder="+254..." />
                 </div>
                 <div class="form-group">
-                    <label>Email Address</label>
+                    <label for="drawerEmail">Email address</label>
                     <input type="email" id="drawerEmail" placeholder="email@example.com" />
                 </div>
                 <div class="form-group">
-                    <label>National ID / Passport</label>
+                    <label for="drawerIdNumber">National ID / Passport</label>
                     <input type="text" id="drawerIdNumber" placeholder="ID number" />
                 </div>
                 <div class="form-group">
-                    <label>Account Status</label>
+                    <label for="drawerStatus">Account status</label>
                     <select id="drawerStatus">
                         <option value="active">Active</option>
                         <option value="suspended">Suspended</option>
-                        <option value="pending">Pending KYC Verification</option>
+                        <option value="pending">Pending KYC</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Risk Level</label>
+                    <label for="drawerRisk">Risk level</label>
                     <select id="drawerRisk">
-                        <option value="low">🟢 Low</option>
-                        <option value="medium">🟡 Medium</option>
-                        <option value="high">🔴 High</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
                     </select>
                 </div>
             </div>
 
-            <!-- ====== TAB: Portfolio ====== -->
+            <!-- Portfolio tab -->
             <div class="tab-pane" id="tab-portfolio">
                 <div class="form-group">
-                    <label>Current Portfolio Value</label>
-                    <div class="balance-preview">
-                        <span class="old-bal" id="drawerCurrentBalance">KES 0.00</span>
-                    </div>
+                    <label>Current portfolio value</label>
+                    <div class="preview-value" id="drawerCurrentBalance">KES 0.00</div>
                 </div>
                 <div class="form-group">
-                    <label>Units Held</label>
-                    <div class="balance-preview">
-                        <span id="drawerUnits" style="font-family:var(--font-display); font-weight:700; font-size:1.1rem; color:var(--text-primary);">0.0 units</span>
-                    </div>
+                    <label>Units held</label>
+                    <div class="preview-value" id="drawerUnits">0.0 units</div>
                 </div>
                 <div class="form-group">
-                    <label>Adjustment Type</label>
+                    <label for="drawerAdjustmentType">Adjustment type</label>
                     <select id="drawerAdjustmentType">
-                        <option value="credit">➕ Credit Portfolio (Deposit)</option>
-                        <option value="debit">➖ Debit Portfolio (Redemption)</option>
-                        <option value="interest">📈 Post Interest Accrual</option>
-                        <option value="override">✏️ Override (Set exact value)</option>
+                        <option value="credit">Credit portfolio (deposit)</option>
+                        <option value="debit">Debit portfolio (redemption)</option>
+                        <option value="interest">Post interest accrual</option>
+                        <option value="override">Override (set exact value)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Adjustment Amount (KES)</label>
+                    <label for="drawerAdjustmentAmount">Adjustment amount (KES)</label>
                     <input type="number" id="drawerAdjustmentAmount" placeholder="0.00" step="0.01" min="0" />
-                    <div class="input-hint">Enter the amount to add, remove, or set as the new portfolio value.</div>
+                    <div class="field-hint">Amount to add, remove, or set as the new portfolio value.</div>
                 </div>
                 <div class="form-group">
-                    <label>Reason for Adjustment</label>
-                    <textarea id="drawerAdjustmentReason" placeholder="e.g. Manual deposit verification, interest correction, compliance adjustment..."></textarea>
-                    <div class="input-hint">Required for audit and CMA compliance.</div>
+                    <label for="drawerAdjustmentReason">Reason for adjustment</label>
+                    <textarea id="drawerAdjustmentReason" placeholder="e.g. Manual deposit verification, interest correction..."></textarea>
+                    <div class="field-hint">Required for audit and CMA compliance.</div>
                 </div>
                 <div class="form-group">
-                    <label>New Portfolio Preview</label>
-                    <div class="balance-preview">
-                        <span class="new-bal" id="drawerNewBalancePreview">KES 0.00</span>
-                    </div>
+                    <label>New portfolio preview</label>
+                    <div class="preview-value preview-value-accent" id="drawerNewBalancePreview">KES 0.00</div>
                 </div>
             </div>
 
-            <!-- ====== TAB: Transactions ====== -->
+            <!-- Transactions tab -->
             <div class="tab-pane" id="tab-transactions">
-                <div id="drawerTransactionList">
-                    <!-- Populated by JS -->
-                </div>
+                <div id="drawerTransactionList"></div>
             </div>
 
-            <!-- ====== TAB: Activity ====== -->
-            <div class="tab-pane" id="tab-activity">
-                <div id="drawerActivityList">
-                    <!-- Populated by JS -->
-                </div>
+            <!-- Audit tab -->
+            <div class="tab-pane" id="tab-audit">
+                <div id="drawerActivityList"></div>
             </div>
 
-            <!-- Actions -->
             <div class="drawer-actions">
-                <button class="btn-drawer-primary" onclick="saveDrawerChanges()">💾 Save Changes</button>
-                <button class="btn-drawer-secondary" onclick="closeDrawer()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveDrawerChanges()" type="button">Save changes</button>
+                <button class="btn btn-outline" onclick="closeDrawer()" type="button">Cancel</button>
             </div>
-
         </div>
-    </div>
+    </aside>
 
-    <!-- ====== YIELD RATE MODAL ====== -->
+    <!-- ====== MODAL: YIELD ====== -->
     <div class="modal-overlay" id="yieldModal">
         <div class="modal-box">
-            <div class="modal-header">
+            <header class="modal-head">
                 <div>
-                    <h3>📈 Set Yield Rate</h3>
-                    <div class="modal-sub">Update the effective annual yield for the fund</div>
+                    <h3>Set yield rate</h3>
+                    <p>Update the effective annual yield for the fund.</p>
                 </div>
-                <button class="modal-close" onclick="closeModal('yieldModal')">✕</button>
-            </div>
+                <button class="modal-close" onclick="closeModal('yieldModal')" aria-label="Close" type="button">✕</button>
+            </header>
             <form onsubmit="handleSetYield(event)">
                 <div class="form-group">
-                    <label for="yieldRateInput">New Effective Annual Yield</label>
-                    <div class="yield-input-wrap">
+                    <label for="yieldRateInput">New effective annual yield</label>
+                    <div class="input-suffix-wrap">
                         <input type="number" id="yieldRateInput" placeholder="14.20" step="0.01" min="0" max="30" required />
-                        <span class="suffix">% p.a.</span>
+                        <span class="input-suffix">% p.a.</span>
                     </div>
-                    <div class="input-hint">Enter the annual percentage. Range: 0.00 – 30.00%</div>
+                    <div class="field-hint">Range: 0.00 – 30.00%</div>
                 </div>
 
-                <div class="yield-preview-box">
-                    <div class="row">
-                        <span class="label">Previous yield</span>
-                        <span class="value">14.20% p.a.</span>
+                <div class="preview-box">
+                    <div class="preview-row">
+                        <span>Previous yield</span>
+                        <span class="preview-value-sm">14.20% p.a.</span>
                     </div>
-                    <div class="row highlight">
-                        <span class="label">New yield</span>
-                        <span class="value" id="yieldPreview">14.20% p.a.</span>
+                    <div class="preview-row preview-row-accent">
+                        <span>New yield</span>
+                        <span class="preview-value-sm" id="yieldPreview">14.20% p.a.</span>
                     </div>
-                    <div class="row">
-                        <span class="label">Effective daily rate</span>
-                        <span class="value" id="dailyRatePreview">0.0389%</span>
+                    <div class="preview-row">
+                        <span>Effective daily rate</span>
+                        <span class="preview-value-sm" id="dailyRatePreview">0.0389%</span>
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-top:1rem;">
-                    <label for="yieldReason">Reason for Change</label>
-                    <textarea id="yieldReason" placeholder="e.g. Market rate adjustment, CBK rate change, fund performance update..." required></textarea>
-                    <div class="input-hint">This will be logged in the audit trail.</div>
+                <div class="form-group">
+                    <label for="yieldReason">Reason for change</label>
+                    <textarea id="yieldReason" placeholder="Market rate adjustment, CBK rate change..." required></textarea>
+                    <div class="field-hint">Logged in the audit trail.</div>
                 </div>
 
-                <button type="submit" class="btn-modal-primary">Update Yield Rate</button>
-                <button type="button" class="btn-modal-secondary" onclick="closeModal('yieldModal')">Cancel</button>
+                <div class="modal-actions-row">
+                    <button type="submit" class="btn btn-primary">Update yield rate</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('yieldModal')">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- ====== CONFIRMATION MODAL ====== -->
+    <!-- ====== MODAL: CONFIRM ADJUSTMENT ====== -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal-box">
-            <h3>⚠️ Confirm Portfolio Change</h3>
-            <p>You are about to adjust this investor's portfolio. This action will be logged and the investor may receive an SMS notification.</p>
-            <div class="change-detail" id="modalChangeDetail">
-                <span class="old">KES 0.00</span> → <span class="new">KES 0.00</span>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-confirm" onclick="confirmSave()">Yes, Update Portfolio</button>
-                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <header class="modal-head">
+                <div>
+                    <h3>Confirm portfolio change</h3>
+                    <p>This action will be logged and the investor may receive an email notification.</p>
+                </div>
+            </header>
+            <div class="change-detail" id="modalChangeDetail"></div>
+            <div class="modal-actions-row">
+                <button class="btn btn-danger" onclick="confirmSave()" type="button">Yes, update portfolio</button>
+                <button class="btn btn-outline" onclick="closeModal('confirmModal')" type="button">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- ====== INTEREST ACCRUAL CONFIRMATION MODAL ====== -->
+    <!-- ====== MODAL: ACCRUAL ====== -->
     <div class="modal-overlay" id="accrualModal">
         <div class="modal-box">
-            <h3>🔄 Run Interest Accrual</h3>
-            <p>This will calculate and credit daily interest to all active investors based on the current yield rate. This action cannot be undone.</p>
-            <div class="change-detail" style="font-family:var(--font-body);">
-                <div style="display:flex; justify-content:space-between; padding:0.3rem 0;">
-                    <span style="color:var(--text-secondary);">Active investors</span>
+            <header class="modal-head">
+                <div>
+                    <h3>Run interest accrual</h3>
+                    <p>This will calculate and credit daily interest to all active investors based on the current yield rate. Cannot be undone.</p>
+                </div>
+            </header>
+            <div class="change-detail">
+                <div class="detail-row">
+                    <span>Active investors</span>
                     <strong id="accrualInvestorCount">0</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; padding:0.3rem 0;">
-                    <span style="color:var(--text-secondary);">Current yield</span>
+                <div class="detail-row">
+                    <span>Current yield</span>
                     <strong>14.20% p.a.</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; padding:0.3rem 0; border-top:1px solid rgba(255,255,255,0.06); margin-top:0.3rem;">
-                    <span style="color:var(--text-secondary);">Estimated total credit</span>
-                    <strong style="color:var(--accent-green);">KES 1,842,340</strong>
+                <div class="detail-row detail-row-accent">
+                    <span>Estimated total credit</span>
+                    <strong id="accrualEstimate">—</strong>
                 </div>
             </div>
-            <div class="modal-actions">
-                <button class="btn-confirm" onclick="confirmAccrual()" style="background:var(--primary);">Yes, Run Accrual</button>
-                <button class="btn-cancel" onclick="closeModal('accrualModal')">Cancel</button>
+            <div class="modal-actions-row">
+                <button class="btn btn-primary" onclick="confirmAccrual()" type="button">Yes, run accrual</button>
+                <button class="btn btn-outline" onclick="closeModal('accrualModal')" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== MODAL: BROADCAST ====== -->
+    <div class="modal-overlay" id="broadcastModal">
+        <div class="modal-box">
+            <header class="modal-head">
+                <div>
+                    <h3>Broadcast email</h3>
+                    <p>Send a one-off email to a subset of investors.</p>
+                </div>
+                <button class="modal-close" onclick="closeBroadcastModal()" aria-label="Close" type="button">✕</button>
+            </header>
+            <div class="form-group">
+                <label for="broadcastRecipient">Recipients</label>
+                <select id="broadcastRecipient">
+                    <option value="all">All active investors</option>
+                    <option value="specific">A specific investor</option>
+                </select>
+            </div>
+            <div class="form-group" id="specificPhoneGroup" style="display:none;">
+                <label for="broadcastPhone">Investor phone number</label>
+                <input type="tel" id="broadcastPhone" placeholder="+254 712 345 678" />
+            </div>
+            <div class="form-group">
+                <label for="broadcastMessage">Message</label>
+                <textarea id="broadcastMessage" placeholder="Write the message…" rows="5"></textarea>
+            </div>
+            <div class="modal-actions-row">
+                <button class="btn btn-primary" onclick="sendBroadcast()" type="button">Send broadcast</button>
+                <button class="btn btn-outline" onclick="closeBroadcastModal()" type="button">Cancel</button>
             </div>
         </div>
     </div>
@@ -604,87 +454,19 @@
     <script src="admin.js"></script>
 
     <script>
-        // ============================================================
-        // YIELD RATE MODAL — live preview
-        // ============================================================
+        // Yield modal live preview
         (function() {
             const yieldInput = document.getElementById('yieldRateInput');
             const yieldPreview = document.getElementById('yieldPreview');
             const dailyPreview = document.getElementById('dailyRatePreview');
-
-            if (yieldInput) {
-                yieldInput.addEventListener('input', function() {
-                    const val = parseFloat(this.value) || 0;
-                    const daily = (val / 100) / 365 * 100;
-                    if (yieldPreview) yieldPreview.textContent = val.toFixed(2) + '% p.a.';
-                    if (dailyPreview) dailyPreview.textContent = daily.toFixed(4) + '%';
-                });
-            }
+            if (!yieldInput) return;
+            yieldInput.addEventListener('input', function() {
+                const val = parseFloat(this.value) || 0;
+                const daily = (val / 100) / 365 * 100;
+                if (yieldPreview) yieldPreview.textContent = val.toFixed(2) + '% p.a.';
+                if (dailyPreview) dailyPreview.textContent = daily.toFixed(4) + '%';
+            });
         })();
-
-        // ============================================================
-        // HANDLE SET YIELD
-        // ============================================================
-        function handleSetYield(e) {
-            e.preventDefault();
-            const newYield = parseFloat(document.getElementById('yieldRateInput').value);
-            const reason = document.getElementById('yieldReason').value.trim();
-
-            if (!newYield || newYield < 0 || newYield > 30) {
-                showToast('⚠️ Please enter a valid yield between 0 and 30%.', 'error');
-                return;
-            }
-
-            if (!reason) {
-                showToast('⚠️ Please provide a reason for the yield change.', 'error');
-                return;
-            }
-
-            // Simulate saving
-            const btn = e.target.querySelector('.btn-modal-primary');
-            btn.disabled = true;
-            btn.textContent = 'Updating...';
-
-            setTimeout(() => {
-                // Update display
-                const rateEl = document.querySelector('.yield-widget .rate');
-                if (rateEl) {
-                    rateEl.innerHTML = `${newYield.toFixed(2)}<span class="pct">% p.a.</span>`;
-                }
-
-                closeModal('yieldModal');
-                showToast(`✅ Yield rate updated to ${newYield.toFixed(2)}% p.a.`, 'success');
-
-                // Reset form
-                e.target.reset();
-                btn.disabled = false;
-                btn.textContent = 'Update Yield Rate';
-                if (yieldPreview) yieldPreview.textContent = newYield.toFixed(2) + '% p.a.';
-            }, 1200);
-        }
-        window.handleSetYield = handleSetYield;
-
-        // ============================================================
-        // RUN INTEREST ACCRUAL
-        // ============================================================
-        function runInterestAccrual() {
-            // Set investor count for preview
-            const countEl = document.getElementById('accrualInvestorCount');
-            if (countEl) countEl.textContent = '18,247';
-
-            openModal('accrualModal');
-        }
-        window.runInterestAccrual = runInterestAccrual;
-
-        function confirmAccrual() {
-            closeModal('accrualModal');
-            showToast('⏳ Interest accrual running... This may take a few minutes.', 'info');
-
-            setTimeout(() => {
-                showToast('✅ Interest accrued successfully for 18,247 investors. Total: KES 1,842,340', 'success');
-            }, 2500);
-        }
-        window.confirmAccrual = confirmAccrual;
     </script>
 
 </body>

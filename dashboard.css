@@ -897,3 +897,26 @@ input, select { font-family: inherit; }
     height: 16px;
     color: var(--forest);
 }
+
+.pending-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1.15rem;
+    background: rgba(138, 106, 46, 0.06);
+    border: 1px solid rgba(138, 106, 46, 0.16);
+    border-radius: 8px;
+    font-size: 0.88rem;
+}
+.pending-banner-label {
+    font-family: var(--display);
+    font-weight: 500;
+    letter-spacing: -0.008em;
+    color: var(--warning);
+}
+.pending-banner-detail {
+    color: var(--ink-soft);
+    text-align: right;
+    font-size: 0.82rem;
+}

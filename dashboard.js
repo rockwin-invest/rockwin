@@ -68,26 +68,21 @@
             ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
             : 'U';
 
-        // Header — greeting word + name
         const nameEl = $('userFirstName');
         if (nameEl) nameEl.textContent = firstName;
 
         const avatarEl = $('userAvatar');
         if (avatarEl) avatarEl.textContent = initials;
 
-        // Portfolio value
         const portfolioEl = $('balanceFigure');
         if (portfolioEl) portfolioEl.textContent = formatKES(user.portfolioValue || 0);
 
-        // Units
         const unitsEl = $('unitsDisplay');
         if (unitsEl) unitsEl.textContent = (user.unitsHeld || 0).toFixed(4) + ' units';
 
-        // Yield
         const yieldEl = $('yieldDisplay');
         if (yieldEl) yieldEl.textContent = (user.annualYield || 14.2).toFixed(2) + '% p.a.';
 
-        // Reward message
         const rewardEl = $('rewardMessage');
         if (rewardEl) {
             if ((user.portfolioValue || 0) === 0) {
@@ -97,7 +92,6 @@
             }
         }
 
-        // Context message
         const ctxEl = $('contextMessage');
         if (ctxEl) {
             const textEl = ctxEl.querySelector('.text');
@@ -170,6 +164,33 @@
         if (monthEl) monthEl.textContent = 'KES ' + formatKES(stats.interestThisMonth || 0);
         if (ytdEl) ytdEl.textContent = 'KES ' + formatKES(stats.interestYTD || 0);
         if (yieldEl) yieldEl.textContent = (stats.currentYield || 14.2).toFixed(2) + '% p.a.';
+    }
+
+    // ============================================================
+    // RENDER PENDING WITHDRAWALS BANNER
+    // ============================================================
+    function renderPendingWithdrawals(withdrawals) {
+        const banner = $('pendingBanner');
+        const text = $('pendingBannerText');
+        if (!banner || !text) return;
+
+        const pending = (withdrawals || []).filter(function(w) {
+            return w.status === 'pending' || w.status === 'approved';
+        });
+
+        if (!pending.length) {
+            banner.style.display = 'none';
+            return;
+        }
+
+        const total = pending.reduce(function(sum, w) { return sum + (w.amount || 0); }, 0);
+        const count = pending.length;
+
+        text.textContent = count === 1
+            ? 'KES ' + formatKES(total) + ' — awaiting review'
+            : count + ' requests totalling KES ' + formatKES(total) + ' — awaiting review';
+
+        banner.style.display = 'flex';
     }
 
     // ============================================================
@@ -410,13 +431,50 @@
     }
 
     // ============================================================
-    // OTHER HANDLERS
+    // WITHDRAW HANDLER
     // ============================================================
-    window.handleWithdraw = function(e) {
+    window.handleWithdraw = async function(e) {
         e.preventDefault();
-        showToast('Redemptions are coming soon.', 'info');
+
+        const destination = $('withdrawDestination').value;
+        const account = $('withdrawAccount').value.trim();
+        const amount = parseFloat($('withdrawAmount').value);
+
+        if (!destination) return showToast('Please select a destination.', 'error');
+        if (!account) return showToast('Please enter the account or phone number.', 'error');
+        if (!amount || amount < 1000) return showToast('Minimum redemption is KES 1,000.', 'error');
+
+        const available = userData ? (userData.portfolioValue || 0) : 0;
+        if (amount > available) {
+            return showToast('Amount exceeds your available balance of KES ' + formatKES(available) + '.', 'error');
+        }
+
+        const submitBtn = e.target.querySelector('.btn-modal-primary');
+        const original = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+
+        try {
+            const result = await apiFetch('/api/withdrawals/request', {
+                method: 'POST',
+                body: JSON.stringify({ amount, destination, account })
+            });
+
+            showToast('Redemption requested. Ref ' + result.reference + '. Funds typically sent within 24–48 hours.', 'success');
+            closeModal('withdrawModal');
+            e.target.reset();
+            await loadDashboard();
+        } catch (err) {
+            showToast(err.message || 'Could not submit request.', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = original;
+        }
     };
 
+    // ============================================================
+    // STATEMENT — placeholder (next feature)
+    // ============================================================
     window.downloadStatement = function() {
         showToast('Statement download is coming soon.', 'info');
     };
@@ -429,12 +487,14 @@
             const results = await Promise.all([
                 apiFetch('/api/user/profile'),
                 apiFetch('/api/user/ledger').catch(function() { return []; }),
-                apiFetch('/api/user/stats').catch(function() { return {}; })
+                apiFetch('/api/user/stats').catch(function() { return {}; }),
+                apiFetch('/api/withdrawals/mine').catch(function() { return { withdrawals: [] }; })
             ]);
 
             renderUser(results[0]);
             renderTransactions(results[1]);
             renderStats(results[2]);
+            renderPendingWithdrawals(results[3].withdrawals || []);
         } catch (err) {
             console.error('Dashboard load error:', err);
             showToast('Failed to load dashboard.', 'error');
@@ -460,6 +520,20 @@
         if ($('lastLoginTime')) $('lastLoginTime').textContent = h12 + ':' + mins + ' ' + ampm;
 
         await loadDashboard();
+
+        // Auto-fill the withdrawal account when M-PESA is selected
+        const destSelect = $('withdrawDestination');
+        if (destSelect) {
+            destSelect.addEventListener('change', function() {
+                const acct = $('withdrawAccount');
+                if (!acct) return;
+                if (this.value === 'mpesa' && userData && userData.phoneNumber) {
+                    acct.value = userData.phoneNumber;
+                } else if (this.value === 'bank') {
+                    acct.value = '';
+                }
+            });
+        }
     });
 
 })();

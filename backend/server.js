@@ -22,6 +22,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+app.use('/api/payments', require('./routes/payment'));
+app.use('/api/withdrawals', require('./routes/withdrawal'));  // ← add this
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
