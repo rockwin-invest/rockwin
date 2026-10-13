@@ -2,7 +2,7 @@
     'use strict';
 
     // ---------- CONFIG ----------
-    const API_BASE = 'https://rockwin.onrender.com';
+    const API_BASE = 'https://api.rockwininvestment.com';
 
     // ---------- DOM REFS ----------
     const form = document.getElementById('loginForm');

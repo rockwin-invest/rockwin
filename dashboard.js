@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    const API_BASE = 'https://rockwin.onrender.com';
+    const API_BASE = 'https://api.rockwininvestment.com';
     let userData = null;
     let depositPoller = null;
 
