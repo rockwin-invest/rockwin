@@ -259,3 +259,66 @@
     .fs-download-inner { padding: 1.5rem 1.25rem; }
     .fs-disclaimer { padding: 1.25rem 1.25rem; font-size: 0.82rem; }
 }
+
+/* ============================================================
+   FLOATING WHATSAPP
+   ============================================================ */
+.wa-float {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 300;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--paper);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px -8px rgba(27, 67, 50, 0.4);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.wa-float:hover {
+    background: var(--forest-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px rgba(27, 67, 50, 0.5);
+}
+.wa-float svg { width: 24px; height: 24px; }
+
+.wa-float-label {
+    position: absolute;
+    right: calc(100% + 0.75rem);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.5rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.wa-float:hover .wa-float-label { opacity: 1; }
+.wa-float-label::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-left-color: var(--ink);
+}
+
+@media (max-width: 640px) {
+    .wa-float { bottom: 1rem; right: 1rem; width: 48px; height: 48px; }
+    .wa-float svg { width: 22px; height: 22px; }
+    .wa-float-label { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wa-float, .wa-float-label { transition: none; }
+}

@@ -322,6 +322,36 @@ exports.getAuditLog = async (req, res) => {
     }
 };
 
+// In adminController.js
+exports.getTaxSummary = async (req, res) => {
+    try {
+        const { from, to } = req.query;
+        const match = {};
+        if (from || to) {
+            match.date = {};
+            if (from) match.date.$gte = new Date(from);
+            if (to)   match.date.$lte = new Date(to);
+        }
+        const agg = await TaxLiability.aggregate([
+            { $match: match },
+            {
+                $group: {
+                    _id: null,
+                    grossInterest: { $sum: '$grossInterest' },
+                    taxWithheld:   { $sum: '$taxWithheld' },
+                    netInterest:   { $sum: '$netInterest' },
+                    usersAccrued:  { $sum: '$usersAccrued' },
+                    days:          { $sum: 1 }
+                }
+            }
+        ]);
+        res.json(agg[0] || { grossInterest: 0, taxWithheld: 0, netInterest: 0, usersAccrued: 0, days: 0 });
+    } catch (error) {
+        console.error('Tax summary error:', error);
+        res.status(500).json({ error: 'Server error.' });
+    }
+};
+
 exports.getStats = async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();

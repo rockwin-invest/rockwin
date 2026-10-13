@@ -60,7 +60,7 @@
     window.handleLogout = handleLogout;
 
     function contactWhatsApp() {
-        window.open('https://wa.me/+254700123456?text=' + encodeURIComponent('Hello RockWin Support'), '_blank');
+        window.open('https://wa.me/255760355866?text=' + encodeURIComponent('Hello RockWin Support'), '_blank');
     }
     window.contactWhatsApp = contactWhatsApp;
 
