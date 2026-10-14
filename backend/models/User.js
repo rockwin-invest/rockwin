@@ -29,12 +29,23 @@ const UserSchema = new mongoose.Schema({
     status: { type: String, enum: ['active', 'suspended', 'pending'], default: 'pending' },
     risk: { type: String, enum: ['low', 'medium', 'high'], default: 'low' },
 
-    smsEnabled: { type: Boolean, default: true },
-    interestAlertsEnabled: { type: Boolean, default: true },
+    // Admin access level. Default 'user' for everyone who signs up.
+    // Elevated manually by an admin via the promote-admin script or Atlas.
+    role: {
+        type: String,
+        enum: ['user', 'super_admin', 'operations', 'auditor', 'support', 'compliance'],
+        default: 'user'
+    },
+
+    // Notification preferences — read by interestService, authController, paymentController
+    emailAlertsEnabled: { type: Boolean, default: true },
+    interestAlertsEnabled: { type: Boolean, default: false },  // opt-in, see interestService
     loginAlertsEnabled: { type: Boolean, default: true },
+    marketingEnabled: { type: Boolean, default: false },
     emailStatementsEnabled: { type: Boolean, default: false },
-    autoInvestEnabled: { type: Boolean, default: true },
-    reinvestInterest: { type: Boolean, default: true },
+
+    // Legacy — SMS was retired from the platform; kept for compatibility with existing documents
+    smsEnabled: { type: Boolean, default: false },
 
     lastLogin: { type: Date },
     createdAt: { type: Date, default: Date.now }
