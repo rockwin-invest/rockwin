@@ -45,7 +45,6 @@
 
     // ---------- CALCULATOR ----------
     const ANNUAL_YIELD = 0.1062;
-    const WITHHOLDING_TAX = 0.15;
     const DAYS_PER_YEAR = 365;
 
     const amountInput = document.getElementById('calcAmount');
@@ -53,8 +52,6 @@
     const termButtons = document.querySelectorAll('#calculator .term-selector button');
 
     const interestEl = document.getElementById('calcInterest');
-    const taxEl      = document.getElementById('calcTax');
-    const netEl      = document.getElementById('calcNet');
     const totalEl    = document.getElementById('calcTotal');
 
     let selectedMonths = 12;
@@ -74,15 +71,8 @@
         const grossValue    = principal * Math.pow(1 + dailyRate, years * DAYS_PER_YEAR);
         const grossInterest = grossValue - principal;
 
-        // 15% withholding tax on interest only
-        const tax            = grossInterest * WITHHOLDING_TAX;
-        const netInterest    = grossInterest - tax;
-        const netTotalValue  = principal + netInterest;
-
         if (interestEl) interestEl.textContent = formatKES(grossInterest);
-        if (taxEl)      taxEl.textContent      = '− ' + formatKES(tax);
-        if (netEl)      netEl.textContent      = formatKES(netInterest);
-        if (totalEl)    totalEl.textContent    = formatKES(netTotalValue);
+        if (totalEl)    totalEl.textContent    = formatKES(grossValue);
     }
 
     if (amountInput) {

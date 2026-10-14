@@ -33,9 +33,6 @@
             --gutter: 1.5rem;
         }
 
-        /* ============================================================
-           RESET
-           ============================================================ */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
         body {
@@ -231,7 +228,6 @@
             align-items: start;
         }
 
-        /* ---------- TOC ---------- */
         .toc {
             position: sticky;
             top: 6rem;
@@ -266,10 +262,7 @@
             border-left-color: var(--forest);
         }
 
-        /* ---------- CONTENT ---------- */
-        .legal-content {
-            max-width: 72ch;
-        }
+        .legal-content { max-width: 72ch; }
         .legal-intro {
             font-size: 1.02rem;
             color: var(--ink-soft);
@@ -369,7 +362,6 @@
         }
         .legal-section a:hover { border-color: var(--forest); }
 
-        /* ---------- DATA TABLE ---------- */
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -386,9 +378,7 @@
             border-bottom: 1px solid var(--rule-strong);
         }
         .data-table thead th:last-child { padding-right: 0; }
-        .data-table tbody tr {
-            border-bottom: 1px solid var(--rule);
-        }
+        .data-table tbody tr { border-bottom: 1px solid var(--rule); }
         .data-table tbody td {
             padding: 1rem 1rem 1rem 0;
             font-size: 0.92rem;
@@ -408,9 +398,6 @@
         }
         .data-table tbody td:last-child { padding-right: 0; }
 
-        /* ============================================================
-           FOOTER
-           ============================================================ */
         .page-footer {
             padding: 2rem 0 3rem;
             border-top: 1px solid var(--rule);
@@ -434,9 +421,6 @@
         }
         .page-footer-links a:hover { color: var(--forest); }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
         @media (max-width: 900px) {
             .legal-hero { padding: 7rem 0 2rem; }
             .legal-layout { padding: 2.5rem 0 4rem; }
@@ -505,9 +489,6 @@
             }
         }
 
-        /* ============================================================
-           PRINT
-           ============================================================ */
         @media print {
             .masthead, .nav-toggle, .toc, .page-footer-links { display: none; }
             body { background: #fff; color: #000; font-size: 11pt; }
@@ -523,7 +504,6 @@
 </head>
 <body>
 
-    <!-- ====== MASTHEAD ====== -->
     <header class="masthead" id="masthead">
         <div class="masthead-inner">
             <a href="index.html" class="wordmark" aria-label="RockWin Investment">
@@ -556,7 +536,6 @@
 
     <main>
 
-        <!-- ====== HERO ====== -->
         <section class="legal-hero">
             <div class="shell">
                 <div class="legal-hero-inner">
@@ -575,12 +554,10 @@
             </div>
         </section>
 
-        <!-- ====== CONTENT ====== -->
         <section class="legal-layout">
             <div class="shell">
                 <div class="legal-grid">
 
-                    <!-- Table of contents -->
                     <aside class="toc" aria-label="Contents">
                         <div class="toc-title">Contents</div>
                         <nav class="toc-list">
@@ -598,7 +575,6 @@
                         </nav>
                     </aside>
 
-                    <!-- Privacy content -->
                     <article class="legal-content">
 
                         <p class="legal-intro">
@@ -606,7 +582,7 @@
                         </p>
 
                         <div class="legal-callout">
-                            This policy complies with the <strong>Kenya Data Protection Act (2019)</strong> and the <strong>Capital Markets Authority</strong> regulations on client data handling.
+                            This policy complies with the <strong>Kenya Data Protection Act (2019)</strong> and applicable data handling regulations.
                         </div>
 
                         <section class="legal-section" id="s1">
@@ -623,7 +599,7 @@
                                 <tbody>
                                     <tr>
                                         <td>Identity</td>
-                                        <td>Full legal name, National ID or Passport number, date of birth, and any supporting documents required for KYC verification.</td>
+                                        <td>Full legal name, National ID or Passport number, date of birth, and any supporting documents required for identity verification.</td>
                                     </tr>
                                     <tr>
                                         <td>Contact</td>
@@ -635,11 +611,11 @@
                                     </tr>
                                     <tr>
                                         <td>Next of kin</td>
-                                        <td>Name, phone number, and relationship — required by the CMA.</td>
+                                        <td>Name, phone number, and relationship.</td>
                                     </tr>
                                     <tr>
                                         <td>Tax</td>
-                                        <td>KRA PIN and withholding tax consent status.</td>
+                                        <td>KRA PIN and tax consent status.</td>
                                     </tr>
                                     <tr>
                                         <td>Technical</td>
@@ -653,11 +629,11 @@
                             <h2><span class="num">02</span> How we use your data</h2>
                             <p>We process your personal data for the following purposes, each tied to operating your account or complying with the law:</p>
                             <ul>
-                                <li><strong>KYC verification</strong> — to comply with CMA and anti-money laundering laws</li>
+                                <li><strong>Identity verification</strong> — to comply with anti-money laundering laws</li>
                                 <li><strong>Account management</strong> — to operate your account, process deposits, and execute redemptions</li>
                                 <li><strong>Interest accrual</strong> — to calculate and credit daily interest to your portfolio</li>
-                                <li><strong>Tax compliance</strong> — to deduct and remit 15% withholding tax to KRA</li>
-                                <li><strong>Communications</strong> — to send statements, alerts, and regulatory notices</li>
+                                <li><strong>Tax compliance</strong> — to process statutory deductions where required by law</li>
+                                <li><strong>Communications</strong> — to send statements, alerts, and notices</li>
                                 <li><strong>Fraud prevention</strong> — to detect and prevent fraudulent activity</li>
                                 <li><strong>Service improvement</strong> — to analyse usage patterns and improve the platform</li>
                             </ul>
@@ -668,7 +644,7 @@
                             <p>Under the Data Protection Act (2019), we rely on the following legal bases:</p>
                             <ul>
                                 <li><strong>Contractual necessity</strong> — to deliver the investment services you signed up for</li>
-                                <li><strong>Legal obligation</strong> — to comply with CMA, KRA, and AML regulations</li>
+                                <li><strong>Legal obligation</strong> — to comply with applicable financial and tax regulations</li>
                                 <li><strong>Consent</strong> — for marketing communications and optional features</li>
                                 <li><strong>Legitimate interest</strong> — for fraud prevention and account security</li>
                             </ul>
@@ -676,21 +652,20 @@
 
                         <section class="legal-section" id="s4">
                             <h2><span class="num">04</span> Data sharing</h2>
-                            <p>We share personal data only with organisations that are necessary to operate the fund or meet our legal obligations:</p>
+                            <p>We share personal data only with organisations that are necessary to operate the platform or meet our legal obligations. These may include:</p>
                             <ul>
-                                <li><strong>I&amp;M Bank</strong> — as trustee and custodian of fund assets</li>
-                                <li><strong>Deloitte</strong> — as independent auditor</li>
-                                <li><strong>Capital Markets Authority</strong> — for regulatory reporting</li>
-                                <li><strong>Kenya Revenue Authority</strong> — for tax remittance</li>
+                                <li><strong>Trustee and custodian partners</strong> — to hold and administer pooled assets</li>
+                                <li><strong>Independent auditors</strong> — to verify financial records</li>
+                                <li><strong>Regulatory and tax authorities</strong> — for statutory reporting</li>
                                 <li><strong>Payment and messaging providers</strong> — to process deposits and deliver notifications</li>
-                                <li><strong>KYC verification partners</strong> — for identity verification</li>
+                                <li><strong>Identity verification partners</strong> — for identity verification</li>
                             </ul>
                             <p>We do <strong>not sell your data</strong> to third parties.</p>
                         </section>
 
                         <section class="legal-section" id="s5">
                             <h2><span class="num">05</span> Data retention</h2>
-                            <p>We retain your personal data for as long as your account is active, plus <strong>7 years</strong> after account closure, as required by CMA regulations. After this period, data is anonymised or securely deleted.</p>
+                            <p>We retain your personal data for as long as your account is active, plus <strong>7 years</strong> after account closure, as required by applicable regulations. After this period, data is anonymised or securely deleted.</p>
                         </section>
 
                         <section class="legal-section" id="s6">
@@ -699,7 +674,7 @@
                             <ul>
                                 <li>Access your personal data</li>
                                 <li>Correct inaccurate data</li>
-                                <li>Request deletion, subject to regulatory retention requirements</li>
+                                <li>Request deletion, subject to statutory retention requirements</li>
                                 <li>Object to certain processing</li>
                                 <li>Request data portability</li>
                                 <li>Withdraw consent for optional processing</li>
@@ -752,7 +727,6 @@
 
     </main>
 
-    <!-- ====== FOOTER ====== -->
     <footer class="page-footer">
         <div class="shell">
             <div class="page-footer-inner">
@@ -770,7 +744,6 @@
         (function() {
             'use strict';
 
-            // ---------- MASTHEAD scroll state ----------
             const masthead = document.getElementById('masthead');
             if (masthead) {
                 const setScrolled = () => masthead.classList.toggle('scrolled', window.scrollY > 12);
@@ -778,7 +751,6 @@
                 window.addEventListener('scroll', setScrolled, { passive: true });
             }
 
-            // ---------- MOBILE MENU ----------
             const navToggle = document.getElementById('navToggle');
             const mobileMenu = document.getElementById('mobileMenu');
 
