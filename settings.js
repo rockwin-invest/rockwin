@@ -128,7 +128,7 @@
         // Investment Summary
         $('summaryPortfolioValue').textContent = 'KES ' + formatKES(user.portfolioValue);
         $('summaryUnits').textContent = (user.unitsHeld || 0).toFixed(4);
-        $('summaryYield').textContent = (user.annualYield || 14.2).toFixed(2) + '% p.a.';
+        $('summaryYield').textContent = (user.annualYield || 10.62).toFixed(2) + '% p.a.';
         $('summaryInterestYTD').textContent = 'KES ' + formatKES(user.ytdInterestEarned);
 
         // KYC card

@@ -1,7 +1,7 @@
 const FundPerformance = require('../models/FundPerformance');
 
 const INITIAL_NAV = 100.00;
-const DEFAULT_YIELD = 0.142; // decimal, not percent (0.142 = 14.2%)
+const DEFAULT_YIELD = 0.1062; // decimal, not percent (0.1062 = 10.62%)
 
 // ============================================================
 // NAV PER UNIT

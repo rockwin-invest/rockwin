@@ -44,7 +44,7 @@
     }
 
     // ---------- CALCULATOR ----------
-    const ANNUAL_YIELD = 0.142;
+    const ANNUAL_YIELD = 0.1062;
     const WITHHOLDING_TAX = 0.15;
     const DAYS_PER_YEAR = 365;
 

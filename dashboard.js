@@ -81,14 +81,14 @@
         if (unitsEl) unitsEl.textContent = (user.unitsHeld || 0).toFixed(4) + ' units';
 
         const yieldEl = $('yieldDisplay');
-        if (yieldEl) yieldEl.textContent = (user.annualYield || 14.2).toFixed(2) + '% p.a.';
+        if (yieldEl) yieldEl.textContent = (user.annualYield || 10.62).toFixed(2) + '% p.a.';
 
         const rewardEl = $('rewardMessage');
         if (rewardEl) {
             if ((user.portfolioValue || 0) === 0) {
                 rewardEl.textContent = 'Welcome — start investing from KES 100.';
             } else {
-                rewardEl.textContent = 'Interest accrues daily at ' + (user.annualYield || 14.2).toFixed(2) + '% p.a.';
+                rewardEl.textContent = 'Interest accrues daily at ' + (user.annualYield || 10.62).toFixed(2) + '% p.a.';
             }
         }
 
@@ -163,7 +163,7 @@
         if (todayEl) todayEl.textContent = 'KES ' + formatKES(stats.interestToday || 0);
         if (monthEl) monthEl.textContent = 'KES ' + formatKES(stats.interestThisMonth || 0);
         if (ytdEl) ytdEl.textContent = 'KES ' + formatKES(stats.interestYTD || 0);
-        if (yieldEl) yieldEl.textContent = (stats.currentYield || 14.2).toFixed(2) + '% p.a.';
+        if (yieldEl) yieldEl.textContent = (stats.currentYield || 10.62).toFixed(2) + '% p.a.';
     }
 
     // ============================================================

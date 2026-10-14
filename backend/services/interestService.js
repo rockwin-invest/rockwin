@@ -75,7 +75,7 @@ exports.runDailyAccrual = async () => {
     try {
         const annualYield = await navService.getCurrentYield();
         const currentNav = await navService.getCurrentNav();
-        const nextNav = navService.computeNextNav(currentNav, annualYield);
+       
 
         const users = await User.find({ status: 'active', unitsHeld: { $gt: 0 } });
 
@@ -116,7 +116,7 @@ exports.runDailyAccrual = async () => {
             { date: today },
             {
                 date: today,
-                navPerUnit: nextNav,
+                navPerUnit: currentNav,
                 dailyYieldRate: annualYield / 365,
                 annualYieldRate: annualYield,
                 aum,

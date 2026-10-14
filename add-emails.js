@@ -79,7 +79,7 @@ exports.sendWelcomeEmail = async (user) => {
             { label: 'Status', value: 'Pending KYC' }
         ]) +
         '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;"><strong>Next steps:</strong> Complete your KYC verification to activate your account.</p>' +
-        '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Start from just <strong>KES 1,000</strong> — no lock-in, earn up to <strong>14.2% p.a.</strong></p>' +
+        '<p style="color: #4a5a72; font-size: 15px; line-height: 1.6;">Start from just <strong>KES 1,000</strong> — no lock-in, earn up to <strong>10.62% p.a.</strong></p>' +
         ctaButton('Sign In to Your Account', 'https://rockwin-invest.github.io/rockwin/login.html');
 
     return exports.sendEmail(user.email, 'Welcome to RockWin Investment — Account Created', wrapEmail('Welcome to RockWin Investment', body));
