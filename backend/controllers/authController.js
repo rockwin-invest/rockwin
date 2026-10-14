@@ -2,8 +2,12 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const emailService = require('../services/emailService');
 
+const SUPPORT_EMAIL = 'info@rockwininvestment.com';
 const otpStore = new Map();
 
+// ============================================================
+// SIGNUP
+// ============================================================
 exports.signup = async (req, res) => {
     try {
         const { fullName, phoneNumber, email, idNumber, dateOfBirth, password, nextOfKin } = req.body;
@@ -48,7 +52,7 @@ exports.signup = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, phone: user.phoneNumber, role: 'user' },
+            { id: user._id, phone: user.phoneNumber, role: user.role || 'user' },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRE || '7d' }
         );
@@ -64,6 +68,7 @@ exports.signup = async (req, res) => {
                 email: user.email,
                 accountNumber: user.accountNumber,
                 status: user.status,
+                role: user.role || 'user',
                 portfolioValue: 0,
                 unitsHeld: 0
             }
@@ -74,6 +79,9 @@ exports.signup = async (req, res) => {
     }
 };
 
+// ============================================================
+// LOGIN
+// ============================================================
 exports.login = async (req, res) => {
     try {
         const { phoneNumber, password } = req.body;
@@ -90,7 +98,6 @@ exports.login = async (req, res) => {
         user.lastLogin = new Date();
         await user.save();
 
-        // Send login notification email (default ON)
         if (user.loginAlertsEnabled !== false && user.email) {
             try {
                 await emailService.sendLoginNotificationEmail(user, {
@@ -103,7 +110,7 @@ exports.login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, phone: user.phoneNumber, role: 'user' },
+            { id: user._id, phone: user.phoneNumber, role: user.role || 'user' },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRE || '7d' }
         );
@@ -119,7 +126,8 @@ exports.login = async (req, res) => {
                 accountNumber: user.accountNumber,
                 portfolioValue: user.portfolioValue || 0,
                 unitsHeld: user.unitsHeld || 0,
-                status: user.status
+                status: user.status,
+                role: user.role || 'user'
             }
         });
     } catch (error) {
@@ -128,6 +136,9 @@ exports.login = async (req, res) => {
     }
 };
 
+// ============================================================
+// FORGOT PASSWORD
+// ============================================================
 exports.forgotPassword = async (req, res) => {
     try {
         const { phoneNumber } = req.body;
@@ -146,7 +157,7 @@ exports.forgotPassword = async (req, res) => {
                 'RockWin Investment — Password Reset Code',
                 '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
                 '<h1 style="color: #006d32; font-size: 24px;">Password Reset</h1>' +
-                '<p style="color: #4a5a72; font-size: 15px;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
+                '<p style="color: #4a5a72; font-size: 15px;">Hi ' + (user.fullName || 'Investor').split(' ')[0] + ',</p>' +
                 '<p style="color: #4a5a72; font-size: 15px;">Your 6-digit reset code is:</p>' +
                 '<div style="background: #e8f5ee; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">' +
                 '<div style="color: #006d32; font-size: 36px; font-weight: 700; letter-spacing: 8px; font-family: monospace;">' + otp + '</div>' +
@@ -165,6 +176,9 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
+// ============================================================
+// RESET PASSWORD
+// ============================================================
 exports.resetPassword = async (req, res) => {
     try {
         const { phoneNumber, otp, newPassword } = req.body;
@@ -181,18 +195,9 @@ exports.resetPassword = async (req, res) => {
         otpStore.delete(phoneNumber);
 
         try {
-            await emailService.sendEmail(
-                user.email,
-                'RockWin Investment — Password Changed',
-                '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
-                '<h1 style="color: #006d32; font-size: 24px;">Password Changed</h1>' +
-                '<p style="color: #4a5a72; font-size: 15px;">Hi ' + user.fullName.split(' ')[0] + ',</p>' +
-                '<p style="color: #4a5a72; font-size: 15px;">Your RockWin Investment password has been changed successfully.</p>' +
-                '<p style="color: #4a5a72; font-size: 15px;">If you didn\'t do this, contact support@rockwin.co.ke immediately.</p>' +
-                '</div>'
-            );
+            await emailService.sendPasswordChangedEmail(user);
         } catch (e) {
-            console.warn('Confirmation email failed:', e.message);
+            console.warn('Password change email failed:', e.message);
         }
 
         res.json({ message: 'Password reset successful.' });
@@ -202,6 +207,9 @@ exports.resetPassword = async (req, res) => {
     }
 };
 
+// ============================================================
+// CHANGE PASSWORD (authenticated)
+// ============================================================
 exports.changePassword = async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
@@ -231,16 +239,7 @@ exports.changePassword = async (req, res) => {
         await user.save();
 
         try {
-            await emailService.sendEmail(
-                user.email,
-                'RockWin Investment — Password Changed',
-                '<div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #0b1c30;">' +
-                '<h1 style="color: #006d32; font-size: 24px;">Password Changed</h1>' +
-                '<p style="color: #4a5a72; font-size: 15px;">Hi ' + (user.fullName || 'Investor').split(' ')[0] + ',</p>' +
-                '<p style="color: #4a5a72; font-size: 15px;">Your RockWin Investment password was changed from your account settings.</p>' +
-                '<p style="color: #4a5a72; font-size: 15px;">If you didn\'t do this, contact support@rockwin.co.ke immediately.</p>' +
-                '</div>'
-            );
+            await emailService.sendPasswordChangedEmail(user);
         } catch (e) {
             console.warn('Password change email failed:', e.message);
         }
@@ -252,10 +251,16 @@ exports.changePassword = async (req, res) => {
     }
 };
 
+// ============================================================
+// LOGOUT
+// ============================================================
 exports.logout = (req, res) => {
     res.json({ message: 'Logged out successfully.' });
 };
 
+// ============================================================
+// VERIFY OTP
+// ============================================================
 exports.verifyOtp = (req, res) => {
     const { phoneNumber, otp } = req.query;
     const stored = otpStore.get(phoneNumber);

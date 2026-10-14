@@ -130,18 +130,24 @@
 
                 const data = await response.json();
 
-                if (response.ok) {
-                    if (data.token) {
-                        localStorage.setItem('token', data.token);
-                        if (data.user) {
-                            localStorage.setItem('user', JSON.stringify(data.user));
-                        }
-                    }
-                    showAlert('Signed in. Redirecting…', 'success');
-                    setTimeout(function() {
-                        window.location.href = 'dashboard.html';
-                    }, 900);
-                } else {
+               if (response.ok) {
+    if (data.token) {
+        localStorage.setItem('token', data.token);
+        if (data.user) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+        }
+    }
+
+    showAlert('Signed in. Redirecting…', 'success');
+
+    const role = (data.user && data.user.role) || 'user';
+    const isAdmin = role !== 'user';
+    const target = isAdmin ? 'admin.html' : 'dashboard.html';
+
+    setTimeout(function() {
+        window.location.href = target;
+    }, 900);
+} else {
                     throw new Error(data.error || 'Invalid credentials. Please try again.');
                 }
             } catch (err) {
