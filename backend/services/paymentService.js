@@ -60,7 +60,7 @@ const tumaGateway = {
     _token: null,
     _tokenExpiresAt: 0,
 
-    getAccessToken: async () => {
+       getAccessToken: async () => {
         // Reuse if we still have at least 5 minutes of life
         if (tumaGateway._token && Date.now() < tumaGateway._tokenExpiresAt - 5 * 60 * 1000) {
             return tumaGateway._token;
@@ -83,18 +83,34 @@ const tumaGateway = {
         );
 
         const data = response.data || {};
-        if (!data.success || !data.token) {
-            throw new Error('Tuma auth failed: ' + (data.message || 'no token returned'));
+
+        // Tuma's response shape has varied. Accept every known variant:
+        //   { success, token, expires_in }
+        //   { message, data: { token, expires_in } }
+        //   { access_token }
+        const token =
+            data.token ||
+            data.access_token ||
+            (data.data && (data.data.token || data.data.access_token));
+
+        const expiresIn =
+            data.expires_in ||
+            (data.data && data.data.expires_in) ||
+            86400;
+
+        if (!token) {
+            // Log the actual response so we can see the shape if it changes again
+            console.error('[PAYMENT:tuma] Auth response has no token. Raw body:',
+                JSON.stringify(data).slice(0, 500));
+            throw new Error('Tuma auth failed: ' + (data.message || data.error || 'no token in response'));
         }
 
-        tumaGateway._token = data.token;
-        tumaGateway._tokenExpiresAt = Date.now() + (data.expires_in || 86400) * 1000;
+        tumaGateway._token = token;
+        tumaGateway._tokenExpiresAt = Date.now() + expiresIn * 1000;
 
-        console.log('[PAYMENT:tuma] Auth token acquired, expires in ' +
-            (data.expires_in || 86400) + 's');
-        return data.token;
+        console.log('[PAYMENT:tuma] Auth token acquired, expires in ' + expiresIn + 's');
+        return token;
     },
-
     initiateSTKPush: async ({ phoneNumber, amount, reference }) => {
         const token = await tumaGateway.getAccessToken();
 
