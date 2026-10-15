@@ -38,33 +38,102 @@ const mockGateway = {
 };
 
 // ============================================================
-// TUMA GATEWAY — settles to I&M account
+// TUMA GATEWAY — M-PESA STK push, settles to I&M account
+//
+// Flow per Tuma docs:
+//   1. POST /auth/token with { email, api_key } → JWT, valid 24h
+//   2. POST /payment/stk-push with { amount, phone, callback_url, description }
+//      Authorization: Bearer <JWT>
+//   3. Response: { success, data: { merchant_request_id, checkout_request_id, customer_message } }
+//
+// Notes:
+//   - Tuma has no signed webhooks. We verify by shared secret in
+//     the callback URL's query string (see verifyWebhook below).
+//   - Tuma has no dedicated reference field, so we embed our
+//     PAY-XXXXXX reference in the `description` for visibility on
+//     the customer's M-PESA statement.
 // ============================================================
 const tumaGateway = {
-    initiateSTKPush: async ({ phoneNumber, amount, reference }) => {
-        const url = process.env.TUMA_API_URL || 'https://api.tuma.co.ke/payment/stk-push';
-        const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
+    baseUrl: process.env.TUMA_API_URL || 'https://api.tuma.co.ke',
 
-        const response = await axios.post(url, {
-            phone_number: cleanPhone,
-            amount: amount,
-            account_reference: reference,
-            transaction_desc: 'RockWin Investment deposit',
-            callback_url: process.env.PAYMENT_CALLBACK_URL
-        }, {
-            headers: {
-                'Authorization': 'Bearer ' + process.env.TUMA_API_KEY,
-                'Content-Type': 'application/json'
-            },
-            timeout: 20000
-        });
+    // Cached JWT — reuse until near expiry
+    _token: null,
+    _tokenExpiresAt: 0,
+
+    getAccessToken: async () => {
+        // Reuse if we still have at least 5 minutes of life
+        if (tumaGateway._token && Date.now() < tumaGateway._tokenExpiresAt - 5 * 60 * 1000) {
+            return tumaGateway._token;
+        }
+
+        const email = process.env.TUMA_EMAIL;
+        const apiKey = process.env.TUMA_API_KEY;
+
+        if (!email || !apiKey) {
+            throw new Error('Tuma credentials not configured (TUMA_EMAIL, TUMA_API_KEY)');
+        }
+
+        const response = await axios.post(
+            tumaGateway.baseUrl + '/auth/token',
+            { email, api_key: apiKey },
+            {
+                headers: { 'Content-Type': 'application/json' },
+                timeout: 15000
+            }
+        );
 
         const data = response.data || {};
+        if (!data.success || !data.token) {
+            throw new Error('Tuma auth failed: ' + (data.message || 'no token returned'));
+        }
+
+        tumaGateway._token = data.token;
+        tumaGateway._tokenExpiresAt = Date.now() + (data.expires_in || 86400) * 1000;
+
+        console.log('[PAYMENT:tuma] Auth token acquired, expires in ' +
+            (data.expires_in || 86400) + 's');
+        return data.token;
+    },
+
+    initiateSTKPush: async ({ phoneNumber, amount, reference }) => {
+        const token = await tumaGateway.getAccessToken();
+
+        // Normalise to 2547XXXXXXXX — Tuma expects no leading +
+        let cleanPhone = String(phoneNumber).replace(/[^0-9]/g, '');
+        if (cleanPhone.startsWith('0')) cleanPhone = '254' + cleanPhone.slice(1);
+        if (cleanPhone.length === 9) cleanPhone = '254' + cleanPhone;
+
+        // Tuma has no reference field; embed ours in the description
+        const description = 'RockWin Investment ' + reference;
+
+        const response = await axios.post(
+            tumaGateway.baseUrl + '/payment/stk-push',
+            {
+                amount: Number(amount),
+                phone: cleanPhone,
+                callback_url: process.env.PAYMENT_CALLBACK_URL,
+                description
+            },
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 25000
+            }
+        );
+
+        const data = response.data || {};
+
+        if (!data.success || !data.data) {
+            throw new Error('Tuma rejected: ' + (data.message || 'unknown'));
+        }
+
         return {
             success: true,
-            checkoutRequestId: data.CheckoutRequestID || data.checkout_request_id,
-            merchantRequestId: data.MerchantRequestID || data.merchant_request_id,
-            customerMessage: data.CustomerMessage || 'Check your phone.',
+            checkoutRequestId: data.data.checkout_request_id,
+            merchantRequestId: data.data.merchant_request_id,
+            customerMessage: data.data.customer_message || 'Check your phone.',
             gateway: 'tuma',
             raw: data
         };
@@ -99,9 +168,8 @@ const darajaGateway = {
     initiateSTKPush: async ({ phoneNumber, amount, reference }) => {
         const token = await darajaGateway.getAccessToken();
 
-        // Safaricom requires the format YYYYMMDDHHmmss in Kenya local time.
-        // Using toISOString() returns UTC, which is 3 hours behind EAT —
-        // that produces timestamp mismatches in the sandbox. Build from local time instead.
+        // Safaricom requires YYYYMMDDHHmmss in Kenya local time (EAT),
+        // not UTC. toISOString() would be 3 hours behind.
         const now = new Date();
         const pad = (n) => String(n).padStart(2, '0');
         const timestamp =
@@ -132,7 +200,7 @@ const darajaGateway = {
             PartyB: process.env.DARAJA_SHORTCODE,
             PhoneNumber: cleanPhone,
             CallBackURL: process.env.PAYMENT_CALLBACK_URL,
-            AccountReference: reference.slice(0, 12), // Safaricom limit
+            AccountReference: reference.slice(0, 12),
             TransactionDesc: 'RockWin Investment'
         }, {
             headers: {
@@ -162,7 +230,6 @@ const darajaGateway = {
 // ============================================================
 // FLUTTERWAVE GATEWAY — M-PESA, bank transfer, card
 // Scaffolded; activate by setting PAYMENT_GATEWAY=flutterwave
-// and supplying FLW_SECRET_KEY + FLW_WEBHOOK_HASH.
 // ============================================================
 const flutterwaveGateway = {
     baseUrl: 'https://api.flutterwave.com/v3',
@@ -172,7 +239,6 @@ const flutterwaveGateway = {
         'Content-Type': 'application/json'
     }),
 
-    // M-PESA STK push via Flutterwave's charge endpoint
     initiateSTKPush: async ({ phoneNumber, amount, reference, customer }) => {
         const cleanPhone = phoneNumber.replace(/^\+/, '').replace(/[^0-9]/g, '');
 
@@ -207,7 +273,6 @@ const flutterwaveGateway = {
         };
     },
 
-    // Bank transfer — creates a virtual account for this specific payment
     initiateBankTransfer: async ({ amount, reference, customer }) => {
         const response = await axios.post(flutterwaveGateway.baseUrl + '/virtual-account-numbers', {
             email: customer && customer.email ? customer.email : 'investor@rockwininvestment.com',
@@ -242,7 +307,6 @@ const flutterwaveGateway = {
         };
     },
 
-    // Card — creates a hosted checkout URL for redirection
     initiateCardPayment: async ({ amount, reference, customer }) => {
         const siteUrl = process.env.SITE_URL || 'https://rockwininvestment.com';
 
@@ -333,18 +397,16 @@ exports.simulateMockCompletion = (paymentRequest) => mockGateway.simulateComplet
 // ============================================================
 // WEBHOOK VERIFICATION
 // ============================================================
-// Every gateway that sends a webhook MUST be verified, or an
-// attacker who learns the callback URL can POST a fake "success"
-// and credit their own account. This is the single most important
-// security check in the payment flow.
-//
-// In dev with the mock gateway, we log and accept — there is no
-// webhook to verify. In production with a real gateway, we
-// reject anything that doesn't carry the correct signature.
+// Signature strategy per gateway:
+//   mock        → accept in dev only, reject in production
+//   flutterwave → verif-hash header vs FLW_WEBHOOK_HASH
+//   daraja      → shared secret in ?k= query string
+//   tuma        → shared secret in ?k= query string (no signing per docs)
+// ============================================================
 exports.verifyWebhook = (req) => {
     const gateway = ACTIVE_GATEWAY;
 
-    // Mock gateway — no signature exists to check
+    // Mock — no signature to check
     if (gateway === 'mock') {
         if (process.env.NODE_ENV === 'production') {
             console.error('[PAYMENT] Mock gateway active in production — refusing webhook');
@@ -353,8 +415,7 @@ exports.verifyWebhook = (req) => {
         return true;
     }
 
-    // Flutterwave — compares the `verif-hash` header against the
-    // secret you configured in their dashboard.
+    // Flutterwave — verif-hash header
     if (gateway === 'flutterwave') {
         const expected = process.env.FLW_WEBHOOK_HASH;
         if (!expected) {
@@ -366,43 +427,31 @@ exports.verifyWebhook = (req) => {
             console.warn('[PAYMENT] Flutterwave webhook missing verif-hash');
             return false;
         }
-        // Constant-time comparison to avoid timing attacks
         const a = Buffer.from(String(received));
         const b = Buffer.from(String(expected));
         if (a.length !== b.length) return false;
         return crypto.timingSafeEqual(a, b);
     }
 
-    // Tuma — HMAC-SHA256 of the raw body against TUMA_WEBHOOK_SECRET.
-    // Tuma sends the hex digest in the `x-tuma-signature` header.
+    // Tuma — no signed webhooks per docs. Shared secret in ?k=.
     if (gateway === 'tuma') {
-        const secret = process.env.TUMA_WEBHOOK_SECRET;
-        if (!secret) {
+        const expected = process.env.TUMA_WEBHOOK_SECRET;
+        if (!expected) {
             console.error('[PAYMENT] TUMA_WEBHOOK_SECRET not configured — rejecting webhook');
             return false;
         }
-        const received = req.headers['x-tuma-signature'];
+        const received = req.query && req.query.k;
         if (!received) {
-            console.warn('[PAYMENT] Tuma webhook missing x-tuma-signature');
+            console.warn('[PAYMENT] Tuma webhook missing shared secret (?k=)');
             return false;
         }
-        const raw = typeof req.rawBody === 'string'
-            ? req.rawBody
-            : JSON.stringify(req.body || {});
-        const expected = crypto.createHmac('sha256', secret).update(raw).digest('hex');
-
         const a = Buffer.from(String(received));
         const b = Buffer.from(String(expected));
         if (a.length !== b.length) return false;
         return crypto.timingSafeEqual(a, b);
     }
 
-    // Daraja — Safaricom does not sign webhooks. The only available
-    // protections are (a) keeping the callback URL secret and (b)
-    // IP-whitelisting Safaricom's ranges at the proxy layer.
-    // Until that IP whitelist is enforced at the load balancer,
-    // treat the endpoint as untrusted and require an internal
-    // shared secret to be present in the URL query string.
+    // Daraja — no signed webhooks. Shared secret in ?k=.
     if (gateway === 'daraja') {
         const expected = process.env.DARAJA_CALLBACK_SECRET;
         if (!expected) {

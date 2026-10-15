@@ -20,10 +20,12 @@ exports.initiateDeposit = async (req, res) => {
             return res.status(400).json({ error: 'Minimum deposit is KES ' + MIN_DEPOSIT + '.' });
         }
 
-        // Normalize phone number
+        // Normalise to +2547XXXXXXXX for storage and gateway
         let cleanPhone = (phoneNumber || req.user.phoneNumber || '').replace(/\s/g, '');
         if (!cleanPhone.startsWith('+')) {
-            cleanPhone = cleanPhone.startsWith('254') ? '+' + cleanPhone : '+254' + cleanPhone.replace(/^0/, '');
+            cleanPhone = cleanPhone.startsWith('254')
+                ? '+' + cleanPhone
+                : '+254' + cleanPhone.replace(/^0/, '');
         }
 
         // Generate unique reference
@@ -177,7 +179,6 @@ async function completePayment(paymentRequest, gatewayReceipt, rawData, context)
 
     if (!locked) {
         console.log('[PAYMENT] Already resolved — skipping credit:', paymentRequest.reference);
-        // Return the current persisted state so the caller has fresh data
         return await PaymentRequest.findById(paymentRequest._id);
     }
 
@@ -248,7 +249,13 @@ async function completePayment(paymentRequest, gatewayReceipt, rawData, context)
 }
 
 // ============================================================
-// WEBHOOK — receives callback from Tuma/Daraja
+// WEBHOOK — receives callback from Tuma / Daraja / Flutterwave
+//
+// Payload shapes we handle:
+//   Tuma         { status, checkout_request_id, result_code, result_desc,
+//                  mpesa_receipt_number, amount, failure_reason? }
+//   Daraja       { Body: { stkCallback: { CheckoutRequestID, ResultCode, CallbackMetadata } } }
+//   Custom       { reference, status: 'success', receipt }
 // ============================================================
 exports.webhook = async (req, res) => {
     try {
@@ -258,20 +265,20 @@ exports.webhook = async (req, res) => {
         const body = req.body || {};
         console.log('[WEBHOOK] Received:', JSON.stringify(body).slice(0, 500));
 
-        // Verify signature (currently pass-through)
+        // Verify signature / shared secret for the active gateway
         if (!paymentService.verifyWebhook(req)) {
-            console.warn('[WEBHOOK] Signature verification failed');
+            console.warn('[WEBHOOK] Verification failed — ignoring payload');
             return;
         }
 
-        // Extract identifiers — depends on gateway
+        // Extract identifiers — depends on gateway format
         let checkoutRequestId = null;
         let resultCode = null;
         let receipt = null;
         let failReason = null;
 
-        // Tuma / Daraja style
         if (body.Body && body.Body.stkCallback) {
+            // Daraja / Safaricom native format
             const cb = body.Body.stkCallback;
             checkoutRequestId = cb.CheckoutRequestID;
             resultCode = cb.ResultCode;
@@ -281,14 +288,16 @@ exports.webhook = async (req, res) => {
                 });
             }
             failReason = cb.ResultDesc;
-        } else if (body.checkout_request_id) {
-            // Tuma flat style
+
+        } else if (body.checkout_request_id && body.result_code !== undefined) {
+            // Tuma format — has both checkout_request_id and result_code
             checkoutRequestId = body.checkout_request_id;
-            resultCode = body.status === 'success' ? 0 : 1;
-            receipt = body.receipt || body.mpesa_receipt;
-            failReason = body.message;
+            resultCode = body.result_code;                 // number (0 = success)
+            receipt = body.mpesa_receipt_number;           // e.g. "UBNGT7QNYB"
+            failReason = body.failure_reason || body.result_desc;
+
         } else if (body.reference) {
-            // Custom gateways that send our own reference
+            // Custom gateways that echo our reference back
             const paymentRequest = await PaymentRequest.findOne({ reference: body.reference });
             if (paymentRequest && body.status === 'success') {
                 await completePayment(paymentRequest, body.receipt, body, { source: 'webhook' });
@@ -301,7 +310,7 @@ exports.webhook = async (req, res) => {
             return;
         }
 
-        // Find the payment
+        // Find the matching pending payment
         const paymentRequest = await PaymentRequest.findOne({ checkoutRequestId });
         if (!paymentRequest) {
             console.warn('[WEBHOOK] No PaymentRequest for checkoutRequestId:', checkoutRequestId);
@@ -429,7 +438,6 @@ exports.confirmPaymentManually = async (req, res) => {
         );
 
         if (completed.status !== 'completed') {
-            // completePayment failed somewhere after the lock (e.g. user missing)
             return res.status(500).json({
                 error: 'Payment could not be completed: ' + (completed.failureReason || 'unknown error')
             });
