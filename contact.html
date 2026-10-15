@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Contact us · RockWin Investment</title>
+    <meta name="description" content="Get in touch with RockWin Investment. Support by WhatsApp, phone, or email — and a direct message form." />
+
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#1B4332" />
+    <link rel="canonical" href="https://rockwininvestment.com/contacts.html" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link rel="icon" type="image/webp" href="/rockwin-favicon.webp" />
+    <link rel="shortcut icon" href="/rockwin-favicon.webp" type="image/webp" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="contacts.css" />
+</head>
+<body>
+
+    <!-- ====== MASTHEAD ====== -->
+    <header class="masthead" id="masthead">
+        <div class="masthead-inner">
+            <a href="index.html" class="wordmark" aria-label="RockWin Investment">
+                <span class="wordmark-mark">R</span>
+                <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+            </a>
+
+            <nav class="primary-nav" aria-label="Primary">
+                <a href="index.html#how">How it works</a>
+                <a href="index.html#calculator">Calculator</a>
+                <a href="fund-factsheet.html">Factsheet</a>
+                <a href="about.html">About</a>
+                <a href="contacts.html" class="active">Contact</a>
+                <a href="login.html" class="nav-signin">Sign in</a>
+                <a href="signup.html" class="nav-cta">Open an account</a>
+            </nav>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+            <a href="index.html#how">How it works</a>
+            <a href="index.html#calculator">Calculator</a>
+            <a href="fund-factsheet.html">Factsheet</a>
+            <a href="about.html">About</a>
+            <a href="contacts.html">Contact</a>
+            <a href="login.html">Sign in</a>
+            <a href="signup.html" class="mobile-cta">Open an account</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- ====== HERO ====== -->
+        <section class="contact-hero">
+            <div class="shell">
+                <div class="contact-hero-inner">
+                    <span class="eyebrow">
+                        <span class="eyebrow-rule"></span>
+                        Contact
+                    </span>
+                    <h1 class="display">We're here to help.</h1>
+                    <p class="lede">
+                        Questions about your account, a deposit, or a redemption? Send us a message below, or reach us directly on WhatsApp, phone, or email.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== FORM + DETAILS ====== -->
+        <section class="contact-section">
+            <div class="shell contact-grid">
+
+                <!-- LEFT: form -->
+                <div class="contact-form-wrap">
+                    <h2 class="contact-h2">Send us a message</h2>
+                    <p class="contact-h2-sub">We respond to every message. Most are answered within 1 business day.</p>
+
+                    <div id="contactAlert" class="contact-alert"></div>
+
+                    <form id="contactForm" class="contact-form" novalidate>
+
+                        <div class="form-group">
+                            <label for="contactName">Your name <span class="req">*</span></label>
+                            <input type="text" id="contactName" name="name" placeholder="e.g. Jane Wanjiru" required autocomplete="name" maxlength="100" />
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contactEmail">Email <span class="req">*</span></label>
+                                <input type="email" id="contactEmail" name="email" placeholder="you@example.com" required autocomplete="email" maxlength="150" />
+                            </div>
+                            <div class="form-group">
+                                <label for="contactPhone">Phone <span class="opt">(optional)</span></label>
+                                <input type="tel" id="contactPhone" name="phone" placeholder="+254 712 345 678" autocomplete="tel" maxlength="20" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactTopic">What is this about?</label>
+                            <select id="contactTopic" name="topic">
+                                <option value="Account enquiry">Account enquiry</option>
+                                <option value="Deposit issue">Deposit issue</option>
+                                <option value="Redemption issue">Redemption issue</option>
+                                <option value="KYC verification">KYC verification</option>
+                                <option value="Technical problem">Technical problem</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactMessage">Your message <span class="req">*</span></label>
+                            <textarea id="contactMessage" name="message" placeholder="Tell us what's happening and any reference numbers you have..." required rows="6" maxlength="2000"></textarea>
+                            <div class="field-hint">
+                                <span id="charCount">0</span> / 2000 characters
+                            </div>
+                        </div>
+
+                        <!-- Honeypot — hidden from real users, catches bots -->
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="contactWebsite">Website</label>
+                            <input type="text" id="contactWebsite" name="website" tabindex="-1" autocomplete="off" />
+                        </div>
+
+                        <button type="submit" id="contactSubmit" class="btn btn-primary contact-submit">
+                            <span id="contactSubmitText">Send message</span>
+                            <span id="contactSpinner" class="contact-spinner" style="display:none;"></span>
+                        </button>
+
+                    </form>
+                </div>
+
+                <!-- RIGHT: contact details -->
+                <aside class="contact-details">
+                    <h2 class="contact-h2">Other ways to reach us</h2>
+
+                    <div class="contact-card">
+                        <span class="contact-label">WhatsApp</span>
+                        <a href="https://wa.me/255760355866?text=Hi%20RockWin%2C%20I%20have%20a%20question." class="contact-value" target="_blank" rel="noopener">
+                            +255 760 355 866
+                        </a>
+                        <p class="contact-desc">Fastest response. Usually within minutes during business hours.</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <span class="contact-label">Phone (Kenya)</span>
+                        <a href="tel:+254100468516" class="contact-value">+254 100 468 516</a>
+                        <p class="contact-desc">For account enquiries and support.</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <span class="contact-label">Email</span>
+                        <a href="mailto:info@rockwininvestment.com" class="contact-value">info@rockwininvestment.com</a>
+                        <p class="contact-desc">Statements, KYC documents, and formal enquiries.</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <span class="contact-label">Registered office</span>
+                        <span class="contact-value contact-value-plain">
+                            TFA Complex<br>
+                            Arusha, Tanzania
+                        </span>
+                        <p class="contact-desc">Operating a fund for investors in Kenya.</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <span class="contact-label">Response times</span>
+                        <span class="contact-value contact-value-plain">WhatsApp: minutes</span>
+                        <p class="contact-desc">Email and form: within 1 business day.</p>
+                    </div>
+                </aside>
+
+            </div>
+        </section>
+
+        <!-- ====== FAQ ====== -->
+        <section class="contact-section contact-section-alt">
+            <div class="shell">
+                <h2 class="contact-h2">Common questions</h2>
+                <p class="contact-h2-sub">These cover most enquiries. If yours isn't here, message us on WhatsApp.</p>
+
+                <div class="contact-faq">
+                    <details class="contact-faq-item">
+                        <summary>My deposit hasn't shown up yet. What should I do?</summary>
+                        <div class="contact-faq-body">
+                            <p>Deposits via M-PESA usually confirm within a few seconds. If it's been more than 10 minutes, send us a WhatsApp message with the M-PESA confirmation code and we'll trace it. If the STK prompt never appeared, the transaction didn't start — try again from your dashboard.</p>
+                        </div>
+                    </details>
+
+                    <details class="contact-faq-item">
+                        <summary>How do I redeem funds?</summary>
+                        <div class="contact-faq-body">
+                            <p>Open your dashboard → tap Redeem → choose M-PESA or bank account → enter the amount. Requests are reviewed same-day, and funds typically reach you within 24 hours for M-PESA, or 2–3 business days for bank transfers.</p>
+                        </div>
+                    </details>
+
+                    <details class="contact-faq-item">
+                        <summary>How is interest calculated?</summary>
+                        <div class="contact-faq-body">
+                            <p>Interest accrues on your closing balance every day at the fund's annual yield divided by 365. The amount is credited to your portfolio as additional units each morning, and because those units earn interest too, the return compounds automatically. Interest is subject to 15% withholding tax, deducted at source.</p>
+                        </div>
+                    </details>
+
+                    <details class="contact-faq-item">
+                        <summary>How do I update my profile or change my password?</summary>
+                        <div class="contact-faq-body">
+                            <p>Sign in and open Settings from the sidebar. You can update your name, email, phone, and password there. Your national ID and date of birth cannot be changed online for compliance reasons — contact us if either needs correcting.</p>
+                        </div>
+                    </details>
+
+                    <details class="contact-faq-item">
+                        <summary>Can I download a statement?</summary>
+                        <div class="contact-faq-body">
+                            <p>Yes. Open your dashboard and click "Download statement" under Resources. You'll get a PDF with your account details and full transaction history, generated on demand.</p>
+                        </div>
+                    </details>
+
+                    <details class="contact-faq-item">
+                        <summary>Is RockWin regulated?</summary>
+                        <div class="contact-faq-body">
+                            <p>For details on regulation, trusteeship, and our audited financials, see the <a href="fund-factsheet.html">fund factsheet</a> or contact us directly.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== FINAL CTA ====== -->
+        <section class="final">
+            <div class="shell final-inner">
+                <h2 class="display-final">Ready to start investing?</h2>
+                <div class="final-actions">
+                    <a href="signup.html" class="btn btn-primary">Open an account</a>
+                    <a href="login.html" class="final-signin">Already have an account? Sign in →</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="site-footer">
+        <div class="shell">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <span class="wordmark-text">RockWin<span class="wordmark-sub"> Investment</span></span>
+                    <p class="footer-blurb">A money market fund built for the way Kenyans save. Deposit from KES 1,000. Earn interest daily.</p>
+                </div>
+
+                <div class="footer-cols">
+                    <div class="footer-col">
+                        <h4>Invest</h4>
+                        <ul>
+                            <li><a href="index.html#calculator">Returns calculator</a></li>
+                            <li><a href="signup.html">Open an account</a></li>
+                            <li><a href="fund-factsheet.html">Fund factsheet</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contacts.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="terms.html">Terms of service</a></li>
+                            <li><a href="privacy.html">Privacy policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="mailto:info@rockwininvestment.com">info@rockwininvestment.com</a></li>
+                            <li><a href="tel:+254100468516">+254 100 468 516</a></li>
+                            <li><a href="https://wa.me/255760355866" target="_blank" rel="noopener">WhatsApp</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; 2026 RockWin Investment. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="contacts.js"></script>
+
+</body>
+</html>

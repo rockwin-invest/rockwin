@@ -473,10 +473,151 @@
     };
 
     // ============================================================
-    // STATEMENT — placeholder (next feature)
+    // STATEMENT — PDF download (jsPDF + autoTable)
     // ============================================================
-    window.downloadStatement = function() {
-        showToast('Statement download is coming soon.', 'info');
+    window.downloadStatement = async function() {
+        if (!userData) {
+            showToast('Account details not loaded yet. Please wait a moment.', 'error');
+            return;
+        }
+
+        const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+        if (!jsPDFCtor) {
+            showToast('Statement library failed to load. Check your connection.', 'error');
+            return;
+        }
+
+        showToast('Generating statement…', 'info');
+
+        try {
+            const transactions = await apiFetch('/api/user/ledger').catch(function() { return []; });
+
+            const doc = new jsPDFCtor({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+
+            // ---------- HEADER ----------
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(20);
+            doc.setTextColor(15, 26, 20);
+            doc.text('RockWin Investment', 14, 20);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(74, 83, 77);
+            doc.text('Statement of Account', 14, 27);
+
+            doc.setFontSize(8);
+            doc.text('Generated: ' + new Date().toLocaleString('en-KE'), pageWidth - 14, 20, { align: 'right' });
+            doc.text('Reference: ' + (userData.accountNumber || '—'), pageWidth - 14, 25, { align: 'right' });
+
+            // ---------- ACCOUNT SUMMARY ----------
+            doc.setDrawColor(232, 227, 214);
+            doc.setLineWidth(0.3);
+            doc.line(14, 34, pageWidth - 14, 34);
+
+            doc.setFontSize(9);
+            doc.setTextColor(74, 83, 77);
+            const leftCol = 14;
+            const rightCol = pageWidth / 2 + 5;
+
+            doc.text('Account holder', leftCol, 42);
+            doc.text('Account number', leftCol, 48);
+            doc.text('Email', leftCol, 54);
+            doc.text('Portfolio value', rightCol, 42);
+            doc.text('Units held', rightCol, 48);
+            doc.text('Gross yield', rightCol, 54);
+
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(15, 26, 20);
+            doc.text(userData.fullName || '—', leftCol + 32, 42);
+            doc.text(userData.accountNumber || '—', leftCol + 32, 48);
+            doc.text(userData.email || '—', leftCol + 32, 54);
+            doc.text('KES ' + formatKES(userData.portfolioValue || 0), rightCol + 30, 42);
+            doc.text((userData.unitsHeld || 0).toFixed(4), rightCol + 30, 48);
+            doc.text((userData.annualYield || 10.62).toFixed(2) + '% p.a.', rightCol + 30, 54);
+
+            // ---------- TRANSACTIONS TABLE ----------
+            const tableData = (transactions || []).map(function(t) {
+                const date = t.date
+                    ? new Date(t.date).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '—';
+                return [
+                    date,
+                    t.description || '—',
+                    t.reference || '—',
+                    (t.type === 'credit' ? '+ ' : '− ') + (t.amount || '0.00')
+                ];
+            });
+
+            if (tableData.length === 0) {
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(138, 144, 137);
+                doc.text('No transactions on this account yet.', pageWidth / 2, 80, { align: 'center' });
+            } else {
+                doc.autoTable({
+                    startY: 65,
+                    head: [['Date', 'Description', 'Reference', 'Amount (KES)']],
+                    body: tableData,
+                    theme: 'grid',
+                    headStyles: {
+                        fillColor: [27, 67, 50],
+                        textColor: [245, 241, 232],
+                        fontStyle: 'bold',
+                        fontSize: 9
+                    },
+                    bodyStyles: {
+                        fontSize: 9,
+                        textColor: [74, 83, 77]
+                    },
+                    alternateRowStyles: {
+                        fillColor: [237, 231, 218]
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 30 },
+                        1: { cellWidth: 65 },
+                        2: { cellWidth: 45 },
+                        3: { cellWidth: 40, halign: 'right' }
+                    },
+                    margin: { left: 14, right: 14 }
+                });
+            }
+
+            // ---------- FOOTER ON EVERY PAGE ----------
+            const pageCount = doc.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setDrawColor(232, 227, 214);
+                doc.line(14, pageHeight - 18, pageWidth - 14, pageHeight - 18);
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(7.5);
+                doc.setTextColor(138, 144, 137);
+                doc.text('RockWin Investment Ltd · info@rockwininvestment.com', 14, pageHeight - 12);
+                doc.text('Page ' + i + ' of ' + pageCount, pageWidth - 14, pageHeight - 12, { align: 'right' });
+
+                doc.setFontSize(6.5);
+                doc.text(
+                    'This statement is for information purposes. Past performance is not a guarantee of future returns.',
+                    pageWidth / 2, pageHeight - 7, { align: 'center' }
+                );
+            }
+
+            // ---------- SAVE ----------
+            const filename =
+                'RockWin-Statement-' +
+                (userData.accountNumber || 'account') +
+                '-' +
+                new Date().toISOString().slice(0, 10) +
+                '.pdf';
+
+            doc.save(filename);
+            showToast('Statement downloaded.', 'success');
+        } catch (err) {
+            console.error('Statement generation error:', err);
+            showToast('Could not generate statement: ' + (err.message || 'unknown error'), 'error');
+        }
     };
 
     // ============================================================

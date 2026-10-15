@@ -84,8 +84,16 @@ function paragraph(text) {
 
 // ============================================================
 // BASE SEND
+//
+// Optional 4th parameter `options`:
+//   { replyTo: 'someone@example.com' }
+//
+// Used by the contact form so replies go to the submitter,
+// not back into the support inbox.
 // ============================================================
-exports.sendEmail = async (to, subject, html) => {
+exports.sendEmail = async (to, subject, html, options) => {
+    options = options || {};
+
     try {
         const client = getResendClient();
         if (!client) {
@@ -96,7 +104,7 @@ exports.sendEmail = async (to, subject, html) => {
         const { data, error } = await client.emails.send({
             from: 'RockWin Investment <' + FROM + '>',
             to: [to],
-            reply_to: SUPPORT_EMAIL,
+            reply_to: options.replyTo || SUPPORT_EMAIL,
             subject: subject,
             html: html
         });
